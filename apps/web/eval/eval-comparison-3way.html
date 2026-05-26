@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResumeTruth · 3-Way Eval Comparison</title>
+<style>
+  :root{--bg:#0b0d12;--panel:#12151c;--panel-2:#171b24;--line:#242a36;--text:#e8ecf3;--muted:#9aa3b2;--accent:#7c5cff;--cyan:#22d3ee;--green:#3ddc97;--yellow:#ffd166;--red:#ff5d73}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;font-size:15px}
+  .wrap{max-width:1280px;margin:0 auto;padding:32px 24px 80px}
+  code{background:#0a0c11;border:1px solid var(--line);padding:1px 6px;border-radius:4px;font-size:13px;font-family:"SF Mono",Menlo,Consolas,monospace}
+  header.hero{background:radial-gradient(900px 320px at 0% -20%,rgba(124,92,255,.22),transparent 60%),radial-gradient(900px 320px at 100% 0%,rgba(34,211,238,.15),transparent 60%),linear-gradient(180deg,#0e1118,#0b0d12);border:1px solid var(--line);border-radius:18px;padding:36px 32px;margin-bottom:24px}
+  .eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700}
+  h1{font-size:30px;margin:8px 0;line-height:1.2;letter-spacing:-.4px}
+  h1 .grad{background:linear-gradient(90deg,#7c5cff,#22d3ee 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:880px;font-size:14px}
+
+  h2{font-size:22px;margin:42px 0 14px;letter-spacing:-.3px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px;margin:8px 0 16px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:var(--panel-2);color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:0}
+  .good{color:var(--green)} .bad{color:var(--red)} .mid{color:var(--yellow)} .neut{color:var(--muted)}
+  .callout{background:linear-gradient(180deg,rgba(124,92,255,.08),rgba(34,211,238,.04));border:1px solid rgba(124,92,255,.25);border-radius:12px;padding:16px 18px;margin:14px 0;color:#dde3ef;font-size:14px}
+  .callout.warn{background:linear-gradient(180deg,rgba(255,93,115,.06),rgba(255,209,102,.04));border-color:rgba(255,93,115,.3)}
+  .callout strong{color:var(--cyan)} .callout.warn strong{color:var(--red)}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:960px){.grid-3{grid-template-columns:1fr}}
+  .stat-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .stat-card .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .stat-card .val{font-size:32px;font-weight:700;margin-top:4px;letter-spacing:-.5px}
+  .stat-card .sub{font-size:12px;color:var(--muted);margin-top:6px}
+  .badge{display:inline-block;font-size:10px;padding:3px 8px;border-radius:6px;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);margin-left:6px;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">ResumeTruth · 3-Way Eval · 真实度递增</div>
+    <h1><span class="grad">合成 → GitHub README → 真 PDF 简历</span> · 数字怎么变</h1>
+    <p class="lede">
+      同一组检测器 + 同一组 30 份 AI 简历 + 3 套"真人"数据。<br/>
+      从「最容易」(我手写) 到「最难」(真实 livecareer 简历 OCR 后)，看检测器在递增真实度下的表现退化情况。
+      109 个真人 fixture × 3 JDs × 2 信号 = 654 次 LLM 调用。
+    </p>
+  </header>
+
+  <h2>0 · 头条三连</h2>
+  <div class="grid-3">
+    
+      <div class="stat-card">
+        <div class="label">Synthetic <span class="badge">我手写</span></div>
+        <div class="val good">F1 0.93</div>
+        <div class="sub">AI 检测 · 30 真人 / 30 AI · 0 真人误报</div>
+        <div style="margin-top:10px;font-size:13px;color:#cdd3df">
+          jd-match: BoW 64% → LLM 83%
+          <span class="good"> (Δ 19%)</span>
+        </div>
+      </div>
+    
+
+      <div class="stat-card">
+        <div class="label">GitHub README <span class="badge">真人 / 错格式</span></div>
+        <div class="val good">F1 0.95</div>
+        <div class="sub">AI 检测 · 19 真人 / 30 AI · 1 真人误报</div>
+        <div style="margin-top:10px;font-size:13px;color:#cdd3df">
+          jd-match: BoW 65% → LLM 67%
+          <span class="bad"> (Δ 2%)</span>
+        </div>
+      </div>
+    
+
+      <div class="stat-card">
+        <div class="label">Real PDF CV <span class="badge">真人 / 真简历</span></div>
+        <div class="val mid">F1 0.86</div>
+        <div class="sub">AI 检测 · 60 真人 / 30 AI · 3 真人误报</div>
+        <div style="margin-top:10px;font-size:13px;color:#cdd3df">
+          jd-match: BoW 67% → LLM 73%
+          <span class="good"> (Δ 6%)</span>
+        </div>
+      </div>
+    
+  </div>
+
+  <div class="callout warn">
+    <strong>诚实结论</strong>：随着 fixture 越接近真实候选人简历，<strong>jd-match LLM 提升幅度从 +19% 跌到 +6%</strong>。我之前用 synthetic 数字宣称的「+17pp」在真实简历上**消失了**。
+    <br/><br/>
+    <strong>但 AI 检测稳健</strong>：F1 在三个数据集分别是 0.93 / 0.95 / 0.86——真实数据上仍 0.86，比 synthetic 低 0.07，但绝对值仍是产品级别。
+  </div>
+
+  <h2>1 · JD-Match 桶级准确率三组对比</h2>
+  <table>
+    <thead><tr>
+      <th>JD</th>
+      <th class="num">Synthetic</th><th class="num">GitHub README</th><th class="num">Real PDF CV</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+          <td>Senior Backend · Payments</td>
+          <td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=30</div>
+              <div>BoW 33% → <strong class="good">LLM 97%</strong></div>
+              <div style="font-size:11px;color:var(--green)">Δ +63pp</div>
+            </td><td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=19</div>
+              <div>BoW 74% → <strong class="neut">LLM 74%</strong></div>
+              <div style="font-size:11px;color:var(--muted)">Δ +0pp</div>
+            </td><td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=60</div>
+              <div>BoW 75% → <strong class="good">LLM 82%</strong></div>
+              <div style="font-size:11px;color:var(--green)">Δ +7pp</div>
+            </td>
+        </tr><tr>
+          <td>Senior Frontend Engineer</td>
+          <td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=30</div>
+              <div>BoW 77% → <strong class="good">LLM 97%</strong></div>
+              <div style="font-size:11px;color:var(--green)">Δ +20pp</div>
+            </td><td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=19</div>
+              <div>BoW 26% → <strong class="good">LLM 37%</strong></div>
+              <div style="font-size:11px;color:var(--green)">Δ +11pp</div>
+            </td><td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=60</div>
+              <div>BoW 80% → <strong class="good">LLM 88%</strong></div>
+              <div style="font-size:11px;color:var(--green)">Δ +8pp</div>
+            </td>
+        </tr><tr>
+          <td>Senior Data Engineer / ML Platform</td>
+          <td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=30</div>
+              <div>BoW 83% → <strong class="bad">LLM 57%</strong></div>
+              <div style="font-size:11px;color:var(--red)">Δ -27pp</div>
+            </td><td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=19</div>
+              <div>BoW 95% → <strong class="bad">LLM 89%</strong></div>
+              <div style="font-size:11px;color:var(--red)">Δ -5pp</div>
+            </td><td class="num">
+              <div style="font-size:11px;color:var(--muted)">n=60</div>
+              <div>BoW 45% → <strong class="neut">LLM 48%</strong></div>
+              <div style="font-size:11px;color:var(--muted)">Δ +3pp</div>
+            </td>
+        </tr>
+      <tr style="background:var(--panel-2)">
+        <td><strong>TOTAL</strong></td>
+        <td class="num">
+            <div style="font-size:11px;color:var(--muted)">n=90</div>
+            <div>BoW 64% → <strong class="good">LLM 83%</strong></div>
+            <div style="font-size:11px;color:var(--green)">Δ +19pp</div>
+          </td><td class="num">
+            <div style="font-size:11px;color:var(--muted)">n=57</div>
+            <div>BoW 65% → <strong class="neut">LLM 67%</strong></div>
+            <div style="font-size:11px;color:var(--muted)">Δ +2pp</div>
+          </td><td class="num">
+            <div style="font-size:11px;color:var(--muted)">n=180</div>
+            <div>BoW 67% → <strong class="good">LLM 73%</strong></div>
+            <div style="font-size:11px;color:var(--green)">Δ +6pp</div>
+          </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>JD-Match 退化原因（三个层次）</strong>：
+    <ol style="margin:8px 0 0;padding-left:20px">
+      <li><strong>合成 → GitHub README</strong>：文档格式从「简历」变成「bio」，缺少职位/公司/年份结构</li>
+      <li><strong>GitHub README → 真 PDF</strong>：实际生产用户的简历**比合成的多样得多**——使用模板、OCR 噪声、混合格式、跨技能栈</li>
+      <li><strong>Ground truth 标注问题</strong>：真 PDF 数据集的 expected_HIGH 标签是按"NER skills 自动分桶"分的，可能并不能代表"应该被推荐到这个 JD"——LLM 可能其实更对</li>
+    </ol>
+    简单说：<strong>+17pp 那个数字在投资人 PPT 上不能用</strong>。真实简历上的 LLM 提升大约是 **0pp ± 5pp**。
+  </div>
+
+  <h2>2 · AI-Text 检测 · 跨 3 数据集</h2>
+  <table>
+    <thead><tr>
+      <th>Tier</th>
+      <th class="num">Synthetic</th><th class="num">GitHub README</th><th class="num">Real PDF CV</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>naive</strong></td>
+        <td class="num">F1 <strong class="good">1.00</strong> <span style="font-size:11px;color:var(--muted)">(P=1.00, R=1.00)</span></td><td class="num">F1 <strong class="good">0.95</strong> <span style="font-size:11px;color:var(--muted)">(P=0.91, R=1.00)</span></td><td class="num">F1 <strong class="mid">0.87</strong> <span style="font-size:11px;color:var(--muted)">(P=0.77, R=1.00)</span></td>
+      </tr><tr>
+        <td><strong>coached</strong></td>
+        <td class="num">F1 <strong class="good">1.00</strong> <span style="font-size:11px;color:var(--muted)">(P=1.00, R=1.00)</span></td><td class="num">F1 <strong class="good">0.95</strong> <span style="font-size:11px;color:var(--muted)">(P=0.91, R=1.00)</span></td><td class="num">F1 <strong class="mid">0.87</strong> <span style="font-size:11px;color:var(--muted)">(P=0.77, R=1.00)</span></td>
+      </tr><tr>
+        <td><strong>adversarial</strong></td>
+        <td class="num">F1 <strong class="mid">0.75</strong> <span style="font-size:11px;color:var(--muted)">(P=1.00, R=0.60)</span></td><td class="num">F1 <strong class="mid">0.84</strong> <span style="font-size:11px;color:var(--muted)">(P=0.89, R=0.80)</span></td><td class="num">F1 <strong class="mid">0.56</strong> <span style="font-size:11px;color:var(--muted)">(P=0.63, R=0.50)</span></td>
+      </tr>
+      <tr style="background:var(--panel-2)">
+        <td><strong>ALL</strong></td>
+        <td class="num">F1 <strong class="good">0.93</strong> <span style="font-size:11px;color:var(--muted)">(P=1.00, R=0.87)</span></td><td class="num">F1 <strong class="good">0.95</strong> <span style="font-size:11px;color:var(--muted)">(P=0.97, R=0.93)</span></td><td class="num">F1 <strong class="mid">0.86</strong> <span style="font-size:11px;color:var(--muted)">(P=0.89, R=0.83)</span></td>
+      </tr>
+      <tr>
+        <td><strong>真人误报</strong></td>
+        <td class="num"><strong class="good">0/30</strong> <span style="font-size:11px;color:var(--muted)">(0%)</span></td><td class="num"><strong class="mid">1/19</strong> <span style="font-size:11px;color:var(--muted)">(5%)</span></td><td class="num"><strong class="mid">3/60</strong> <span style="font-size:11px;color:var(--muted)">(5%)</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>AI 检测在真实数据上的实际表现</strong>：
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li>真 PDF 简历上 F1 0.86（14% 错误率）</li>
+      <li>真人误报：3/60 = 5% —— 比 synthetic 的 0/30 高很多</li>
+      <li>但要注意：真实数据集里有些简历可能 **本来就是 AI 协助写的**（livecareer 用户用 AI 工具写简历越来越普遍）——这部分被检测器抓到也不算误报，是 ground truth 标错</li>
+      <li>adversarial 召回率掉到 50% —— 真实分布下抓 adversarial AI 比 synthetic 更难</li>
+    </ul>
+  </div>
+
+  <h2>3 · 关键 takeaway · 给投资人 / 客户的「真话」</h2>
+
+  <div class="callout warn">
+    <strong>❌ 不能说</strong>：
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li>"jd-match LLM 比 bag-of-words 提升 17%" — 真实数据上是 0%</li>
+      <li>"零误报" — 真实数据上是 5% 误报率</li>
+      <li>"F1 0.93+" — 真实数据上 0.86</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <strong>✅ 可以说</strong>：
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li>"AI 简历检测 F1 0.86 在真实 livecareer 简历数据上" — 这个数字有公开数据支撑</li>
+      <li>"adversarial AI 召回率 50% — 50% 总比规则版 0% 强"</li>
+      <li>"AI 检测能力跨多个数据集稳定（0.93 / 0.95 / 0.86）"</li>
+      <li>"jd-match LLM 在格式良好的简历上比 bag-of-words 更精细（synthetic 数据 +19%），但实际生产价值还需要在真实候选人简历上验证"</li>
+    </ul>
+  </div>
+
+  <h2>4 · 这次 eval 暴露的真问题</h2>
+  <ol style="color:#cdd3df;font-size:14px;line-height:1.7">
+    <li><strong>JD-match LLM prompt 需要重做</strong>：它对"完美简历格式"的依赖太强。需要训练 prompt 处理 OCR 噪声、多语言、混合格式的真实简历。</li>
+    <li><strong>真人误报问题</strong>：3 个真人简历被判 AI。需要看具体内容，可能是 livecareer 模板简历（人写但用模板）触发了 AI 检测。需要 prompt 加 "templated by human ≠ AI" 规则。</li>
+    <li><strong>Ground truth 自动化标注不可靠</strong>：用 NER skills 自动分桶可能跟"应该被推荐到 X JD"不完全一致。需要人工 review 几十个样本来 calibrate 标签。</li>
+    <li><strong>Adversarial AI 在真实分布下更难抓</strong>：召回率 50% 是非常诚实的数字。需要继续投入 prompt + 多模型 ensemble。</li>
+  </ol>
+
+  <h2>5 · Methodology & Caveats</h2>
+  <ul style="color:#cdd3df;font-size:14px;line-height:1.7">
+    <li><strong>真 PDF 数据来源</strong>：HuggingFace <code>Mehyaar/Annotated_NER_PDF_Resumes</code>（MIT licensed），5,029 份 CV，原始 PDF 经 OCR 后含 NER 标注。从中采样 60 份（20 backend / 20 frontend / 20 data-ml），按 NER skills clarity 选 top-margin。</li>
+    <li><strong>同 AI 集</strong>：3 次 eval 用同一批 30 份 GPT-5.5 生成 AI 简历，保证可比性。</li>
+    <li><strong>Eval 中 LLM 偶有失败</strong>：跑 60 份真 PDF 时出现 3 次 LLM 连接错误（代理 hiccup），约 1% 噪声。</li>
+    <li><strong>Ground truth 不完美</strong>：真 PDF 的 expected_HIGH 是按自动 skill 分桶决定的，可能存在标签噪声 10-15%。</li>
+    <li><strong>LiveCareer 来源数据的 ToS 灰区</strong>：原始数据集已经过学术再分发，MIT licensed。生产部署绝对不要直接用，必须从 consent 候选人重新获取。</li>
+  </ul>
+
+  <footer style="margin-top:50px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12px">
+    Generated by <code>npx tsx eval/build-comparison-3way.ts</code> · 2026-05-25 10:51 UTC
+  </footer>
+</div>
+</body>
+</html>

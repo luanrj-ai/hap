@@ -1,0 +1,34 @@
+# Cloudflare Worker config for HAP's free LLM proxy.
+#
+# Before first deploy:
+#   npm run kv:create   # outputs an id, paste it below
+#   wrangler secret put OPENAI_API_KEY
+#   wrangler secret put ANTHROPIC_API_KEY   # optional
+#   wrangler secret put PROXY_ADMIN_TOKEN   # for /admin/* endpoints
+#   wrangler secret put OPENAI_BASE_URL     # optional, defaults to api.openai.com
+#   wrangler secret put ANTHROPIC_BASE_URL  # optional, defaults to api.anthropic.com
+#
+# Then: npm run deploy
+
+name = "hap-proxy"
+main = "src/index.ts"
+compatibility_date = "2025-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Per-day / per-minute quotas. Override per environment if needed.
+[vars]
+DAILY_LIMIT_PER_CLIENT = "50"
+DAILY_LIMIT_PER_IP = "200"
+MINUTE_LIMIT_PER_CLIENT = "10"
+DEFAULT_OPENAI_MODEL = "gpt-4o-mini"
+DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5"
+
+# KV for rate-limit counters. Replace `id` after running `npm run kv:create`.
+[[kv_namespaces]]
+binding = "QUOTA_KV"
+id = "REPLACE_ME_AFTER_KV_CREATE"
+
+# Custom domain — wire up after deploy.
+# [routes]
+# pattern = "api.hap.dev/*"
+# zone_name = "hap.dev"

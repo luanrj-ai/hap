@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResumeTruth · Weekly Digest · 2026-05-26</title>
+<style>
+  :root{--bg:#0b0d12;--panel:#12151c;--panel-2:#171b24;--line:#242a36;--text:#e8ecf3;--muted:#9aa3b2;--accent:#7c5cff;--cyan:#22d3ee;--green:#3ddc97;--yellow:#ffd166;--red:#ff5d73}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;font-size:15px}
+  .wrap{max-width:1100px;margin:0 auto;padding:32px 24px 80px}
+  code{background:#0a0c11;border:1px solid var(--line);padding:1px 6px;border-radius:4px;font-size:13px;font-family:"SF Mono",Menlo,Consolas,monospace}
+  header.hero{background:radial-gradient(900px 320px at 0% -20%,rgba(124,92,255,.22),transparent 60%),radial-gradient(900px 320px at 100% 0%,rgba(34,211,238,.15),transparent 60%),linear-gradient(180deg,#0e1118,#0b0d12);border:1px solid var(--line);border-radius:18px;padding:32px 30px;margin-bottom:24px}
+  .eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700}
+  h1{font-size:28px;margin:8px 0;line-height:1.2;letter-spacing:-.4px}
+  .lede{color:var(--muted);max-width:780px;font-size:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .pill{background:#1f2533;color:var(--muted);font-size:11px;padding:5px 9px;border-radius:999px;border:1px solid var(--line)}
+  h2{font-size:20px;margin:38px 0 12px;letter-spacing:-.3px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:760px){.grid-4{grid-template-columns:1fr}}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .stat .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .stat .val{font-size:32px;font-weight:700;margin-top:6px;letter-spacing:-.5px}
+  .stat .delta{font-size:12px;color:var(--muted);margin-top:4px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+  .row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .row .name{font-weight:600;font-size:15px}
+  .row .meta-line{color:var(--muted);font-size:12px;margin-top:2px}
+  .scores{display:flex;gap:10px;font-size:12px;color:var(--muted);text-align:right;flex-shrink:0;flex-wrap:wrap}
+  .scores b{display:block;font-size:18px;font-weight:700;letter-spacing:-.3px}
+  .scores .good{color:var(--green)}.scores .mid{color:var(--yellow)}.scores .bad{color:var(--red)}
+  .why{font-size:13px;color:#cdd3df;margin-top:8px}
+  .why span{display:inline-block;background:rgba(34,211,238,.1);color:var(--cyan);border:1px solid rgba(34,211,238,.2);border-radius:6px;padding:2px 8px;margin-right:6px;margin-top:4px;font-size:11px}
+  .ai-card{border-color:rgba(255,93,115,.3)}
+  .ai-card .why span{background:rgba(255,93,115,.1);color:var(--red);border-color:rgba(255,93,115,.2)}
+  .gem-card{border-color:rgba(61,220,151,.3)}
+  .gem-card .why span{background:rgba(61,220,151,.1);color:var(--green);border-color:rgba(61,220,151,.2)}
+  .empty{color:var(--muted);font-size:14px;text-align:center;padding:24px}
+  footer{margin-top:50px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:12px}
+  .scope-bar{display:flex;gap:14px;color:var(--muted);font-size:12px;margin:8px 0 24px;flex-wrap:wrap}
+  .scope-bar span strong{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">ResumeTruth · 周度 HR 摘要</div>
+    <h1>本周 82 份候选人评分回顾</h1>
+    <p class="lede">
+      自动从 ResumeTruth Score 表过去 7 天的数据聚合。识别值得优先面试的 top picks、被埋没的 hidden gems、需要复核的 risk picks。
+    </p>
+    <div class="meta">
+      <span class="pill">2026-05-26 02:37 UTC</span>
+      <span class="pill">回溯窗口：7 天</span>
+      <span class="pill">数据行：82</span>
+      <span class="pill">AI 标记 33 (40%)</span>
+    </div>
+  </header>
+
+  <div class="grid-4">
+    <div class="stat"><div class="label">本周评分总数</div><div class="val">82</div><div class="delta">来自 8 个不同 JD</div></div>
+    <div class="stat"><div class="label">AI 简历命中</div><div class="val" style="color:var(--red)">33</div><div class="delta">占比 40%</div></div>
+    <div class="stat"><div class="label">LLM 增强</div><div class="val" style="color:var(--cyan)">65</div><div class="delta">79% 启用率</div></div>
+    <div class="stat"><div class="label">外部验证</div><div class="val" style="color:var(--green)">3</div><div class="delta">实打 GitHub / 网站</div></div>
+  </div>
+
+  <h2>🏆 Top Picks · 推荐优先面试 (8)</h2>
+  <div class="card">
+              <div class="row">
+                <div>
+                  <div class="name">Alex Chen <span style="background:rgba(61,220,151,.15);color:var(--green);border:1px solid rgba(61,220,151,.3);border-radius:6px;padding:2px 8px;font-size:11px">interviewed</span></div>
+                  <div class="meta-line">Senior Backend Engineer with payments or fintech experience · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="good">100</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">100</b></div>
+                  <div><div style="font-size:10px">可验证</div><b class="mid">40</b></div>
+                </div>
+              </div>
+              <div class="why"><span>JD 强匹配 100</span><span>真人写作 100</span></div>
+            </div>
+<div class="card">
+              <div class="row">
+                <div>
+                  <div class="name">Alex Chen <span class="outcome-buttons" data-score-id="cmpku1f52000clmiv802jkvhm" style="font-size:11px;color:var(--muted)">outcome?</span></div>
+                  <div class="meta-line">Senior Backend Engineer focused on payment infrastructure: i · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="good">94</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">89</b></div>
+                  <div><div style="font-size:10px">可验证</div><b class="mid">30</b></div>
+                </div>
+              </div>
+              <div class="why"><span>JD 强匹配 94</span><span>真人写作 100</span></div>
+            </div>
+<div class="card">
+              <div class="row">
+                <div>
+                  <div class="name">Alex Chen <span class="outcome-buttons" data-score-id="cmpku0nag0006lmivw5hvhqry" style="font-size:11px;color:var(--muted)">outcome?</span></div>
+                  <div class="meta-line">Senior Backend Engineer focused on payment infrastructure: i · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="good">94</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">89</b></div>
+                  <div><div style="font-size:10px">可验证</div><b class="mid">40</b></div>
+                </div>
+              </div>
+              <div class="why"><span>JD 强匹配 94</span><span>真人写作 100</span></div>
+            </div>
+<div class="card">
+              <div class="row">
+                <div>
+                  <div class="name">Alex Chen <span class="outcome-buttons" data-score-id="cmpksb0yr001010z4ji0oy9ql" style="font-size:11px;color:var(--muted)">outcome?</span></div>
+                  <div class="meta-line">Senior Backend Engineer with payments or fintech experience, · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="good">94</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">100</b></div>
+                  <div><div style="font-size:10px">可验证</div><b class="mid">40</b></div>
+                </div>
+              </div>
+              <div class="why"><span>JD 强匹配 94</span><span>真人写作 100</span></div>
+            </div>
+<div class="card">
+              <div class="row">
+                <div>
+                  <div class="name">Alex Chen <span class="outcome-buttons" data-score-id="cmpksa1gc000p10z4q7yiok04" style="font-size:11px;color:var(--muted)">outcome?</span></div>
+                  <div class="meta-line">Senior Backend Engineer with payments or fintech experience, · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="good">94</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">100</b></div>
+                  <div><div style="font-size:10px">可验证</div><b class="mid">40</b></div>
+                </div>
+              </div>
+              <div class="why"><span>JD 强匹配 94</span><span>真人写作 100</span></div>
+            </div>
+<div class="card">
+              <div class="row">
+                <div>
+                  <div class="name">adversarial-payments-backend-03 <span class="outcome-buttons" data-score-id="cmpkx0uh4007sqzk4ycsymcab" style="font-size:11px;color:var(--muted)">outcome?</span></div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="good">93</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="mid">55</b></div>
+                  <div><div style="font-size:10px">可验证</div><b class="good">95</b></div>
+                </div>
+              </div>
+              <div class="why"><span>JD 强匹配 94</span><span>技术深度 90</span></div>
+            </div>
+<div class="card">
+              <div class="row">
+                <div>
+                  <div class="name">real-pay-01-stripe-senior <span class="outcome-buttons" data-score-id="cmpkwxzo50000qzk4ae1wuqbs" style="font-size:11px;color:var(--muted)">outcome?</span></div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="good">91</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">93</b></div>
+                  <div><div style="font-size:10px">可验证</div><b class="mid">70</b></div>
+                </div>
+              </div>
+              <div class="why"><span>JD 强匹配 92</span><span>技术深度 90</span><span>真人写作 96</span></div>
+            </div>
+<div class="card">
+              <div class="row">
+                <div>
+                  <div class="name">real-pay-02-paypal-staff <span class="outcome-buttons" data-score-id="cmpkwy7aq000sqzk4k0wn7poz" style="font-size:11px;color:var(--muted)">outcome?</span></div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="good">88</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">89</b></div>
+                  <div><div style="font-size:10px">可验证</div><b class="mid">70</b></div>
+                </div>
+              </div>
+              <div class="why"><span>JD 强匹配 96</span><span>技术深度 75</span><span>真人写作 98</span></div>
+            </div>
+
+  <h2>💎 Hidden Gems · 被埋没的真人才 (2)</h2>
+  <p style="color:var(--muted);font-size:13px;margin-top:0">
+    标准：interview 分 40-74（不会自动入 top picks）但 positive-github 或 positive-rare-depth ≥ 70。这是产品的差异化卖点——发现规则系统会过滤掉但实际值得看的人。
+  </p>
+  <div class="card gem-card">
+              <div class="row">
+                <div>
+                  <div class="name">adversarial-data-ml-04</div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="mid">74</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">81</b></div>
+                </div>
+              </div>
+              <div class="why"><span>深度信号 90</span><span>但 JD 匹配仅 64</span></div>
+              <div style="margin-top:6px;font-size:12px;color:#cdd3df">4 类深度标记 / 8 处具体证据：命名算法 / 协议（raft、etcd、operational transform）；开源项目 stars（65,535 stars）；量化性能数字（p95 41 ms）；多处金额规模（$38k）。</div>
+            </div>
+<div class="card gem-card">
+              <div class="row">
+                <div>
+                  <div class="name">Alex Borderline 3</div>
+                  <div class="meta-line">Senior Backend Engineer payments. Go preferred. 5+ years. · 2026-05-26</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">推荐</div><b class="mid">63</b></div>
+                  <div><div style="font-size:10px">真实</div><b class="good">86</b></div>
+                </div>
+              </div>
+              <div class="why"><span>深度信号 70</span><span>但 JD 匹配仅 58</span></div>
+              <div style="margin-top:6px;font-size:12px;color:#cdd3df">技术深度高。明确提到协同编辑基础设施和 sync engine，领域具体，不是泛泛后端描述。；点名 operational transform，这是协同编辑中的具体算法/技术路线，属于较强深度信号。；给出“850k concurrent users”的系统规模指标，但没有说明延迟、吞吐、故障率或具体改进结果。。</div>
+            </div>
+
+  <h2>⚠ Risk Picks · 需要复核的边缘 case (5)</h2>
+  <p style="color:var(--muted);font-size:13px;margin-top:0">
+    标准：ai-text 分 40-65（既不是明显真人也不是明显 AI）。可能是 coached AI，也可能是非英语母语真人——建议人工最后审一眼。
+  </p>
+  <div class="card ai-card">
+              <div class="row">
+                <div>
+                  <div class="name">coached-payments-backend-03</div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">ai-text</div><b class="bad">40</b></div>
+                  <div><div style="font-size:10px">推荐</div><b class="mid">54</b></div>
+                </div>
+              </div>
+              <div style="margin-top:6px;font-size:12px;color:#cdd3df">判定为 AI 生成（中置信）。大量使用“results-driven、leveraging、scalable、operational excellence”等泛化企业/AI式表述；除“30%”和“millions of users”外，几乎没有可验证的具体指标、项目细节或技术栈版本；经历时间写成“Recent/Prior/Earlier Experience”，教育为“Accredited Uni</div>
+            </div>
+<div class="card ai-card">
+              <div class="row">
+                <div>
+                  <div class="name">coached-payments-backend-02</div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">ai-text</div><b class="bad">40</b></div>
+                  <div><div style="font-size:10px">推荐</div><b class="mid">59</b></div>
+                </div>
+              </div>
+              <div style="margin-top:6px;font-size:12px;color:#cdd3df">判定为 AI 生成（高置信）。大量使用“results-driven、leveraging、scalable、operational excellence”等泛化术语，内容抽象；除“30%”和“millions of users”外几乎没有可验证细节，缺少具体项目、系统规模或技术成果；公司名为 Stripe/Square 但职位、日期、团队、产品线和教育机构都很模糊，如“Accredited Un</div>
+            </div>
+<div class="card ai-card">
+              <div class="row">
+                <div>
+                  <div class="name">coached-frontend-04</div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">ai-text</div><b class="bad">40</b></div>
+                  <div><div style="font-size:10px">推荐</div><b class="mid">34</b></div>
+                </div>
+              </div>
+              <div style="margin-top:6px;font-size:12px;color:#cdd3df">判定为 AI 生成（中置信）。公司与团队名称高度泛化，如“Consumer Technology Company”“High-Growth Product Organization”“Accredited University”；大量使用结果导向、可扩展、协作、设计系统等抽象表述，缺少具体项目、产品名或技术细节；虽有“提升30%”“数百万用户”等指标，但没有说明基线、方法或业务场景，可信度较弱。</div>
+            </div>
+<div class="card ai-card">
+              <div class="row">
+                <div>
+                  <div class="name">coached-frontend-03</div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">ai-text</div><b class="bad">40</b></div>
+                  <div><div style="font-size:10px">推荐</div><b class="mid">37</b></div>
+                </div>
+              </div>
+              <div style="margin-top:6px;font-size:12px;color:#cdd3df">判定为 AI 生成（高置信）。大量使用“results-driven”“leveraging”“high-impact”“scalable”等泛化表述，具体项目细节很少；虽有 Stripe/Notion 和“30%”指标，但没有说明具体产品、功能、技术方案或基准，指标显得孤立；多数 bullet 长度和结构相近，停留在协作、可维护性、用户体验等抽象层面。</div>
+            </div>
+<div class="card ai-card">
+              <div class="row">
+                <div>
+                  <div class="name">coached-data-ml-03</div>
+                  <div class="meta-line">Payment Infrastructure · 2026-05-25</div>
+                </div>
+                <div class="scores">
+                  <div><div style="font-size:10px">ai-text</div><b class="bad">40</b></div>
+                  <div><div style="font-size:10px">推荐</div><b class="mid">46</b></div>
+                </div>
+              </div>
+              <div style="margin-top:6px;font-size:12px;color:#cdd3df">判定为 AI 生成（中置信）。整体充满“results-driven、leveraged、scalable、strategic goals”等泛化表述，项目细节很少；除“30%”和“millions of users”外几乎没有可核验指标，也缺少日期、团队规模、系统规模等具体信息；虽然出现 Stripe、Notion 等真实公司名，但也有“Technology Company”“Accredite</div>
+            </div>
+
+  <h2>🏷  Top Skills（本周候选人池）</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px"><span style="background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:#cdd3df">Go <span style="color:var(--cyan);font-weight:600">3</span></span><span style="background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:#cdd3df">TypeScript <span style="color:var(--cyan);font-weight:600">3</span></span><span style="background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;color:#cdd3df">Rust <span style="color:var(--cyan);font-weight:600">3</span></span></div>
+
+  <h2>📊 按岗位分布</h2>
+  <table style="width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px">
+    <thead><tr><th style="background:var(--panel-2);color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:9px 12px;text-align:left">JD</th><th style="background:var(--panel-2);color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:9px 12px;text-align:right">数量</th></tr></thead>
+    <tbody>
+      <tr><td style="padding:9px 12px;border-top:1px solid var(--line)">Payment Infrastructure</td><td style="padding:9px 12px;border-top:1px solid var(--line);text-align:right">60</td></tr>
+<tr><td style="padding:9px 12px;border-top:1px solid var(--line)">Senior Backend Engineer with payments or fintech experience,</td><td style="padding:9px 12px;border-top:1px solid var(--line);text-align:right">8</td></tr>
+<tr><td style="padding:9px 12px;border-top:1px solid var(--line)">Senior Backend Engineer payments. Go preferred. 5+ years.</td><td style="padding:9px 12px;border-top:1px solid var(--line);text-align:right">3</td></tr>
+<tr><td style="padding:9px 12px;border-top:1px solid var(--line)">Senior Backend Engineer with payments or fintech experience</td><td style="padding:9px 12px;border-top:1px solid var(--line);text-align:right">3</td></tr>
+<tr><td style="padding:9px 12px;border-top:1px solid var(--line)">(no JD)</td><td style="padding:9px 12px;border-top:1px solid var(--line);text-align:right">3</td></tr>
+<tr><td style="padding:9px 12px;border-top:1px solid var(--line)">Senior systems engineer</td><td style="padding:9px 12px;border-top:1px solid var(--line);text-align:right">2</td></tr>
+<tr><td style="padding:9px 12px;border-top:1px solid var(--line)">Senior Backend Engineer focused on payment infrastructure: i</td><td style="padding:9px 12px;border-top:1px solid var(--line);text-align:right">2</td></tr>
+<tr><td style="padding:9px 12px;border-top:1px solid var(--line)">Engineer</td><td style="padding:9px 12px;border-top:1px solid var(--line);text-align:right">1</td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    Generated by <code>npx tsx scripts/weekly-digest.ts</code> · windowed last 7 days ·
+    schedule weekly via <code>schtasks /Create /SC WEEKLY ...</code> (Windows) or crontab (Linux/macOS).
+    <br/><br/>
+    💡 Record outcomes: hit ⬇ on any "outcome?" link below. Once you have 20+ outcomes, run
+    <code>npm run calibrate</code> to auto-adjust HIGH/MED thresholds from real hiring data.
+  </footer>
+</div>
+<script>
+  // Outcome recording: click → choose → POST
+  document.querySelectorAll('.outcome-buttons').forEach((el) => {
+    const scoreId = el.dataset.scoreId;
+    el.style.cursor = 'pointer';
+    el.style.textDecoration = 'underline dotted';
+    el.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      const choice = prompt('Outcome? Type one: hired / interviewed / declined / rejected (or empty to cancel)');
+      if (!choice) return;
+      const valid = ['hired', 'interviewed', 'declined', 'rejected'];
+      if (!valid.includes(choice)) { alert('invalid'); return; }
+      try {
+        const res = await fetch('/api/outcome', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scoreId, outcome: choice }),
+        });
+        if (res.ok) {
+          el.outerHTML = '<span style="background:rgba(61,220,151,.15);color:var(--green);border:1px solid rgba(61,220,151,.3);border-radius:6px;padding:2px 8px;font-size:11px">' + choice + '</span>';
+        } else {
+          alert('Failed: ' + (await res.text()));
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+    });
+  });
+</script>
+</body>
+</html>

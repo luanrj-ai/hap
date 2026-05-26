@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HAP · Hiring Agent Protocol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared/theme.css" />
+<style>
+  /* --- variant A: terminal-first --- */
+  body { font-feature-settings: "ss01", "cv11"; }
+
+  .vA-hero { padding: 56px 0 80px; position: relative; }
+  .vA-hero__top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.35fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .vA-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 5px 10px;
+    border-radius: 100px;
+    background: var(--bg-elev);
+  }
+  .vA-eyebrow b { color: var(--cyan); font-weight: 500; }
+  .vA-eyebrow .vA-eyebrow__sep { color: var(--dim); }
+
+  .vA-headline {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 56px;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--text-strong);
+    margin: 22px 0 24px;
+    text-wrap: balance;
+  }
+  .vA-headline .vA-strike { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 2px; }
+  .vA-headline .vA-cyan { color: var(--cyan); }
+  .vA-headline em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text-strong);
+    letter-spacing: -0.01em;
+  }
+
+  .vA-sub {
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 52ch;
+    margin: 0 0 28px;
+  }
+  .vA-sub code { color: var(--text-strong); background: var(--bg-elev); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); font-size: 12.5px; }
+
+  .vA-ctas { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 22px; }
+  .vA-meta {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .vA-meta span { display: inline-flex; align-items: center; gap: 5px; }
+  .vA-meta b { color: var(--text-strong); font-weight: 500; }
+
+  .vA-hero__tx { min-height: 540px; }
+
+  /* anchor strip — what you can do */
+  .vA-anchors {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .vA-anchor {
+    padding: 22px 24px;
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .vA-anchor:last-child { border-right: 0; }
+  .vA-anchor__kbd { font-family: var(--font-mono); font-size: 10.5px; color: var(--dim); letter-spacing: .12em; text-transform: uppercase; }
+  .vA-anchor__h { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text-strong); }
+  .vA-anchor__p { font-size: 12.5px; color: var(--muted); }
+
+  /* WHY */
+  .vA-why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .vA-why { background: var(--bg); padding: 28px 30px; display: flex; flex-direction: column; gap: 10px; }
+  .vA-why__num { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: .12em; }
+  .vA-why__h { font-family: var(--font-serif); font-size: 24px; line-height: 1.15; color: var(--text-strong); margin: 0; letter-spacing: -0.015em; }
+  .vA-why__p { color: var(--muted); font-size: 14.5px; line-height: 1.6; margin: 0; }
+  .vA-why__sig { font-family: var(--font-mono); font-size: 11.5px; color: var(--dim); margin-top: 4px; }
+  .vA-why__sig b { color: var(--text); font-weight: 500; }
+
+  /* QUICKSTART */
+  .vA-qs {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .vA-qs__bar {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-elev2);
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+  }
+  .vA-qs__bar b { color: var(--text-strong); font-weight: 500; }
+  .vA-qs__steps { padding: 18px 6px; }
+  .vA-qs__step {
+    display: grid;
+    grid-template-columns: 28px 1fr 84px;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px dashed var(--line-soft);
+    align-items: center;
+  }
+  .vA-qs__step:last-child { border-bottom: 0; }
+  .vA-qs__step-n {
+    font-family: var(--font-mono);
+    font-size: 12px; color: var(--accent);
+    border: 1px solid color-mix(in oklab, var(--accent) 50%, var(--line));
+    background: var(--accent-soft);
+    border-radius: 50%;
+    width: 24px; height: 24px;
+    display: grid; place-items: center;
+    line-height: 1;
+  }
+  .vA-qs__cmd { font-family: var(--font-mono); font-size: 13.5px; color: var(--text-strong); overflow: auto; }
+  .vA-qs__cmd .c-prompt { color: var(--accent); margin-right: 8px; }
+  .vA-qs__cmd .c-com { color: var(--dim); font-style: italic; margin-left: 14px; }
+  .vA-qs__copy {
+    font-family: var(--font-mono); font-size: 11px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    border-radius: 5px;
+    padding: 5px 8px;
+    background: var(--bg);
+    transition: color .12s, border-color .12s;
+  }
+  .vA-qs__copy:hover { color: var(--cyan); border-color: var(--cyan); }
+  .vA-qs__copy[data-copied="1"] { color: var(--green); border-color: var(--green); }
+
+  /* A2A profile section */
+  .vA-a2a { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: start; }
+  .vA-a2a__diagram {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    font-family: var(--font-mono);
+  }
+  .vA-stack { display: flex; flex-direction: column; gap: 10px; }
+  .vA-stack__layer {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: var(--bg);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .vA-stack__layer--hap { border-color: color-mix(in oklab, var(--cyan) 55%, var(--line)); background: var(--cyan-soft); }
+  .vA-stack__layer--a2a { border-color: color-mix(in oklab, var(--accent) 50%, var(--line)); background: var(--accent-soft); }
+  .vA-stack__h { font-size: 13px; color: var(--text-strong); display: flex; align-items: center; gap: 10px; }
+  .vA-stack__tag { font-size: 10.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+  .vA-stack__p { font-size: 12px; color: var(--muted); }
+  .vA-stack__arrow { color: var(--dim); text-align: center; font-size: 14px; }
+
+  /* spec excerpt */
+  .vA-spec { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .vA-tabs {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .vA-tabs__bar { display: flex; border-bottom: 1px solid var(--line); background: var(--bg-elev2); }
+  .vA-tabs__tab {
+    padding: 11px 16px;
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--muted);
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    background: transparent;
+  }
+  .vA-tabs__tab[data-active="1"] { color: var(--cyan); background: var(--bg-elev); }
+  .vA-tabs__pane { display: none; padding: 18px 18px; }
+  .vA-tabs__pane[data-active="1"] { display: block; }
+  .vA-tabs__pane pre { margin: 0; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7; white-space: pre; overflow: auto; max-height: 460px; }
+
+  /* comparison strip */
+  .vA-cmp {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .vA-cmp__row { display: grid; grid-template-columns: 220px 1fr 1fr 1fr; }
+  .vA-cmp__row > * { padding: 16px 20px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); font-size: 13.5px; }
+  .vA-cmp__row > *:last-child { border-right: 0; }
+  .vA-cmp__row:last-child > * { border-bottom: 0; }
+  .vA-cmp__row--head > * { background: var(--bg-elev); font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .vA-cmp__row--head > *:first-child { color: var(--text-strong); }
+  .vA-cmp__cat { font-family: var(--font-mono); color: var(--muted); font-size: 12.5px; }
+  .vA-cmp__y { color: var(--green); }
+  .vA-cmp__n { color: var(--red); }
+  .vA-cmp__m { color: var(--yellow); }
+  .vA-cmp__sym { font-family: var(--font-mono); margin-right: 6px; }
+
+  /* roadmap */
+  .vA-rm { display: flex; flex-direction: column; }
+  .vA-rm__row {
+    display: grid;
+    grid-template-columns: 130px 110px 1fr 100px;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .vA-rm__row:last-child { border-bottom: 0; }
+  .vA-rm__ver { font-family: var(--font-mono); font-size: 13px; color: var(--text-strong); }
+  .vA-rm__date { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .vA-rm__what { color: var(--text); font-size: 14.5px; }
+  .vA-rm__what b { color: var(--text-strong); font-weight: 500; }
+  .vA-rm__what .vA-rm__sub { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+
+  /* FAQ */
+  .vA-faq { display: flex; flex-direction: column; }
+  .vA-faq__item { border-bottom: 1px solid var(--line); }
+  .vA-faq__item:first-child { border-top: 1px solid var(--line); }
+  .vA-faq__q { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; padding: 20px 4px; font-size: 18px; color: var(--text-strong); cursor: pointer; font-family: var(--font-serif); font-weight: 400; line-height: 1.3; user-select: none; }
+  .vA-faq__q::after { content: "+"; font-family: var(--font-mono); color: var(--muted); font-size: 18px; transition: transform .15s; }
+  .vA-faq__item[open] .vA-faq__q::after { transform: rotate(45deg); color: var(--cyan); }
+  .vA-faq__a { padding: 0 4px 22px; color: var(--muted); font-size: 14.5px; line-height: 1.65; max-width: 70ch; }
+  .vA-faq__a code { font-family: var(--font-mono); color: var(--text); background: var(--bg-elev); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--line); font-size: 12.5px; }
+
+  /* small CTA */
+  .vA-cta-final {
+    text-align: center; padding: 72px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .vA-cta-final h2 {
+    font-family: var(--font-serif);
+    font-size: 36px; line-height: 1.1;
+    margin: 0 0 14px;
+    color: var(--text-strong);
+    letter-spacing: -0.02em;
+  }
+  .vA-cta-final em { font-style: italic; color: var(--cyan); }
+  .vA-cta-final p { color: var(--muted); margin: 0 0 28px; }
+  .vA-cta-final .vA-ctas { justify-content: center; }
+
+  @media (max-width: 980px) {
+    .vA-hero__top { grid-template-columns: 1fr; gap: 36px; }
+    .vA-headline { font-size: 42px; }
+    .vA-anchors { grid-template-columns: 1fr 1fr; }
+    .vA-anchor:nth-child(2) { border-right: 0; }
+    .vA-anchor:nth-child(1), .vA-anchor:nth-child(2) { border-bottom: 1px solid var(--line); }
+    .vA-a2a, .vA-spec { grid-template-columns: 1fr; gap: 28px; }
+    .vA-why-grid { grid-template-columns: 1fr; }
+    .vA-cmp__row { grid-template-columns: 1fr; }
+    .vA-cmp__row > * { border-right: 0; }
+    .vA-rm__row { grid-template-columns: 1fr; gap: 4px; padding: 14px 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="hap-nav">
+  <div class="hap-wrap hap-nav__inner">
+    <a class="hap-wordmark" href="#">
+      <span class="hap-wordmark__h">hap</span>
+      <span class="hap-wordmark__v">v0.1 · draft</span>
+    </a>
+    <div class="hap-nav__links">
+      <a href="#spec">spec</a>
+      <a href="#quickstart">quickstart</a>
+      <a href="#roadmap">roadmap</a>
+      <a href="#faq">faq</a>
+    </div>
+    <div class="hap-nav__spacer"></div>
+    <div class="hap-nav__meta">
+      <span class="hap-pill hap-pill--cyan">profile of <a href="https://a2a-protocol.org" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">A2A</a></span>
+      <span class="hap-pill">MIT</span>
+      <button class="hap-btn hap-btn--ghost" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+        <span data-theme-icon>◐</span>
+      </button>
+      <a class="hap-btn hap-btn--cyan" href="https://github.com" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.81.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 014 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        github · ★ <span id="star-count">2.1k</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="vA-hero">
+  <div class="hap-wrap hap-wrap--wide">
+    <div class="vA-hero__top">
+
+      <div>
+        <span class="vA-eyebrow">
+          <b>$</b>
+          <span>HAP · Hiring Agent Protocol</span>
+          <span class="vA-eyebrow__sep">·</span>
+          <span>v0.1 · RFC draft · 2026</span>
+        </span>
+
+        <h1 class="vA-headline">
+          The hiring funnel runs on <em>protocol</em>,<br />
+          not <span class="vA-strike">resumes</span>.
+        </h1>
+
+        <p class="vA-sub">
+          An open <a href="https://a2a-protocol.org" target="_blank" rel="noopener">A2A</a> profile for AI-mediated hiring. Two agents — one
+          on the candidate's side, one on the recruiter's — interview each other
+          with <em style="font-family:var(--font-serif);font-style:italic;color:var(--text-strong);">cited, dereferenceable evidence</em>.
+          Federated. Self-hosted. No central server. MIT.
+        </p>
+
+        <div class="vA-ctas">
+          <a class="hap-btn hap-btn--primary" href="https://github.com" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+            Star on GitHub
+          </a>
+          <button class="hap-btn hap-btn--cyan" data-copy="npm install -g @hap/cli && hap demo">
+            <span class="c-prompt" style="color:var(--accent)">$</span>&nbsp;npm&nbsp;run&nbsp;demo
+            <span style="color:var(--dim);margin-left:6px;font-size:11px;">⌘C</span>
+          </button>
+          <a class="hap-btn" href="#spec">
+            <span style="color:var(--cyan)">→</span>&nbsp;read the spec
+          </a>
+        </div>
+
+        <div class="vA-meta">
+          <span><span class="hap-pill hap-pill--green hap-pill--dot"></span> spec stable for v0.1</span>
+          <span>📦 <b>4 reference impls</b> · TS</span>
+          <span>↪ runs over <b>A2A</b>, not against it</span>
+          <span>🔐 <b>BYO LLM</b> · OpenAI · Anthropic · local</span>
+        </div>
+      </div>
+
+      <div class="vA-hero__tx" id="hero-transcript"></div>
+
+    </div>
+
+    <!-- anchor strip -->
+    <div class="vA-anchors">
+      <a class="vA-anchor" href="#why">
+        <span class="vA-anchor__kbd">§1 · WHY</span>
+        <span class="vA-anchor__h">A protocol, not a SaaS</span>
+        <span class="vA-anchor__p">What HAP fixes that ATS plugins can't.</span>
+      </a>
+      <a class="vA-anchor" href="#quickstart">
+        <span class="vA-anchor__kbd">§2 · RUN</span>
+        <span class="vA-anchor__h">60-second local demo</span>
+        <span class="vA-anchor__p">Three commands. No keys. No login.</span>
+      </a>
+      <a class="vA-anchor" href="#spec">
+        <span class="vA-anchor__kbd">§3 · SPEC</span>
+        <span class="vA-anchor__h">Message schemas + AgentCard</span>
+        <span class="vA-anchor__p">Wire format, evidence types, disclosure rules.</span>
+      </a>
+      <a class="vA-anchor" href="#faq">
+        <span class="vA-anchor__kbd">§4 · WHY-NOT</span>
+        <span class="vA-anchor__h">Trust, spam, identity, MCP</span>
+        <span class="vA-anchor__p">Honest answers to the skeptical reader.</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<section id="why" class="hap-section">
+  <div class="hap-wrap">
+    <p class="hap-eyebrow">§1 · Why HAP exists</p>
+    <h2 class="hap-h2">Both sides of the hiring conversation are about to be agents.<br />They need a wire format.</h2>
+    <p class="hap-lead">
+      Resumes are static; AI generators have made the medium unverifiable.
+      ATS giants (Greenhouse / Lever / Workday) own the pipe but won't compose.
+      HAP fixes both — without asking either side to switch vendors.
+    </p>
+
+    <div class="vA-why-grid">
+      <article class="vA-why">
+        <span class="vA-why__num">01 · FEDERATED</span>
+        <h3 class="vA-why__h">Like SMTP. Like ActivityPub.<br />Not like a blockchain.</h3>
+        <p class="vA-why__p">
+          No central server, no on-chain claims. Each side runs its own agent
+          on its own infra. Discovery is optional and lives in a tracker layer,
+          BitTorrent-style. Spam is a federation-policy problem — blocklists,
+          rate limits, reputation — solved on top, not in the core.
+        </p>
+        <span class="vA-why__sig">// peer-to-peer · no broker · vendor-neutral</span>
+      </article>
+
+      <article class="vA-why">
+        <span class="vA-why__num">02 · EVIDENCE OVER CLAIM</span>
+        <h3 class="vA-why__h">URLs to public traces,<br />not unverifiable assertions.</h3>
+        <p class="vA-why__p">
+          A candidate-agent answers with a GitHub commit SHA, a conference talk
+          URL, a paper DOI. The HR-agent dereferences and verifies — author byline
+          matches, maintainer list contains the candidate, talk venue is real.
+          Self-claim without trace is allowed but flagged as low-confidence.
+        </p>
+        <span class="vA-why__sig">// every claim is a hyperlink · trust is per-URL, not per-name</span>
+      </article>
+
+      <article class="vA-why">
+        <span class="vA-why__num">03 · PROGRESSIVE DISCLOSURE</span>
+        <h3 class="vA-why__h">No full resume. No full JD.<br />Just the relevant pieces.</h3>
+        <p class="vA-why__p">
+          The candidate-agent decides what to disclose, in response to each
+          question. The HR-agent asks for what the JD requires. PII stays on
+          the candidate's box until both sides have committed to the session.
+          Refusing to answer is a first-class outcome, not a red flag.
+        </p>
+        <span class="vA-why__sig">// piece-wise · candidate consent on every byte</span>
+      </article>
+
+      <article class="vA-why">
+        <span class="vA-why__num">04 · A2A PROFILE</span>
+        <h3 class="vA-why__h">We didn't start a new<br />protocol war.</h3>
+        <p class="vA-why__p">
+          HAP messages are valid <a href="https://a2a-protocol.org" target="_blank" rel="noopener">Google A2A</a>
+          messages. We standardize <i style="font-family:var(--font-serif);">content</i>,
+          not transport. Any A2A-compliant runtime — OpenAI's, Anthropic's,
+          Google's, yours — speaks HAP the moment it declares the skill.
+        </p>
+        <span class="vA-why__sig">// transport: A2A · semantics: HAP · LLM: BYO</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUICKSTART ============ -->
+<section id="quickstart" class="hap-section">
+  <div class="hap-wrap">
+    <p class="hap-eyebrow">§2 · 60-second quick start</p>
+    <h2 class="hap-h2">Two agents. One interview. <em style="font-family:var(--font-serif);font-style:italic;color:var(--cyan);">Local.</em></h2>
+    <p class="hap-lead">
+      Three commands. Spins up a candidate-agent and an HR-agent on
+      <code style="font-family:var(--font-mono);color:var(--text);">localhost</code>,
+      runs one HAP session, prints the transcript. No API keys required —
+      falls back to a template HR-agent if no LLM is configured.
+    </p>
+
+    <div class="vA-qs">
+      <div class="vA-qs__bar">
+        <div class="hap-tx__bar-dots">
+          <div class="hap-tx__bar-dot hap-tx__bar-dot--r"></div>
+          <div class="hap-tx__bar-dot hap-tx__bar-dot--y"></div>
+          <div class="hap-tx__bar-dot hap-tx__bar-dot--g"></div>
+        </div>
+        <b>~/code</b> <span style="color:var(--dim);">·</span> bash <span style="color:var(--dim);margin-left:auto;font-size:11px;">node ≥ 20</span>
+      </div>
+      <div class="vA-qs__steps">
+        <div class="vA-qs__step">
+          <span class="vA-qs__step-n">1</span>
+          <div class="vA-qs__cmd"><span class="c-prompt">$</span>git clone https://github.com/luanrj-ai/hap &amp;&amp; cd hap</div>
+          <button class="vA-qs__copy" data-copy="git clone https://github.com/luanrj-ai/hap && cd hap">copy</button>
+        </div>
+        <div class="vA-qs__step">
+          <span class="vA-qs__step-n">2</span>
+          <div class="vA-qs__cmd"><span class="c-prompt">$</span>npm install &amp;&amp; npm run build <span class="c-com"># ~ 20s</span></div>
+          <button class="vA-qs__copy" data-copy="npm install && npm run build">copy</button>
+        </div>
+        <div class="vA-qs__step">
+          <span class="vA-qs__step-n">3</span>
+          <div class="vA-qs__cmd"><span class="c-prompt">$</span>npm run demo <span class="c-com"># runs candidate ⇄ hr interview, prints transcript</span></div>
+          <button class="vA-qs__copy" data-copy="npm run demo">copy</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 22px; font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); display: flex; gap: 24px; flex-wrap: wrap;">
+      <span>↪ want OpenAI / Anthropic enhancement? add <code style="color:var(--cyan);">OPENAI_API_KEY</code> to <code style="color:var(--cyan);">.env</code></span>
+      <span>↪ no key? a hosted free-tier proxy is online at <a href="#" style="color:var(--cyan)">hap.dev/proxy</a></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A2A PROFILE ============ -->
+<section id="a2a" class="hap-section">
+  <div class="hap-wrap">
+    <p class="hap-eyebrow">§3 · Where HAP sits</p>
+    <div class="vA-a2a">
+      <div>
+        <h2 class="hap-h2">It's an A2A profile.<br />Not a competing protocol.</h2>
+        <p class="hap-lead" style="max-width: 50ch;">
+          HAP is to <a href="https://a2a-protocol.org" target="_blank" rel="noopener">Google's A2A</a>
+          what HTTP is to TCP. A2A handles the envelope: agent cards, message
+          routing, auth. HAP standardizes the <em style="font-family:var(--font-serif);">payload</em>:
+          what a hiring conversation actually contains.
+        </p>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px;font-size:14.5px;line-height:1.55;color:var(--text);">
+          <li style="display:flex;gap:14px;"><span style="color:var(--cyan);font-family:var(--font-mono);font-size:13px;flex-shrink:0;">⊢</span><span>Agents publish an A2A <code style="font-family:var(--font-mono);font-size:12.5px;color:var(--text-strong);background:var(--bg-elev);padding:1px 5px;border-radius:4px;border:1px solid var(--line);">AgentCard</code> at <code style="font-family:var(--font-mono);font-size:12.5px;color:var(--text-strong);background:var(--bg-elev);padding:1px 5px;border-radius:4px;border:1px solid var(--line);">/.well-known/agent.json</code> declaring the <code style="font-family:var(--font-mono);font-size:12.5px;color:var(--text-strong);background:var(--bg-elev);padding:1px 5px;border-radius:4px;border:1px solid var(--line);">hap.v0</code> skill.</span></li>
+          <li style="display:flex;gap:14px;"><span style="color:var(--cyan);font-family:var(--font-mono);font-size:13px;flex-shrink:0;">⊢</span><span>Wire format is JSON-over-HTTPS. Auth is HTTPS + optional bearer. Nothing exotic.</span></li>
+          <li style="display:flex;gap:14px;"><span style="color:var(--cyan);font-family:var(--font-mono);font-size:13px;flex-shrink:0;">⊢</span><span>Seven HAP message kinds. All carry <code style="font-family:var(--font-mono);font-size:12.5px;color:var(--text-strong);background:var(--bg-elev);padding:1px 5px;border-radius:4px;border:1px solid var(--line);">metadata.hap.version</code> for forward-compat.</span></li>
+          <li style="display:flex;gap:14px;"><span style="color:var(--cyan);font-family:var(--font-mono);font-size:13px;flex-shrink:0;">⊢</span><span>Evidence registry is an open extension point — community-extended, not vendor-owned.</span></li>
+        </ul>
+      </div>
+
+      <div class="vA-a2a__diagram">
+        <div class="vA-stack">
+          <div class="vA-stack__layer">
+            <div class="vA-stack__h">your agent runtime <span class="vA-stack__tag">any LLM · BYO</span></div>
+            <div class="vA-stack__p">OpenAI · Anthropic · local · or no LLM at all (template fallback)</div>
+          </div>
+          <div class="vA-stack__arrow">↑</div>
+          <div class="vA-stack__layer vA-stack__layer--hap">
+            <div class="vA-stack__h" style="color:var(--cyan);">hap.v0 · skill</div>
+            <div class="vA-stack__p" style="color:var(--text);">7 message kinds · evidence registry · disclosure model</div>
+          </div>
+          <div class="vA-stack__arrow">↑</div>
+          <div class="vA-stack__layer vA-stack__layer--a2a">
+            <div class="vA-stack__h" style="color:var(--accent);">A2A · agent2agent</div>
+            <div class="vA-stack__p" style="color:var(--text);">envelope · agent card · routing · auth · open standard</div>
+          </div>
+          <div class="vA-stack__arrow">↑</div>
+          <div class="vA-stack__layer">
+            <div class="vA-stack__h">HTTPS · TLS</div>
+            <div class="vA-stack__p">no central broker · no on-chain claims</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPEC EXCERPT ============ -->
+<section id="spec" class="hap-section">
+  <div class="hap-wrap">
+    <p class="hap-eyebrow">§3 · Spec excerpt · v0.1</p>
+    <h2 class="hap-h2">Two artifacts. <em style="font-family:var(--font-serif);font-style:italic;color:var(--cyan);">Read them in five minutes.</em></h2>
+    <p class="hap-lead">
+      Every HAP agent publishes an <code style="font-family:var(--font-mono);color:var(--text);">AgentCard</code>
+      declaring the skill. Every interview is a sequence of HAP messages over A2A.
+      Below are the canonical shapes — the full RFC has prose, registries, and
+      versioning rules.
+    </p>
+
+    <div class="vA-tabs" id="spec-tabs">
+      <div class="vA-tabs__bar" role="tablist">
+        <button class="vA-tabs__tab" data-tab="card" data-active="1">.well-known/agent.json</button>
+        <button class="vA-tabs__tab" data-tab="ask">hap.ask</button>
+        <button class="vA-tabs__tab" data-tab="answer">hap.answer</button>
+        <button class="vA-tabs__tab" data-tab="close">hap.session.close</button>
+      </div>
+
+      <div class="vA-tabs__pane" data-pane="card" data-active="1">
+<pre><span class="c-com">// GET https://alex-chen.dev/.well-known/agent.json</span>
+{
+  <span class="c-key">"name"</span>: <span class="c-str">"alex-chen / candidate-agent"</span>,
+  <span class="c-key">"protocolVersion"</span>: <span class="c-str">"a2a/0.3"</span>,
+  <span class="c-key">"skills"</span>: [<span class="c-str">"hap.v0"</span>],
+  <span class="c-key">"endpoints"</span>: {
+    <span class="c-key">"message"</span>: <span class="c-str">"https://alex-chen.dev/a2a/message"</span>
+  },
+  <span class="c-key">"hap"</span>: {
+    <span class="c-key">"role"</span>: <span class="c-str">"candidate"</span>,
+    <span class="c-key">"supported_versions"</span>: [<span class="c-str">"v0.1"</span>],
+    <span class="c-key">"supported_evidence_types"</span>: [
+      <span class="c-str">"github_user"</span>, <span class="c-str">"github_repo"</span>, <span class="c-str">"github_commit"</span>,
+      <span class="c-str">"talk"</span>, <span class="c-str">"blog_post"</span>, <span class="c-str">"package"</span>,
+      <span class="c-str">"personal_site"</span>
+    ],
+    <span class="c-key">"rate_limit"</span>: { <span class="c-key">"per_day"</span>: <span class="c-num">100</span>, <span class="c-key">"per_hour"</span>: <span class="c-num">20</span> },
+    <span class="c-key">"human_contact"</span>: <span class="c-str">"alex@example.com"</span>
+  }
+}</pre>
+      </div>
+
+      <div class="vA-tabs__pane" data-pane="ask">
+<pre><span class="c-com">// HR-agent → candidate-agent</span>
+{
+  <span class="c-key">"kind"</span>: <span class="c-str">"hap.ask"</span>,
+  <span class="c-key">"session_id"</span>: <span class="c-str">"h_01HXY7K4M2P9R8VQ"</span>,
+  <span class="c-key">"question_id"</span>: <span class="c-str">"q1"</span>,
+  <span class="c-key">"ask"</span>: {
+    <span class="c-key">"type"</span>: <span class="c-str">"open"</span>,
+    <span class="c-key">"prompt"</span>: <span class="c-str">"Walk me through an idempotency system you've shipped at &gt;10k RPS. What broke first?"</span>,
+    <span class="c-key">"evidence_preference"</span>: [<span class="c-str">"github_commit"</span>, <span class="c-str">"talk"</span>]
+  },
+  <span class="c-key">"metadata"</span>: {
+    <span class="c-key">"hap"</span>: { <span class="c-key">"version"</span>: <span class="c-str">"v0.1"</span> }
+  }
+}</pre>
+      </div>
+
+      <div class="vA-tabs__pane" data-pane="answer">
+<pre><span class="c-com">// candidate-agent → HR-agent</span>
+{
+  <span class="c-key">"kind"</span>: <span class="c-str">"hap.answer"</span>,
+  <span class="c-key">"session_id"</span>: <span class="c-str">"h_01HXY7K4M2P9R8VQ"</span>,
+  <span class="c-key">"question_id"</span>: <span class="c-str">"q1"</span>,
+  <span class="c-key">"answer"</span>: {
+    <span class="c-key">"text"</span>: <span class="c-str">"Designed the key-normalization layer for our payment router. Tuned LRU eviction after a retry storm under network partition."</span>,
+    <span class="c-key">"evidence"</span>: [
+      {
+        <span class="c-key">"type"</span>: <span class="c-str">"github_commit"</span>,
+        <span class="c-key">"url"</span>: <span class="c-str">"https://github.com/alex-chen/ratelimit-go/commit/9f4ac21"</span>,
+        <span class="c-key">"note"</span>: <span class="c-str">"PR introducing the key normalization"</span>
+      },
+      {
+        <span class="c-key">"type"</span>: <span class="c-str">"talk"</span>,
+        <span class="c-key">"url"</span>: <span class="c-str">"https://youtu.be/AbCdE"</span>,
+        <span class="c-key">"venue"</span>: <span class="c-str">"GopherCon 2024"</span>,
+        <span class="c-key">"title"</span>: <span class="c-str">"Designing Idempotent Payment APIs"</span>
+      }
+    ],
+    <span class="c-key">"confidence"</span>: <span class="c-str">"high"</span>,
+    <span class="c-key">"decline_reason"</span>: <span class="c-null">null</span>
+  }
+}</pre>
+      </div>
+
+      <div class="vA-tabs__pane" data-pane="close">
+<pre><span class="c-com">// either side → counterpart</span>
+{
+  <span class="c-key">"kind"</span>: <span class="c-str">"hap.session.close"</span>,
+  <span class="c-key">"session_id"</span>: <span class="c-str">"h_01HXY7K4M2P9R8VQ"</span>,
+  <span class="c-key">"outcome"</span>: <span class="c-str">"fit"</span>,
+  <span class="c-key">"summary"</span>: <span class="c-str">"Strong evidence on idempotency at scale. OSS maintenance recent. Recommend phone screen."</span>,
+  <span class="c-key">"next_step"</span>: <span class="c-str">"schedule_human_interview"</span>
+}
+
+<span class="c-com">// outcome  ∈ { "fit", "no_fit", "unclear", "candidate_declined" }</span>
+<span class="c-com">// next_step ∈ { "human_follow_up", "schedule_human_interview", "archive" }</span></pre>
+      </div>
+    </div>
+
+    <div style="margin-top:22px;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);">
+      <a href="#" style="color:var(--cyan)">→ read the full v0.1 RFC</a>
+      <span style="color:var(--dim);margin:0 14px;">·</span>
+      <a href="#" style="color:var(--cyan)">→ evidence registry</a>
+      <span style="color:var(--dim);margin:0 14px;">·</span>
+      <a href="#" style="color:var(--cyan)">→ TypeScript schemas (Zod)</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPARISON ============ -->
+<section class="hap-section">
+  <div class="hap-wrap">
+    <p class="hap-eyebrow">§4 · How HAP differs · honestly</p>
+    <h2 class="hap-h2">A protocol, a product, and a pitch deck<br />walk into a hiring conversation.</h2>
+    <p class="hap-lead">
+      We get asked "isn't this just another <em>X</em>?" a lot. Short answer: no.
+      Long answer below. Where we lose, we say so.
+    </p>
+
+    <div class="vA-cmp">
+      <div class="vA-cmp__row vA-cmp__row--head">
+        <div></div>
+        <div>HAP</div>
+        <div>ATS plugin <span style="color:var(--dim)">(Greenhouse · Lever)</span></div>
+        <div>Web3 hiring chain <span style="color:var(--dim)">(VC)</span></div>
+      </div>
+      <div class="vA-cmp__row">
+        <div class="vA-cmp__cat">trust root</div>
+        <div><span class="vA-cmp__sym vA-cmp__y">●</span>HTTPS + per-URL evidence</div>
+        <div><span class="vA-cmp__sym vA-cmp__m">●</span>ATS vendor's database</div>
+        <div><span class="vA-cmp__sym vA-cmp__n">●</span>on-chain DID claims</div>
+      </div>
+      <div class="vA-cmp__row">
+        <div class="vA-cmp__cat">interop</div>
+        <div><span class="vA-cmp__sym vA-cmp__y">●</span>federated · any A2A runtime</div>
+        <div><span class="vA-cmp__sym vA-cmp__n">●</span>walled garden per vendor</div>
+        <div><span class="vA-cmp__sym vA-cmp__m">●</span>chain-locked, bridge-broken</div>
+      </div>
+      <div class="vA-cmp__row">
+        <div class="vA-cmp__cat">candidate consent</div>
+        <div><span class="vA-cmp__sym vA-cmp__y">●</span>progressive · piece-wise</div>
+        <div><span class="vA-cmp__sym vA-cmp__n">●</span>full resume + cover letter upfront</div>
+        <div><span class="vA-cmp__sym vA-cmp__m">●</span>credentials minted ahead of time</div>
+      </div>
+      <div class="vA-cmp__row">
+        <div class="vA-cmp__cat">verifiability</div>
+        <div><span class="vA-cmp__sym vA-cmp__y">●</span>dereference any URL · author byline · commit author</div>
+        <div><span class="vA-cmp__sym vA-cmp__m">●</span>resume text + LinkedIn cross-check</div>
+        <div><span class="vA-cmp__sym vA-cmp__m">●</span>cryptographic but issuer-trusted</div>
+      </div>
+      <div class="vA-cmp__row">
+        <div class="vA-cmp__cat">ships today</div>
+        <div><span class="vA-cmp__sym vA-cmp__y">●</span>v0.1 RFC · MIT · TypeScript impls</div>
+        <div><span class="vA-cmp__sym vA-cmp__y">●</span>yes (and they own the pipe)</div>
+        <div><span class="vA-cmp__sym vA-cmp__n">●</span>3–5 yrs out, by ecosystem estimate</div>
+      </div>
+      <div class="vA-cmp__row">
+        <div class="vA-cmp__cat">where we lose</div>
+        <div style="color:var(--muted);" class="vA-cmp__cat">spec is v0.x · adoption is zero today</div>
+        <div style="color:var(--muted);" class="vA-cmp__cat">we don't track applications. (we're not an ATS.)</div>
+        <div style="color:var(--muted);" class="vA-cmp__cat">no on-chain attestation primitive (yet)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROADMAP ============ -->
+<section id="roadmap" class="hap-section">
+  <div class="hap-wrap">
+    <p class="hap-eyebrow">§5 · Roadmap · published, dated, honest</p>
+    <h2 class="hap-h2">v0.x = breaking changes allowed. <em style="font-family:var(--font-serif);font-style:italic;color:var(--cyan);">v1.0 = stable.</em></h2>
+    <p class="hap-lead">
+      We're 0.1. Anything before v1 may change. The point of publishing now is
+      to get the schemas critiqued before they're hard to move.
+    </p>
+
+    <div class="vA-rm">
+      <div class="vA-rm__row">
+        <span class="vA-rm__ver">v0.1</span>
+        <span class="vA-rm__date">May 2026</span>
+        <div class="vA-rm__what">
+          <b>RFC draft</b> · 7 message kinds · evidence registry · TS reference impls
+          <span class="vA-rm__sub">candidate-runtime · hr-runtime · a2a-adapter · scoring</span>
+        </div>
+        <span class="hap-pill hap-pill--cyan hap-pill--dot">shipped</span>
+      </div>
+      <div class="vA-rm__row">
+        <span class="vA-rm__ver">v0.2</span>
+        <span class="vA-rm__date">Q3 2026</span>
+        <div class="vA-rm__what">
+          <b>Tracker</b> — optional discovery directory
+          <span class="vA-rm__sub">DNS-style, BitTorrent-tracker model; not required for known-URL contact</span>
+        </div>
+        <span class="hap-pill hap-pill--yellow hap-pill--dot">drafting</span>
+      </div>
+      <div class="vA-rm__row">
+        <span class="vA-rm__ver">v0.3</span>
+        <span class="vA-rm__date">Q4 2026</span>
+        <div class="vA-rm__what">
+          <b>Verifier framework</b> · pluggable per evidence-type · community contrib
+          <span class="vA-rm__sub">github-author-match, talk-venue-check, oss-maintainer-list, …</span>
+        </div>
+        <span class="hap-pill hap-pill--dot">planned</span>
+      </div>
+      <div class="vA-rm__row">
+        <span class="vA-rm__ver">v0.4</span>
+        <span class="vA-rm__date">Q1 2027</span>
+        <div class="vA-rm__what">
+          <b>Disclosure scopes</b> — formal grammar for candidate-agent consent
+          <span class="vA-rm__sub">"public-by-default", "after-accept-only", "PII never"</span>
+        </div>
+        <span class="hap-pill hap-pill--dot">planned</span>
+      </div>
+      <div class="vA-rm__row">
+        <span class="vA-rm__ver">v1.0</span>
+        <span class="vA-rm__date">≥ Q3 2027</span>
+        <div class="vA-rm__what">
+          <b>Schema freeze</b> — backward-compatible additions only
+          <span class="vA-rm__sub">predicated on ≥ 5 independent runtimes interoperating cleanly</span>
+        </div>
+        <span class="hap-pill hap-pill--dot">target</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="hap-section">
+  <div class="hap-wrap hap-wrap--narrow">
+    <p class="hap-eyebrow">§6 · FAQ · for the skeptical reader</p>
+    <h2 class="hap-h2">"Isn't this just <em style="font-family:var(--font-serif);font-style:italic;">X</em>?"</h2>
+
+    <div class="vA-faq">
+      <details class="vA-faq__item" open>
+        <summary class="vA-faq__q">Why not just MCP?</summary>
+        <div class="vA-faq__a">
+          MCP is agent ↔ tool. HAP is agent ↔ agent. Two AI agents talking to each
+          other about a job is a peer conversation, not a tool call. A2A is the
+          right layer; HAP is the right profile on that layer.
+        </div>
+      </details>
+      <details class="vA-faq__item">
+        <summary class="vA-faq__q">Why not blockchain / Verifiable Credentials?</summary>
+        <div class="vA-faq__a">
+          We considered W3C VC and rejected it as premature. Adoption is 3–5 years
+          out and depends on an issuer ecosystem that doesn't exist for hiring.
+          We don't want to be a dead-on-arrival spec waiting for an ecosystem.
+          When VC matures, HAP evidence can wrap a VC like any other URL — the
+          registry is open.
+        </div>
+      </details>
+      <details class="vA-faq__item">
+        <summary class="vA-faq__q">What stops spam?</summary>
+        <div class="vA-faq__a">
+          The same things that work for email and ActivityPub: TLS-served agent
+          cards, rate limits in the AgentCard, blocklists, reputation services.
+          Spam is a federation-policy problem solved on top of the protocol —
+          not inside the core. The reference HR-runtime ships with per-IP
+          throttling and an allowlist hook.
+        </div>
+      </details>
+      <details class="vA-faq__item">
+        <summary class="vA-faq__q">Will candidates actually trust their agent with real data?</summary>
+        <div class="vA-faq__a">
+          That's the candidate's choice. Reference impls are self-host by default.
+          The hosted convenience tier on <code>hap.dev</code> uses a "do not log"
+          policy and publishes its system prompt. Your data never leaves the
+          candidate-agent unless the candidate-agent <i style="font-family:var(--font-serif);">chooses</i> to disclose it.
+        </div>
+      </details>
+      <details class="vA-faq__item">
+        <summary class="vA-faq__q">How does this not become Yet Another LinkedIn?</summary>
+        <div class="vA-faq__a">
+          LinkedIn is a database with auth-walled identity and a marketplace
+          attached. HAP is a wire format with no database, no marketplace, and
+          no identity broker. We can't centralize even if we wanted to — the
+          spec doesn't have a place to put a central server.
+        </div>
+      </details>
+      <details class="vA-faq__item">
+        <summary class="vA-faq__q">What about identity verification — is the candidate "real"?</summary>
+        <div class="vA-faq__a">
+          Out of scope. KYC providers do that. HAP doesn't validate that a
+          candidate-agent's claimed human exists — it gives the HR-agent enough
+          public evidence (commits, talks, papers) to <em style="font-family:var(--font-serif);">decide</em> how much
+          identity proof to ask for, before involving a human.
+        </div>
+      </details>
+      <details class="vA-faq__item">
+        <summary class="vA-faq__q">Is this an ATS replacement?</summary>
+        <div class="vA-faq__a">
+          No. HAP is the <em style="font-family:var(--font-serif);">interview channel</em>, not the application
+          tracking system. An ATS can plug in as the HR-agent runner; the ATS
+          keeps its database and HAP carries the conversation.
+        </div>
+      </details>
+      <details class="vA-faq__item">
+        <summary class="vA-faq__q">Who built this, and why solo?</summary>
+        <div class="vA-faq__a">
+          One person. v0.1 is a draft published to get punched at. PRs and
+          issues on the GitHub repo are the entire roadmap process — there's
+          no closed company, no investor list, no team page. If it turns
+          out the schemas are wrong, we want to know <i style="font-family:var(--font-serif);">before</i> v1.0
+          locks them in.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="vA-cta-final">
+  <div class="hap-wrap hap-wrap--narrow">
+    <h2>Three ways in. <em>Pick one.</em></h2>
+    <p>It's MIT. It's v0.1. The fastest way to find out if it's any good is to run it.</p>
+    <div class="vA-ctas">
+      <a class="hap-btn hap-btn--primary" href="https://github.com" target="_blank" rel="noopener">★ Star on GitHub</a>
+      <button class="hap-btn hap-btn--cyan" data-copy="git clone https://github.com/luanrj-ai/hap && npm run demo"><span style="color:var(--accent);">$</span>&nbsp;clone &amp; npm run demo</button>
+      <a class="hap-btn" href="#spec">→ read the spec</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="hap-footer">
+  <div class="hap-wrap">
+    <div class="hap-footer__row" style="justify-content: space-between;">
+      <div class="hap-footer__col" style="max-width: 280px;">
+        <div class="hap-wordmark" style="font-size: 14px;">
+          <span class="hap-wordmark__h">hap</span>
+          <span class="hap-wordmark__v">v0.1 · draft</span>
+        </div>
+        <p style="margin: 6px 0 0; color: var(--muted); line-height: 1.6;">
+          Hiring Agent Protocol — an open A2A profile for AI-mediated hiring.
+          MIT-licensed. Federated. No central server.
+        </p>
+      </div>
+      <div class="hap-footer__col">
+        <h4>Spec</h4>
+        <a href="#">v0.1 RFC</a>
+        <a href="#">Message kinds</a>
+        <a href="#">Evidence registry</a>
+        <a href="#">AgentCard</a>
+      </div>
+      <div class="hap-footer__col">
+        <h4>Code</h4>
+        <a href="#">GitHub repo</a>
+        <a href="#">candidate-runtime</a>
+        <a href="#">hr-runtime</a>
+        <a href="#">@hap/cli</a>
+      </div>
+      <div class="hap-footer__col">
+        <h4>Community</h4>
+        <a href="#">RFC discussion</a>
+        <a href="#">Issues &amp; PRs</a>
+        <a href="#">Hosted proxy</a>
+        <a href="#">/r/hap</a>
+      </div>
+    </div>
+    <div class="hap-footer__bottom">
+      <span>MIT · v0.1 draft · built on <a href="https://a2a-protocol.org" target="_blank" rel="noopener" style="color:var(--muted);">A2A</a></span>
+      <span>this page renders no analytics</span>
+    </div>
+  </div>
+</footer>
+
+<script src="shared/transcript.js"></script>
+<script>
+  // mount the hero transcript
+  HAPTranscript.mount(document.getElementById("hero-transcript"), { autoplay: true });
+
+  // theme toggle
+  const themeBtn = document.getElementById("theme-toggle");
+  const themeIcon = themeBtn.querySelector("[data-theme-icon]");
+  function setTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    themeIcon.textContent = t === "light" ? "☀" : "◐";
+    try { localStorage.setItem("hap-theme", t); } catch (e) {}
+  }
+  themeBtn.addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme") || "dark";
+    setTheme(cur === "dark" ? "light" : "dark");
+  });
+  try {
+    const saved = localStorage.getItem("hap-theme");
+    if (saved) setTheme(saved);
+  } catch (e) {}
+
+  // copy buttons
+  document.querySelectorAll("[data-copy]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const text = btn.getAttribute("data-copy");
+      try {
+        await navigator.clipboard.writeText(text);
+        const prev = btn.textContent;
+        btn.setAttribute("data-copied", "1");
+        if (btn.classList.contains("vA-qs__copy")) {
+          btn.textContent = "copied ✓";
+          setTimeout(() => { btn.textContent = "copy"; btn.removeAttribute("data-copied"); }, 1400);
+        }
+      } catch (e) {
+        console.warn("clipboard unavailable");
+      }
+    });
+  });
+
+  // spec tabs
+  const tabs = document.getElementById("spec-tabs");
+  if (tabs) {
+    tabs.querySelectorAll(".vA-tabs__tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const id = tab.getAttribute("data-tab");
+        tabs.querySelectorAll(".vA-tabs__tab").forEach((t) => t.removeAttribute("data-active"));
+        tabs.querySelectorAll(".vA-tabs__pane").forEach((p) => p.removeAttribute("data-active"));
+        tab.setAttribute("data-active", "1");
+        tabs.querySelector(`.vA-tabs__pane[data-pane="${id}"]`).setAttribute("data-active", "1");
+      });
+    });
+  }
+</script>
+
+</body>
+</html>

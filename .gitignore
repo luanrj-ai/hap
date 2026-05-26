@@ -1,0 +1,27 @@
+node_modules
+dist
+.next
+.turbo
+.env
+.env.local
+.DS_Store
+*.log
+coverage
+.vscode
+.idea
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+prisma/migrations/dev/
+
+# Cloudflare Worker local state (miniflare)
+.wrangler/
+.dev.vars
+
+# Eval datasets — large, often license-restricted, regenerable
+apps/web/eval/data/
+
+# Build / cache
+.tsbuildinfo
+*.tsbuildinfo

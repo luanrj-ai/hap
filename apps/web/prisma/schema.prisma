@@ -1,0 +1,83 @@
+// Switch provider to "postgresql" for prod — same schema works.
+// Local dev uses SQLite for zero-setup.
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Score {
+  id              String    @id @default(cuid())
+  candidateName   String?
+  candidateHash   String    // sha256 of resumeText (so we never store the raw resume)
+  authenticity    Int
+  verifiability   Int
+  interview       Int
+  summary         String
+  signals         Signal[]
+  feedback        Feedback[]
+  enhancementJson String?   // serialized LLMEnhancement if generated
+  verificationJson String?  // serialized VerificationDetail if verify=true
+  skillsJson      String?   // serialized ExtractedSkills (LLM-extracted structure)
+  panelJson       String?   // serialized ExpertPanelVerdict (borderline cases)
+  linkedinUrl     String?
+  jobDescription  String?
+  scoredAt        DateTime  @default(now())
+
+  // Closed-loop learning: HR-recorded outcome — drives threshold calibration
+  hiringOutcome    String?    // null | "interviewed" | "hired" | "declined" | "rejected"
+  outcomeNotes     String?
+  outcomeRecordedAt DateTime?
+
+  @@index([scoredAt])
+  @@index([candidateHash])
+  @@index([hiringOutcome])
+}
+
+model Signal {
+  id          String   @id @default(cuid())
+  scoreId     String
+  score       Score    @relation(fields: [scoreId], references: [id], onDelete: Cascade)
+  signalId    String
+  label       String
+  dimension   String   // "authenticity" | "verifiability" | "interview"
+  weight      Int
+  value       Int
+  impact      String
+  explanation String
+
+  @@index([scoreId])
+}
+
+model Feedback {
+  id          String   @id @default(cuid())
+  scoreId     String
+  score       Score    @relation(fields: [scoreId], references: [id], onDelete: Cascade)
+  signalId    String?  // null = feedback on overall score
+  thumbs      String   // "up" | "down"
+  reason      String?
+  createdAt   DateTime @default(now())
+
+  @@index([scoreId])
+  @@index([createdAt])
+  @@index([signalId])
+}
+
+model TuningRun {
+  id             String   @id @default(cuid())
+  runAt          DateTime @default(now())
+  windowDays     Int
+  minSamples     Int
+  feedbackCount  Int
+  weightsBefore  String   // JSON: Record<signalId, number>
+  weightsAfter   String   // JSON: Record<signalId, number>
+  signalStats    String   // JSON: Record<signalId, {ups, downs}>
+  changedCount   Int      // how many signals had weight changed
+  notes          String?
+  dryRun         Boolean  @default(false)
+
+  @@index([runAt])
+}

@@ -1,0 +1,1160 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HAP · Hiring Agent Protocol · v0.1 RFC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="shared/theme.css" />
+<style>
+  /* --- variant B: spec / RFC-first --- */
+  body { font-feature-settings: "ss01", "cv11"; }
+
+  .vB-hero {
+    padding: 64px 0 56px;
+  }
+  .vB-hero__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .vB-rfc-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elev);
+    padding: 16px 18px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 16px;
+    row-gap: 5px;
+    margin-bottom: 36px;
+    max-width: 580px;
+  }
+  .vB-rfc-card dt { color: var(--dim); letter-spacing: .08em; text-transform: uppercase; font-size: 10.5px; padding-top: 1px; }
+  .vB-rfc-card dd { margin: 0; color: var(--text); }
+  .vB-rfc-card dd a { color: var(--cyan); }
+  .vB-rfc-card .vB-rfc-status { color: var(--yellow); }
+
+  .vB-headline {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 72px;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--text-strong);
+    margin: 0 0 28px;
+    text-wrap: balance;
+  }
+  .vB-headline em { font-style: italic; color: var(--cyan); }
+  .vB-headline .vB-headline__small {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0;
+    margin-bottom: 12px;
+    font-style: normal;
+  }
+
+  .vB-sub {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--text);
+    max-width: 38ch;
+    margin: 0 0 32px;
+  }
+  .vB-sub em { font-style: italic; color: var(--text-strong); }
+
+  .vB-ctas { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; }
+
+  .vB-meta {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    display: flex; gap: 18px; flex-wrap: wrap;
+  }
+  .vB-meta b { color: var(--text-strong); font-weight: 500; }
+
+  /* figure 1 panel */
+  .vB-fig {
+    position: relative;
+  }
+  .vB-fig__caption {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 12px;
+    line-height: 1.55;
+    padding-left: 12px;
+    border-left: 2px solid var(--line);
+  }
+  .vB-fig__caption b { color: var(--text-strong); font-weight: 500; }
+  .vB-fig__caption .vB-fig__label {
+    display: inline-block;
+    color: var(--cyan);
+    margin-right: 8px;
+    font-weight: 500;
+  }
+
+  /* TOC strip */
+  .vB-toc {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-top: 48px;
+  }
+  .vB-toc a {
+    padding: 16px 18px;
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 4px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-decoration: none;
+    transition: background .12s, color .12s;
+  }
+  .vB-toc a:last-child { border-right: 0; }
+  .vB-toc a:hover { color: var(--cyan); background: var(--bg-elev); }
+  .vB-toc a b {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    color: var(--text-strong);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+  }
+  .vB-toc a span { color: var(--dim); }
+
+  /* sections — document layout */
+  .vB-doc-section { padding: 96px 0; border-top: 1px solid var(--line); }
+  .vB-doc-section--bare { border-top: 0; }
+  .vB-secmark {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin: 0 0 18px;
+    letter-spacing: 0;
+  }
+  .vB-h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 1.08;
+    letter-spacing: -0.022em;
+    color: var(--text-strong);
+    margin: 0 0 20px;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .vB-h2 em { font-style: italic; color: var(--cyan); }
+  .vB-h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--text-strong);
+    margin: 0 0 8px;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+  }
+  .vB-prose {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.65;
+    color: var(--text);
+    max-width: 60ch;
+    margin: 0;
+  }
+  .vB-prose p { margin: 0 0 18px; }
+  .vB-prose p:last-child { margin-bottom: 0; }
+  .vB-prose strong { color: var(--text-strong); font-weight: 500; }
+  .vB-prose em { font-style: italic; }
+  .vB-prose a { color: var(--cyan); }
+  .vB-prose code { font-family: var(--font-mono); font-size: 15px; color: var(--text-strong); background: var(--bg-elev); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); }
+
+  /* two-column document */
+  .vB-2col {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 80px;
+    align-items: start;
+  }
+
+  /* pillars as numbered RFC entries */
+  .vB-pillars { display: flex; flex-direction: column; gap: 0; counter-reset: pillar; }
+  .vB-pillar {
+    counter-increment: pillar;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 28px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .vB-pillar:first-child { border-top: 1px solid var(--line); }
+  .vB-pillar__n {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0;
+  }
+  .vB-pillar__n::before { content: "§ "; color: var(--dim); }
+  .vB-pillar__body { display: flex; flex-direction: column; gap: 8px; }
+  .vB-pillar__h {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    line-height: 1.2;
+    color: var(--text-strong);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+  .vB-pillar__h em { font-style: italic; color: var(--cyan); }
+  .vB-pillar__p {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--text);
+    max-width: 56ch;
+    margin: 0;
+  }
+  .vB-pillar__p code { font-family: var(--font-mono); font-size: 13.5px; color: var(--text-strong); }
+  .vB-pillar__tag {
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+    margin-top: 2px;
+  }
+  .vB-pillar__tag span { color: var(--dim); margin: 0 6px; }
+
+  /* spec excerpt — RFC numbered */
+  .vB-spec-list {
+    display: flex; flex-direction: column; gap: 36px;
+  }
+  .vB-spec-entry {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .vB-spec-entry__num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding-top: 4px;
+  }
+  .vB-spec-entry__num b { color: var(--cyan); display: block; font-weight: 500; }
+  .vB-spec-entry__body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .vB-spec-entry__body .vB-h3 { margin: 0; }
+  .vB-spec-entry__body .vB-prose { font-size: 17px; max-width: 64ch; }
+  .vB-spec-entry__body pre {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.65;
+    overflow: auto;
+    color: var(--text);
+  }
+  .c-key { color: var(--cyan); }
+  .c-str { color: var(--green); }
+  .c-num { color: var(--yellow); }
+  .c-bool { color: var(--pink); }
+  .c-null { color: var(--muted); }
+  .c-com { color: var(--dim); font-style: italic; }
+
+  /* quickstart inline */
+  .vB-qs {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .vB-qs__head {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-elev2);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .vB-qs__head b { color: var(--text-strong); font-weight: 500; }
+  .vB-qs__head .vB-qs__head-right { margin-left: auto; color: var(--dim); }
+  .vB-qs__body { padding: 8px 0; }
+  .vB-qs__row {
+    display: grid;
+    grid-template-columns: 32px 1fr 70px;
+    gap: 14px;
+    align-items: center;
+    padding: 12px 22px;
+    border-bottom: 1px dashed var(--line-soft);
+  }
+  .vB-qs__row:last-child { border-bottom: 0; }
+  .vB-qs__row-n {
+    font-family: var(--font-mono); font-size: 11.5px;
+    color: var(--accent);
+    border: 1px solid color-mix(in oklab, var(--accent) 40%, var(--line));
+    background: var(--accent-soft);
+    border-radius: 4px;
+    padding: 1px 0;
+    text-align: center;
+  }
+  .vB-qs__cmd { font-family: var(--font-mono); font-size: 13px; color: var(--text-strong); overflow: auto; }
+  .vB-qs__cmd .c-prompt { color: var(--accent); margin-right: 8px; }
+  .vB-qs__cmd .c-com { color: var(--dim); font-style: italic; margin-left: 14px; font-size: 12px; }
+  .vB-qs__copy {
+    font-family: var(--font-mono); font-size: 10.5px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 4px 8px;
+    background: var(--bg);
+  }
+  .vB-qs__copy:hover { color: var(--cyan); border-color: var(--cyan); }
+
+  /* comparison strip */
+  .vB-cmp {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .vB-cmp__cell {
+    background: var(--bg);
+    padding: 26px 26px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .vB-cmp__cell h4 {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+    font-weight: 500;
+  }
+  .vB-cmp__cell h3 {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    line-height: 1.2;
+    margin: 0 0 10px;
+    color: var(--text-strong);
+    font-weight: 400;
+    letter-spacing: -0.012em;
+  }
+  .vB-cmp__cell p {
+    font-family: var(--font-serif);
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--text);
+    margin: 0;
+  }
+  .vB-cmp__cell .vB-cmp__verdict {
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line-soft);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .vB-cmp__cell .vB-cmp__verdict b { color: var(--cyan); }
+  .vB-cmp__cell--hap { background: var(--bg-elev); }
+  .vB-cmp__cell--hap h3 { color: var(--cyan); font-style: italic; }
+
+  /* roadmap */
+  .vB-rm-list {
+    border-top: 1px solid var(--line);
+  }
+  .vB-rm-list > div {
+    display: grid;
+    grid-template-columns: 100px 130px 1fr 120px;
+    gap: 28px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .vB-rm__ver { font-family: var(--font-serif); font-size: 22px; color: var(--text-strong); font-style: italic; }
+  .vB-rm__date { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+  .vB-rm__body { font-family: var(--font-serif); font-size: 17px; color: var(--text); line-height: 1.5; }
+  .vB-rm__body b { color: var(--text-strong); font-weight: 500; }
+  .vB-rm__body .vB-rm__detail { display: block; font-family: var(--font-mono); font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+  /* FAQ */
+  .vB-faq { columns: 2; column-gap: 64px; }
+  .vB-faq__item { break-inside: avoid; margin-bottom: 32px; }
+  .vB-faq__q { font-family: var(--font-serif); font-size: 21px; line-height: 1.25; color: var(--text-strong); font-weight: 400; margin: 0 0 8px; letter-spacing: -0.012em; }
+  .vB-faq__q em { font-style: italic; color: var(--cyan); }
+  .vB-faq__a { font-family: var(--font-serif); font-size: 16px; line-height: 1.6; color: var(--text); margin: 0; max-width: 50ch; }
+  .vB-faq__a code { font-family: var(--font-mono); font-size: 13px; color: var(--text-strong); }
+  .vB-faq__a strong { color: var(--text-strong); font-weight: 500; }
+
+  /* closing CTA */
+  .vB-closing {
+    padding: 96px 0 80px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+  .vB-closing h2 {
+    font-family: var(--font-serif);
+    font-size: 56px;
+    line-height: 1.05;
+    color: var(--text-strong);
+    margin: 0 0 16px;
+    letter-spacing: -0.022em;
+    font-weight: 400;
+  }
+  .vB-closing h2 em { font-style: italic; color: var(--cyan); }
+  .vB-closing p {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    color: var(--muted);
+    margin: 0 0 32px;
+    max-width: 48ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (max-width: 1080px) {
+    .vB-hero__grid, .vB-2col { grid-template-columns: 1fr; gap: 48px; }
+    .vB-headline { font-size: 52px; }
+    .vB-h2 { font-size: 36px; }
+    .vB-faq { columns: 1; }
+    .vB-cmp { grid-template-columns: 1fr; }
+    .vB-toc { grid-template-columns: 1fr 1fr; }
+    .vB-toc a { border-right: 0; border-bottom: 1px solid var(--line); }
+    .vB-rm-list > div { grid-template-columns: 1fr; gap: 6px; }
+    .vB-spec-entry { grid-template-columns: 1fr; gap: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="hap-nav">
+  <div class="hap-wrap hap-nav__inner">
+    <a class="hap-wordmark" href="#">
+      <span class="hap-wordmark__h">hap</span>
+      <span class="hap-wordmark__v">v0.1 · draft</span>
+    </a>
+    <div class="hap-nav__links">
+      <a href="#why">Why</a>
+      <a href="#spec">Spec</a>
+      <a href="#quickstart">Quickstart</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="hap-nav__spacer"></div>
+    <div class="hap-nav__meta">
+      <span class="hap-pill hap-pill--cyan">profile of <a href="https://a2a-protocol.org" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">A2A</a></span>
+      <span class="hap-pill">MIT</span>
+      <button class="hap-btn hap-btn--ghost" id="theme-toggle" aria-label="Toggle theme">
+        <span data-theme-icon>◐</span>
+      </button>
+      <a class="hap-btn hap-btn--cyan" href="https://github.com" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.81.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 014 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        github · ★ 2.1k
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="vB-hero">
+  <div class="hap-wrap hap-wrap--wide">
+
+    <dl class="vB-rfc-card">
+      <dt>document</dt>
+      <dd>HAP · Hiring Agent Protocol</dd>
+      <dt>version</dt>
+      <dd>0.1 · <span class="vB-rfc-status">draft — comments welcome</span></dd>
+      <dt>base</dt>
+      <dd>Google <a href="https://a2a-protocol.org" target="_blank" rel="noopener">A2A · Agent2Agent</a> (transport · envelope · auth)</dd>
+      <dt>license</dt>
+      <dd>Apache-2.0 (spec) · MIT (reference implementations)</dd>
+      <dt>status</dt>
+      <dd>schemas may change · feedback before v1.0 lock</dd>
+    </dl>
+
+    <div class="vB-hero__grid">
+      <div>
+        <h1 class="vB-headline">
+          <span class="vB-headline__small">HAP · v0.1 RFC</span>
+          The hiring funnel runs on <em>protocol</em>,<br />not resumes.
+        </h1>
+
+        <p class="vB-sub">
+          An open A2A profile for AI-mediated hiring. Two agents — one for the
+          candidate, one for the recruiter — <em>interview each other</em> with
+          cited, dereferenceable evidence.
+        </p>
+
+        <div class="vB-ctas">
+          <a class="hap-btn hap-btn--primary" href="https://github.com" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14 2 9.27l6.91-1.01z"/></svg>
+            Star on GitHub
+          </a>
+          <button class="hap-btn hap-btn--cyan" data-copy="git clone https://github.com/luanrj-ai/hap && npm run demo">
+            <span style="color:var(--accent);">$</span>&nbsp;npm&nbsp;run&nbsp;demo
+          </button>
+          <a class="hap-btn" href="#spec">→ read the spec</a>
+        </div>
+
+        <div class="vB-meta">
+          <span><span class="hap-pill hap-pill--green hap-pill--dot"></span> 4 reference impls</span>
+          <span>runs on any A2A runtime</span>
+          <span>BYO LLM · or template fallback</span>
+        </div>
+      </div>
+
+      <figure class="vB-fig" style="margin: 0;">
+        <div id="hero-transcript" style="min-height: 540px;"></div>
+        <figcaption class="vB-fig__caption">
+          <span class="vB-fig__label">FIG. 1</span>
+          A one-question HAP session, animated. <b>HR-agent</b> opens with a JD;
+          <b>candidate-agent</b> accepts, then answers with two pieces of
+          dereferenceable evidence (commit SHA + talk URL). Total wire time
+          ~1.8s. No resume, no JD payload exceeds 500 bytes per message.
+        </figcaption>
+      </figure>
+    </div>
+
+    <nav class="vB-toc" aria-label="Table of contents">
+      <a href="#why"><span>§1</span><b>Why HAP exists</b><span>Pillars</span></a>
+      <a href="#spec"><span>§2</span><b>Specification</b><span>Messages + AgentCard</span></a>
+      <a href="#quickstart"><span>§3</span><b>Reference impls</b><span>Quickstart</span></a>
+      <a href="#a2a"><span>§4</span><b>A2A profile</b><span>Interop</span></a>
+      <a href="#roadmap"><span>§5</span><b>Roadmap</b><span>v0.2 → v1.0</span></a>
+      <a href="#faq"><span>§6</span><b>FAQ</b><span>Trust · spam · MCP</span></a>
+    </nav>
+  </div>
+</section>
+
+<!-- ============ §1 WHY ============ -->
+<section id="why" class="vB-doc-section">
+  <div class="hap-wrap">
+    <div class="vB-2col">
+      <div>
+        <p class="vB-secmark">§1 · Why HAP exists</p>
+        <h2 class="vB-h2">Both sides of the hiring conversation are about to be agents.</h2>
+      </div>
+      <div class="vB-prose">
+        <p>
+          Resumes are static; AI generators have made the medium unverifiable.
+          ATS giants (Greenhouse, Lever, Workday) own the pipe but won't
+          compose. <strong>HAP fixes both</strong> — without asking either side
+          to switch vendors.
+        </p>
+        <p>
+          When both sides are AI agents — and they will be — they need a
+          standard interview protocol to talk to each other. HAP is that
+          protocol. <em>One sentence:</em> it lets a candidate-agent and an
+          HR-agent run a structured interview without either side handing over
+          a full resume or full job description upfront.
+        </p>
+      </div>
+    </div>
+
+    <div class="vB-pillars" style="margin-top: 56px;">
+      <article class="vB-pillar">
+        <span class="vB-pillar__n">1.1 · federated</span>
+        <div class="vB-pillar__body">
+          <h3 class="vB-pillar__h">Like SMTP. Like ActivityPub. <em>Not</em> like a blockchain.</h3>
+          <p class="vB-pillar__p">
+            No central server, no on-chain claims. Each side runs its own
+            agent on its own infrastructure. Discovery is optional and lives
+            in a tracker layer, BitTorrent-style. Spam is a federation-policy
+            problem — blocklists, rate limits, reputation — solved on top of
+            the protocol, not inside the core.
+          </p>
+          <span class="vB-pillar__tag">peer-to-peer<span>·</span>vendor-neutral<span>·</span>no broker</span>
+        </div>
+      </article>
+
+      <article class="vB-pillar">
+        <span class="vB-pillar__n">1.2 · evidence</span>
+        <div class="vB-pillar__body">
+          <h3 class="vB-pillar__h">URLs to public traces, <em>not</em> unverifiable assertions.</h3>
+          <p class="vB-pillar__p">
+            A candidate-agent answers with a GitHub commit SHA, a conference
+            talk URL, a paper DOI. The HR-agent dereferences and verifies —
+            author byline matches, maintainer list contains the candidate,
+            talk venue is real. Self-claim without trace is allowed but
+            flagged as low-confidence.
+          </p>
+          <span class="vB-pillar__tag">every claim is a hyperlink<span>·</span>trust is per-URL, not per-name</span>
+        </div>
+      </article>
+
+      <article class="vB-pillar">
+        <span class="vB-pillar__n">1.3 · progressive disclosure</span>
+        <div class="vB-pillar__body">
+          <h3 class="vB-pillar__h">No full resume. No full JD. <em>Just the relevant pieces.</em></h3>
+          <p class="vB-pillar__p">
+            The candidate-agent decides what to disclose, in response to each
+            question. The HR-agent asks for what the JD requires. PII stays on
+            the candidate's box until both sides have committed to the
+            session. Refusing to answer is a first-class outcome, not a red flag.
+          </p>
+          <span class="vB-pillar__tag">piece-wise<span>·</span>candidate consent on every byte</span>
+        </div>
+      </article>
+
+      <article class="vB-pillar">
+        <span class="vB-pillar__n">1.4 · A2A profile</span>
+        <div class="vB-pillar__body">
+          <h3 class="vB-pillar__h">We didn't start a <em>new</em> protocol war.</h3>
+          <p class="vB-pillar__p">
+            HAP messages are valid <a href="https://a2a-protocol.org" target="_blank" rel="noopener">Google A2A</a>
+            messages. We standardize <em>content</em>, not transport. Any
+            A2A-compliant runtime — OpenAI's, Anthropic's, Google's, yours —
+            speaks HAP the moment it declares the <code>hap.v0</code> skill.
+          </p>
+          <span class="vB-pillar__tag">transport: A2A<span>·</span>semantics: HAP<span>·</span>LLM: BYO</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §2 SPECIFICATION ============ -->
+<section id="spec" class="vB-doc-section">
+  <div class="hap-wrap">
+    <div class="vB-2col" style="margin-bottom: 56px;">
+      <div>
+        <p class="vB-secmark">§2 · Specification · v0.1</p>
+        <h2 class="vB-h2">Two artifacts. <em>Read them in five minutes.</em></h2>
+      </div>
+      <div class="vB-prose">
+        <p>
+          Every HAP agent publishes an A2A <code>AgentCard</code> at
+          <code>/.well-known/agent.json</code> declaring the <code>hap.v0</code>
+          skill. Every interview is a sequence of seven well-typed messages.
+          Below are the canonical shapes; the full RFC adds prose, registries,
+          and versioning rules.
+        </p>
+      </div>
+    </div>
+
+    <div class="vB-spec-list">
+
+      <article class="vB-spec-entry">
+        <div class="vB-spec-entry__num">
+          <b>§ 2.1</b>
+          <span>AgentCard</span>
+        </div>
+        <div class="vB-spec-entry__body">
+          <h3 class="vB-h3">/.well-known/agent.json</h3>
+          <p class="vB-prose">
+            Stock A2A AgentCard plus a <code>hap</code> namespace declaring
+            role, version, supported evidence types, and rate limits. Spam
+            mitigation lives here — peers honor the declared limits.
+          </p>
+<pre>{
+  <span class="c-key">"name"</span>: <span class="c-str">"alex-chen / candidate-agent"</span>,
+  <span class="c-key">"protocolVersion"</span>: <span class="c-str">"a2a/0.3"</span>,
+  <span class="c-key">"skills"</span>: [<span class="c-str">"hap.v0"</span>],
+  <span class="c-key">"endpoints"</span>: { <span class="c-key">"message"</span>: <span class="c-str">"https://alex-chen.dev/a2a/message"</span> },
+  <span class="c-key">"hap"</span>: {
+    <span class="c-key">"role"</span>: <span class="c-str">"candidate"</span>,
+    <span class="c-key">"supported_versions"</span>: [<span class="c-str">"v0.1"</span>],
+    <span class="c-key">"supported_evidence_types"</span>: [
+      <span class="c-str">"github_user"</span>, <span class="c-str">"github_repo"</span>, <span class="c-str">"github_commit"</span>,
+      <span class="c-str">"talk"</span>, <span class="c-str">"blog_post"</span>, <span class="c-str">"package"</span>
+    ],
+    <span class="c-key">"rate_limit"</span>: { <span class="c-key">"per_day"</span>: <span class="c-num">100</span>, <span class="c-key">"per_hour"</span>: <span class="c-num">20</span> }
+  }
+}</pre>
+        </div>
+      </article>
+
+      <article class="vB-spec-entry">
+        <div class="vB-spec-entry__num">
+          <b>§ 2.2</b>
+          <span>hap.ask</span>
+        </div>
+        <div class="vB-spec-entry__body">
+          <h3 class="vB-h3">HR-agent → candidate-agent</h3>
+          <p class="vB-prose">
+            A single structured question. <code>evidence_preference</code> tells
+            the candidate-agent what kinds of traces would be most credible —
+            but the candidate-agent chooses what to actually disclose.
+          </p>
+<pre>{
+  <span class="c-key">"kind"</span>: <span class="c-str">"hap.ask"</span>,
+  <span class="c-key">"session_id"</span>: <span class="c-str">"h_01HXY7K4M2P9R8VQ"</span>,
+  <span class="c-key">"question_id"</span>: <span class="c-str">"q1"</span>,
+  <span class="c-key">"ask"</span>: {
+    <span class="c-key">"type"</span>: <span class="c-str">"open"</span>,
+    <span class="c-key">"prompt"</span>: <span class="c-str">"Walk me through an idempotency system you've shipped at &gt;10k RPS."</span>,
+    <span class="c-key">"evidence_preference"</span>: [<span class="c-str">"github_commit"</span>, <span class="c-str">"talk"</span>]
+  }
+}</pre>
+        </div>
+      </article>
+
+      <article class="vB-spec-entry">
+        <div class="vB-spec-entry__num">
+          <b>§ 2.3</b>
+          <span>hap.answer</span>
+        </div>
+        <div class="vB-spec-entry__body">
+          <h3 class="vB-h3">candidate-agent → HR-agent</h3>
+          <p class="vB-prose">
+            Short prose answer plus an array of evidence objects. Each
+            evidence is a typed URL the HR-agent can dereference and verify.
+            <code>confidence</code> is self-declared but informs the
+            HR-agent's weighting.
+          </p>
+<pre>{
+  <span class="c-key">"kind"</span>: <span class="c-str">"hap.answer"</span>,
+  <span class="c-key">"question_id"</span>: <span class="c-str">"q1"</span>,
+  <span class="c-key">"answer"</span>: {
+    <span class="c-key">"text"</span>: <span class="c-str">"Designed the key-normalization layer for our payment router…"</span>,
+    <span class="c-key">"evidence"</span>: [
+      { <span class="c-key">"type"</span>: <span class="c-str">"github_commit"</span>, <span class="c-key">"url"</span>: <span class="c-str">"https://github.com/.../commit/9f4ac21"</span> },
+      { <span class="c-key">"type"</span>: <span class="c-str">"talk"</span>,           <span class="c-key">"url"</span>: <span class="c-str">"https://youtu.be/AbCdE"</span>, <span class="c-key">"venue"</span>: <span class="c-str">"GopherCon 2024"</span> }
+    ],
+    <span class="c-key">"confidence"</span>: <span class="c-str">"high"</span>,
+    <span class="c-key">"decline_reason"</span>: <span class="c-null">null</span>
+  }
+}</pre>
+        </div>
+      </article>
+
+      <article class="vB-spec-entry">
+        <div class="vB-spec-entry__num">
+          <b>§ 2.4</b>
+          <span>session lifecycle</span>
+        </div>
+        <div class="vB-spec-entry__body">
+          <h3 class="vB-h3">open · accept | decline · ask · answer · close</h3>
+          <p class="vB-prose">
+            Seven message kinds total. Either side may close the session at
+            any point. <code>outcome</code> is informational — HAP does not
+            rank, score, or decide; that's the consuming app's job.
+          </p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;font-family:var(--font-mono);font-size:12px;">
+            <span class="hap-pill">hap.session.open</span>
+            <span class="hap-pill">hap.session.accept</span>
+            <span class="hap-pill">hap.session.decline</span>
+            <span class="hap-pill">hap.ask</span>
+            <span class="hap-pill">hap.answer</span>
+            <span class="hap-pill">hap.session.elaborate</span>
+            <span class="hap-pill">hap.session.close</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div style="margin-top:48px;font-family:var(--font-mono);font-size:13px;color:var(--muted);text-align:center;">
+      <a href="#" style="color:var(--cyan)">→ read the full v0.1 RFC</a>
+      <span style="color:var(--dim);margin:0 14px;">·</span>
+      <a href="#" style="color:var(--cyan)">→ evidence type registry</a>
+      <span style="color:var(--dim);margin:0 14px;">·</span>
+      <a href="#" style="color:var(--cyan)">→ TypeScript schemas (Zod)</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §3 QUICKSTART ============ -->
+<section id="quickstart" class="vB-doc-section">
+  <div class="hap-wrap">
+    <div class="vB-2col" style="margin-bottom: 32px;">
+      <div>
+        <p class="vB-secmark">§3 · Reference impls · 60-second quickstart</p>
+        <h2 class="vB-h2">Two agents. One interview. <em>Local.</em></h2>
+      </div>
+      <div class="vB-prose">
+        <p>
+          Three commands. Spins up a candidate-agent and an HR-agent on
+          <code>localhost</code>, runs one HAP session, prints the transcript.
+          No API keys required — falls back to a template HR-agent if no LLM
+          is configured.
+        </p>
+      </div>
+    </div>
+
+    <div class="vB-qs" style="max-width: 900px;">
+      <div class="vB-qs__head">
+        <div class="hap-tx__bar-dots">
+          <div class="hap-tx__bar-dot hap-tx__bar-dot--r"></div>
+          <div class="hap-tx__bar-dot hap-tx__bar-dot--y"></div>
+          <div class="hap-tx__bar-dot hap-tx__bar-dot--g"></div>
+        </div>
+        <b>~/code</b>
+        <span class="vB-qs__head-right">bash · node ≥ 20</span>
+      </div>
+      <div class="vB-qs__body">
+        <div class="vB-qs__row">
+          <span class="vB-qs__row-n">1</span>
+          <div class="vB-qs__cmd"><span class="c-prompt">$</span>git clone https://github.com/luanrj-ai/hap &amp;&amp; cd hap</div>
+          <button class="vB-qs__copy" data-copy="git clone https://github.com/luanrj-ai/hap && cd hap">copy</button>
+        </div>
+        <div class="vB-qs__row">
+          <span class="vB-qs__row-n">2</span>
+          <div class="vB-qs__cmd"><span class="c-prompt">$</span>npm install &amp;&amp; npm run build <span class="c-com"># ~20s</span></div>
+          <button class="vB-qs__copy" data-copy="npm install && npm run build">copy</button>
+        </div>
+        <div class="vB-qs__row">
+          <span class="vB-qs__row-n">3</span>
+          <div class="vB-qs__cmd"><span class="c-prompt">$</span>npm run demo <span class="c-com"># prints the transcript shown in Figure 1</span></div>
+          <button class="vB-qs__copy" data-copy="npm run demo">copy</button>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top:22px;font-family:var(--font-mono);font-size:12.5px;color:var(--muted);max-width:900px;">
+      ↪ optional · <code style="color:var(--cyan);">OPENAI_API_KEY</code> or <code style="color:var(--cyan);">ANTHROPIC_API_KEY</code> in <code style="color:var(--cyan);">.env</code> enables LLM-generated questions on the HR side.
+      <br/>
+      ↪ no key, no problem · template HR-agent ships with five pre-built question lines; hosted proxy at <a href="#" style="color:var(--cyan);">hap.dev/proxy</a> if you want LLM without a key.
+    </p>
+  </div>
+</section>
+
+<!-- ============ §4 A2A PROFILE ============ -->
+<section id="a2a" class="vB-doc-section">
+  <div class="hap-wrap">
+    <div class="vB-2col">
+      <div>
+        <p class="vB-secmark">§4 · Where HAP sits</p>
+        <h2 class="vB-h2">It's an <em>A2A profile.</em> Not a competing protocol.</h2>
+        <p class="vB-prose">
+          <em>HAP is to <a href="https://a2a-protocol.org" target="_blank" rel="noopener">Google's A2A</a>
+          what HTTP is to TCP.</em> A2A handles the envelope — agent cards,
+          message routing, auth. HAP standardizes the payload: what a hiring
+          conversation actually contains.
+        </p>
+        <p class="vB-prose" style="margin-top: 16px;">
+          The evidence registry is the only open extension point and is
+          community-extended, not vendor-owned.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="vB-h3" style="margin-bottom: 14px;">Stack · top-to-bottom</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;font-family:var(--font-mono);">
+          <div style="border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--bg-elev);">
+            <div style="font-size:13px;color:var(--text-strong);">your agent runtime</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px;">OpenAI · Anthropic · local · BYO LLM · or template fallback</div>
+          </div>
+          <div style="color:var(--dim);text-align:center;">↑</div>
+          <div style="border:1px solid color-mix(in oklab, var(--cyan) 55%, var(--line));border-radius:8px;padding:14px 16px;background:var(--cyan-soft);">
+            <div style="font-size:13px;color:var(--cyan);">hap.v0 · skill</div>
+            <div style="font-size:12px;color:var(--text);margin-top:3px;">7 message kinds · evidence registry · disclosure model</div>
+          </div>
+          <div style="color:var(--dim);text-align:center;">↑</div>
+          <div style="border:1px solid color-mix(in oklab, var(--accent) 50%, var(--line));border-radius:8px;padding:14px 16px;background:var(--accent-soft);">
+            <div style="font-size:13px;color:var(--accent);">A2A · agent2agent</div>
+            <div style="font-size:12px;color:var(--text);margin-top:3px;">envelope · agent card · routing · auth · open standard</div>
+          </div>
+          <div style="color:var(--dim);text-align:center;">↑</div>
+          <div style="border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:var(--bg-elev);">
+            <div style="font-size:13px;color:var(--text-strong);">HTTPS · TLS</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px;">no central broker · no on-chain claims</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ comparison ============ -->
+<section class="vB-doc-section">
+  <div class="hap-wrap">
+    <p class="vB-secmark" style="text-align:center;">§4a · How HAP differs · honestly</p>
+    <h2 class="vB-h2" style="text-align:center; margin-left:auto; margin-right:auto;">A protocol, a product, and a pitch deck.</h2>
+    <p class="vB-prose" style="text-align:center; margin: 0 auto 48px; max-width: 56ch;">
+      We get asked "isn't this just another <em>X</em>?" a lot.
+      <em>Short answer:</em> no. Long answer:
+    </p>
+
+    <div class="vB-cmp">
+      <div class="vB-cmp__cell">
+        <h4>ATS plugin · Greenhouse · Lever</h4>
+        <h3>The walled pipe.</h3>
+        <p>
+          Owns application tracking; assumes the candidate sends a resume
+          upfront. Interoperability is per-vendor; you build to their API.
+          The HR-agent is a tenant inside their UI.
+        </p>
+        <div class="vB-cmp__verdict">verdict · <b>complementary</b> — HAP doesn't track applications</div>
+      </div>
+      <div class="vB-cmp__cell vB-cmp__cell--hap">
+        <h4>HAP · this document</h4>
+        <h3>The wire format.</h3>
+        <p>
+          A protocol, not a product. Federated. Evidence-cited. Progressive
+          disclosure. Ships today as MIT-licensed reference impls — and the
+          ATS above can run an HR-agent on top of HAP without changing
+          databases.
+        </p>
+        <div class="vB-cmp__verdict">verdict · <b>v0.1 draft, ships today</b></div>
+      </div>
+      <div class="vB-cmp__cell">
+        <h4>Web3 hiring chain · VC-DID</h4>
+        <h3>The premature.</h3>
+        <p>
+          Cryptographically clean but adoption-blocked. Depends on an issuer
+          ecosystem that doesn't exist yet for hiring. 3–5 years out by
+          ecosystem estimate. We didn't want to be a dead-on-arrival spec.
+        </p>
+        <div class="vB-cmp__verdict">verdict · <b>future-compat</b> — wrap a VC as a HAP evidence URL when ready</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §5 ROADMAP ============ -->
+<section id="roadmap" class="vB-doc-section">
+  <div class="hap-wrap">
+    <div class="vB-2col" style="margin-bottom: 40px;">
+      <div>
+        <p class="vB-secmark">§5 · Roadmap · published, dated, honest</p>
+        <h2 class="vB-h2"><em>v0.x:</em> breaking. <em>v1.0:</em> stable.</h2>
+      </div>
+      <div class="vB-prose">
+        <p>
+          We're 0.1. Anything before v1 may change. The point of publishing
+          now is to get the schemas critiqued before they're hard to move.
+          Dates are best-effort and slip publicly.
+        </p>
+      </div>
+    </div>
+
+    <div class="vB-rm-list">
+      <div>
+        <span class="vB-rm__ver">v0.1</span>
+        <span class="vB-rm__date">May 2026</span>
+        <div class="vB-rm__body">
+          <b>RFC draft</b> · 7 message kinds · evidence registry · TS reference impls
+          <span class="vB-rm__detail">candidate-runtime · hr-runtime · a2a-adapter · scoring</span>
+        </div>
+        <span class="hap-pill hap-pill--cyan hap-pill--dot">shipped</span>
+      </div>
+      <div>
+        <span class="vB-rm__ver">v0.2</span>
+        <span class="vB-rm__date">Q3 2026</span>
+        <div class="vB-rm__body">
+          <b>Tracker</b> — optional discovery directory
+          <span class="vB-rm__detail">BitTorrent-tracker model; never required for known-URL contact</span>
+        </div>
+        <span class="hap-pill hap-pill--yellow hap-pill--dot">drafting</span>
+      </div>
+      <div>
+        <span class="vB-rm__ver">v0.3</span>
+        <span class="vB-rm__date">Q4 2026</span>
+        <div class="vB-rm__body">
+          <b>Verifier framework</b> · pluggable per evidence type
+          <span class="vB-rm__detail">github-author-match · talk-venue-check · oss-maintainer-list</span>
+        </div>
+        <span class="hap-pill hap-pill--dot">planned</span>
+      </div>
+      <div>
+        <span class="vB-rm__ver">v0.4</span>
+        <span class="vB-rm__date">Q1 2027</span>
+        <div class="vB-rm__body">
+          <b>Disclosure scopes</b> — formal grammar for candidate-agent consent
+          <span class="vB-rm__detail">public-by-default · after-accept-only · PII-never</span>
+        </div>
+        <span class="hap-pill hap-pill--dot">planned</span>
+      </div>
+      <div>
+        <span class="vB-rm__ver">v1.0</span>
+        <span class="vB-rm__date">≥ Q3 2027</span>
+        <div class="vB-rm__body">
+          <b>Schema freeze</b> · backward-compatible additions only
+          <span class="vB-rm__detail">predicated on ≥ 5 independent runtimes interoperating cleanly</span>
+        </div>
+        <span class="hap-pill hap-pill--dot">target</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ §6 FAQ ============ -->
+<section id="faq" class="vB-doc-section">
+  <div class="hap-wrap">
+    <p class="vB-secmark">§6 · FAQ · for the skeptical reader</p>
+    <h2 class="vB-h2">"Isn't this just <em>X</em>?"</h2>
+
+    <div class="vB-faq" style="margin-top: 40px;">
+      <div class="vB-faq__item">
+        <h3 class="vB-faq__q">Why not just <em>MCP</em>?</h3>
+        <p class="vB-faq__a">
+          MCP is agent ↔ tool. HAP is agent ↔ agent. Two AI agents talking to
+          each other about a job is a peer conversation, not a tool call. A2A
+          is the right layer; HAP is the right profile on that layer.
+        </p>
+      </div>
+      <div class="vB-faq__item">
+        <h3 class="vB-faq__q">Why not <em>blockchain / Verifiable Credentials</em>?</h3>
+        <p class="vB-faq__a">
+          We considered W3C VC and rejected it as premature — adoption is 3–5
+          years out and depends on an issuer ecosystem that doesn't exist for
+          hiring. When VC matures, HAP evidence can wrap a VC like any other
+          URL; the registry is open.
+        </p>
+      </div>
+      <div class="vB-faq__item">
+        <h3 class="vB-faq__q">What stops <em>spam</em>?</h3>
+        <p class="vB-faq__a">
+          The same things that work for email and ActivityPub: TLS-served
+          agent cards, declared rate limits, blocklists, reputation services.
+          Spam is a federation-policy problem solved on top of the protocol —
+          not inside the core.
+        </p>
+      </div>
+      <div class="vB-faq__item">
+        <h3 class="vB-faq__q">Will candidates trust their agent with <em>real data</em>?</h3>
+        <p class="vB-faq__a">
+          Their call. Reference impls self-host by default. The hosted
+          convenience tier on <code>hap.dev</code> uses a "do not log" policy.
+          Data never leaves the candidate-agent unless the candidate-agent
+          <strong>chooses</strong> to disclose it.
+        </p>
+      </div>
+      <div class="vB-faq__item">
+        <h3 class="vB-faq__q">How does this not become <em>Yet Another LinkedIn</em>?</h3>
+        <p class="vB-faq__a">
+          LinkedIn is a database with identity and a marketplace attached.
+          HAP is a wire format with none of those. We can't centralize even
+          if we wanted to — the spec doesn't have a place to put a central
+          server.
+        </p>
+      </div>
+      <div class="vB-faq__item">
+        <h3 class="vB-faq__q">What about <em>identity verification</em>?</h3>
+        <p class="vB-faq__a">
+          Out of scope. KYC providers do that. HAP gives the HR-agent enough
+          public evidence (commits, talks, papers) to decide how much
+          identity proof to ask for, before involving a human.
+        </p>
+      </div>
+      <div class="vB-faq__item">
+        <h3 class="vB-faq__q">Is this an <em>ATS replacement</em>?</h3>
+        <p class="vB-faq__a">
+          No. HAP is the interview channel, not the application tracking
+          system. An ATS can plug in as the HR-agent runner; the ATS keeps
+          its database and HAP carries the conversation.
+        </p>
+      </div>
+      <div class="vB-faq__item">
+        <h3 class="vB-faq__q">Who built this, and <em>why solo</em>?</h3>
+        <p class="vB-faq__a">
+          One person. v0.1 is published to get punched at. PRs and issues on
+          the GitHub repo are the entire roadmap process. If the schemas are
+          wrong, we want to know <em>before</em> v1.0 locks them in.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section class="vB-closing">
+  <div class="hap-wrap hap-wrap--narrow">
+    <h2>Three ways in. <em>Pick one.</em></h2>
+    <p>It's MIT. It's v0.1. The fastest way to find out if it's any good is to run it.</p>
+    <div class="vB-ctas" style="justify-content:center;">
+      <a class="hap-btn hap-btn--primary" href="https://github.com" target="_blank" rel="noopener">★ Star on GitHub</a>
+      <button class="hap-btn hap-btn--cyan" data-copy="git clone https://github.com/luanrj-ai/hap && npm run demo"><span style="color:var(--accent);">$</span>&nbsp;clone &amp; npm run demo</button>
+      <a class="hap-btn" href="#spec">→ read the spec</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="hap-footer">
+  <div class="hap-wrap">
+    <div class="hap-footer__row" style="justify-content: space-between;">
+      <div class="hap-footer__col" style="max-width: 320px;">
+        <div class="hap-wordmark" style="font-size: 14px;">
+          <span class="hap-wordmark__h">hap</span>
+          <span class="hap-wordmark__v">v0.1 · draft</span>
+        </div>
+        <p style="margin: 6px 0 0; color: var(--muted); line-height: 1.6;font-family:var(--font-serif);font-size:14.5px;">
+          Hiring Agent Protocol — an open A2A profile for AI-mediated hiring.
+          MIT-licensed. Federated. No central server.
+        </p>
+      </div>
+      <div class="hap-footer__col">
+        <h4>Spec</h4>
+        <a href="#">v0.1 RFC</a>
+        <a href="#">Message kinds</a>
+        <a href="#">Evidence registry</a>
+        <a href="#">AgentCard</a>
+      </div>
+      <div class="hap-footer__col">
+        <h4>Code</h4>
+        <a href="#">GitHub repo</a>
+        <a href="#">candidate-runtime</a>
+        <a href="#">hr-runtime</a>
+        <a href="#">@hap/cli</a>
+      </div>
+      <div class="hap-footer__col">
+        <h4>Community</h4>
+        <a href="#">RFC discussion</a>
+        <a href="#">Issues &amp; PRs</a>
+        <a href="#">Hosted proxy</a>
+      </div>
+    </div>
+    <div class="hap-footer__bottom">
+      <span>MIT · v0.1 draft · built on <a href="https://a2a-protocol.org" target="_blank" rel="noopener" style="color:var(--muted);">A2A</a></span>
+      <span>this page renders no analytics</span>
+    </div>
+  </div>
+</footer>
+
+<script src="shared/transcript.js"></script>
+<script>
+  HAPTranscript.mount(document.getElementById("hero-transcript"), { autoplay: true });
+
+  const themeBtn = document.getElementById("theme-toggle");
+  const themeIcon = themeBtn.querySelector("[data-theme-icon]");
+  function setTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    themeIcon.textContent = t === "light" ? "☀" : "◐";
+    try { localStorage.setItem("hap-theme", t); } catch (e) {}
+  }
+  themeBtn.addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme") || "dark";
+    setTheme(cur === "dark" ? "light" : "dark");
+  });
+  try {
+    const saved = localStorage.getItem("hap-theme");
+    if (saved) setTheme(saved);
+  } catch (e) {}
+
+  document.querySelectorAll("[data-copy]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(btn.getAttribute("data-copy"));
+        if (btn.classList.contains("vB-qs__copy")) {
+          const orig = btn.textContent;
+          btn.textContent = "copied ✓";
+          btn.style.color = "var(--green)";
+          btn.style.borderColor = "var(--green)";
+          setTimeout(() => { btn.textContent = orig; btn.style.color = ""; btn.style.borderColor = ""; }, 1400);
+        }
+      } catch (e) {}
+    });
+  });
+</script>
+
+</body>
+</html>

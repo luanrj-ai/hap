@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Default dark for routes that don't define their own theme (e.g. /dashboard, /batch).
+   The HAP landing imports hap-theme.css which overrides via CSS variables and supports
+   a light-mode toggle; both work together because hap-theme.css loads after this file. */
+html, body {
+  background: #0b0d12;
+  color: #e8ecf3;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0b0d12; }
+::-webkit-scrollbar-thumb { background: #242a36; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #2d3447; }

@@ -1,0 +1,30 @@
+{
+  "name": "resumetruth",
+  "version": "0.1.0",
+  "private": true,
+  "description": "HAP — Hiring Agent Protocol. Open A2A profile + reference runtimes. Free + federated + LLM key included.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w @resumetruth/web",
+    "dev:ext": "npm run dev -w @resumetruth/extension",
+    "build:ext": "npm run build -w @resumetruth/extension",
+    "build:web": "npm run build -w @resumetruth/web",
+    "build": "npm run build -w @resumetruth/scoring && npm run build:web && npm run build:ext",
+    "tune:weights": "npm run tune:weights -w @resumetruth/web",
+    "tune:seed": "npm run tune:seed -w @resumetruth/web",
+    "demo": "tsx scripts/demo-interview.ts",
+    "dev:candidate": "npm run dev -w @hap/candidate-runtime",
+    "dev:hr": "npm run dev -w @hap/hr-runtime",
+    "dev:proxy": "npm run dev -w @hap/proxy",
+    "deploy:proxy": "npm run deploy -w @hap/proxy"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}

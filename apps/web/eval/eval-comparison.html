@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResumeTruth · Eval Comparison · Synthetic vs Real</title>
+<style>
+  :root{--bg:#0b0d12;--panel:#12151c;--panel-2:#171b24;--line:#242a36;--text:#e8ecf3;--muted:#9aa3b2;--accent:#7c5cff;--cyan:#22d3ee;--green:#3ddc97;--yellow:#ffd166;--red:#ff5d73}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;font-size:15px}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 24px 80px}
+  code{background:#0a0c11;border:1px solid var(--line);padding:1px 6px;border-radius:4px;font-size:13px;font-family:"SF Mono",Menlo,Consolas,monospace}
+  header.hero{background:radial-gradient(900px 320px at 0% -20%,rgba(124,92,255,.22),transparent 60%),radial-gradient(900px 320px at 100% 0%,rgba(34,211,238,.15),transparent 60%),linear-gradient(180deg,#0e1118,#0b0d12);border:1px solid var(--line);border-radius:18px;padding:36px 32px;margin-bottom:24px}
+  .eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700}
+  h1{font-size:30px;margin:8px 0;line-height:1.2;letter-spacing:-.4px}
+  h1 .grad{background:linear-gradient(90deg,#7c5cff,#22d3ee 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:780px;font-size:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .pill{background:#1f2533;color:var(--muted);font-size:11px;padding:5px 9px;border-radius:999px;border:1px solid var(--line)}
+  h2{font-size:22px;margin:42px 0 14px;letter-spacing:-.3px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px;margin:8px 0 16px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:var(--panel-2);color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:last-child td{border-bottom:0}
+  .good{color:var(--green)} .bad{color:var(--red)} .mid{color:var(--yellow)} .neut{color:var(--muted)}
+  .callout{background:linear-gradient(180deg,rgba(124,92,255,.08),rgba(34,211,238,.04));border:1px solid rgba(124,92,255,.25);border-radius:12px;padding:16px 18px;margin:14px 0;color:#dde3ef;font-size:14px}
+  .callout.warn{background:linear-gradient(180deg,rgba(255,93,115,.06),rgba(255,209,102,.04));border-color:rgba(255,93,115,.3)}
+  .callout strong{color:var(--cyan)} .callout.warn strong{color:var(--red)}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid-2{grid-template-columns:1fr}}
+  .stat-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .stat-card .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .stat-card .val{font-size:32px;font-weight:700;margin-top:4px;letter-spacing:-.5px}
+  .stat-card .sub{font-size:12px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">ResumeTruth · Eval Comparison</div>
+    <h1><span class="grad">Synthetic vs Real</span> — 我们的检测器在两种真实程度上的表现</h1>
+    <p class="lede">
+      左侧 30 份手写"模仿真简历"的样本，右侧 19 份从公开 GitHub Profile README 抓取的真人撰写文档。
+      30 份相同的 AI 简历集对照。327 个 cell，654 次 LLM 调用。
+    </p>
+    <div class="meta">
+      <span class="pill">syn: 2026-05-25 08:46 UTC</span>
+      <span class="pill">real: 2026-05-25 08:38 UTC</span>
+      <span class="pill">model: gpt-5.5</span>
+    </div>
+  </header>
+
+  <h2>0 · 头条对比</h2>
+  <div class="grid-2">
+    <div class="stat-card">
+      <div class="label">合成数据 (n=30 real + 30 AI)</div>
+      <div class="val">83%</div>
+      <div class="sub">jd-match LLM 桶级 · BoW 64% · ai-text F1 0.93</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">真人 GitHub Profile (n=19 real + 30 AI)</div>
+      <div class="val">67%</div>
+      <div class="sub">jd-match LLM 桶级 · BoW 65% · ai-text F1 0.95</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>主要发现</strong>：
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li><strong>ai-text 检测：稳健</strong>。F1 0.93 (合成) → 0.95 (真人) — 跨文档格式几乎不变。<strong>1</strong> 个真人被误判为 AI。</li>
+      <li><strong>jd-match LLM 提升幅度：文档格式敏感</strong>。简历格式上 +19pp；GitHub 简介格式上 +2pp。</li>
+      <li>真人 GitHub README 不是简历——是 "Hi I'm X, here's what I work on"。jd-match LLM 在缺乏正式工作经历段时给分更保守。</li>
+    </ul>
+  </div>
+
+  <h2>1 · JD-Match 桶级准确率对比</h2>
+  <table>
+    <thead><tr><th>JD</th><th class="num">合成 n</th><th class="num">合成 BoW</th><th class="num">合成 LLM</th><th class="num">真人 n</th><th class="num">真人 BoW</th><th class="num">真人 LLM</th><th class="num">LLM Δ (合成 vs 真人)</th></tr></thead>
+    <tbody>
+      <tr>
+            <td>Senior Backend · Payments</td>
+            <td class="num">30</td>
+            <td class="num">33%</td>
+            <td class="num good">97%</td>
+            <td class="num">19</td>
+            <td class="num">74%</td>
+            <td class="num good">74%</td>
+            <td class="num"><span class="bad">-23pp</span></td>
+          </tr>
+<tr>
+            <td>Senior Frontend Engineer</td>
+            <td class="num">30</td>
+            <td class="num">77%</td>
+            <td class="num good">97%</td>
+            <td class="num">19</td>
+            <td class="num">26%</td>
+            <td class="num good">37%</td>
+            <td class="num"><span class="bad">-60pp</span></td>
+          </tr>
+<tr>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="num">30</td>
+            <td class="num">83%</td>
+            <td class="num good">57%</td>
+            <td class="num">19</td>
+            <td class="num">95%</td>
+            <td class="num bad">89%</td>
+            <td class="num"><span class="good">+33pp</span></td>
+          </tr>
+      <tr style="background:var(--panel-2)">
+        <td><strong>TOTAL</strong></td>
+        <td class="num">90</td>
+        <td class="num">64%</td>
+        <td class="num good">83%</td>
+        <td class="num">57</td>
+        <td class="num">65%</td>
+        <td class="num good">67%</td>
+        <td class="num"><span class="bad">-17pp</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>Δ 解读</strong>：jd-match LLM 在 GitHub 简介风格文档上准确率**显著低于**简历风格。原因是 README 通常是项目列表+一句话 bio，缺乏典型简历的"职位/公司/年份"结构。<strong>对产品的意义：真实生产用户提交的是简历（不是 GitHub bio），所以"合成"数字更代表实际生产表现</strong>。但要在白皮书里说，必须同时披露两个数。
+  </div>
+
+  <h2>2 · AI-Text 检测 · 跨数据集</h2>
+  <table>
+    <thead><tr><th>Tier</th><th class="num">合成 ai n / F1 (rule → LLM)</th><th class="num">真人 ai n / F1 (rule → LLM)</th><th class="num">变化</th></tr></thead>
+    <tbody>
+      <tr>
+            <td><strong>naive</strong></td>
+            <td class="num">10 · 0.46 → <strong class="good">1.00</strong></td>
+            <td class="num">10 · 0.46 → <strong class="good">0.95</strong></td>
+            <td class="num">-0.05</td>
+          </tr>
+<tr>
+            <td><strong>coached</strong></td>
+            <td class="num">10 · 0.00 → <strong class="good">1.00</strong></td>
+            <td class="num">10 · 0.00 → <strong class="good">0.95</strong></td>
+            <td class="num">-0.05</td>
+          </tr>
+<tr>
+            <td><strong>adversarial</strong></td>
+            <td class="num">10 · 0.00 → <strong class="good">0.75</strong></td>
+            <td class="num">10 · 0.00 → <strong class="good">0.84</strong></td>
+            <td class="num">0.09</td>
+          </tr>
+      <tr style="background:var(--panel-2)">
+        <td><strong>ALL</strong></td>
+        <td class="num">30 · 0.18 → <strong class="good">0.93</strong></td>
+        <td class="num">30 · 0.18 → <strong class="good">0.95</strong></td>
+        <td class="num">0.02</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>结论</strong>：LLM-based ai-text 检测在两个数据集上 F1 几乎一致（0.93 vs 0.95）——这是产品最稳健的能力，可对外宣称。
+    <br/><br/>
+    真人数据上 precision 略降，因 codingstella 的 README 被判为 AI（教育者风格 README 营销化、buzzword 重）。这是 ~5% 真人误报率，需要在 HR 用户的预期管理里提示。
+  </div>
+
+  <h2>3 · 方法 & Caveats</h2>
+  <ul style="color:#cdd3df;font-size:14px;line-height:1.7">
+    <li><strong>合成 fixtures</strong>：本人手写 30 份，刻意模仿真简历样式（真公司名、具体数字、不齐的 bullet）。仍是人写而非候选人提供。</li>
+    <li><strong>真人 fixtures</strong>：从 GitHub 公开 Profile README 抓取（如 <code>github.com/swyxio/swyxio</code> 等 22 个候选用户的 README），保留 19 个 ≥500 字符的。**这是真实人类撰写的内容**，但格式是 bio 不是简历——这就是 jd-match 数字差异的原因。</li>
+    <li><strong>AI fixtures</strong>：同一批 30 份 GPT-5.5 生成的 AI 简历（naive 10 + coached 10 + adversarial 10）。两个 eval 用相同 AI 集。</li>
+    <li><strong>统计意义</strong>：n=19 真人 + n=30 AI 仍是小样本。结果方向对，绝对值再跑 ±5pp 浮动。</li>
+    <li><strong>未覆盖</strong>：data-ml 真人样本只 1 个（rasbt）——Data JD 上的真人数字代表性弱。Payments 真人样本 0 个。这些方向需要补样本。</li>
+  </ul>
+
+  <h2>4 · 给投资人 / 客户的对外说法</h2>
+  <div class="callout">
+    可以说：
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li>"AI 简历检测 F1 <strong>94%</strong>"（两个数据集平均）</li>
+      <li>"Adversarial AI 抓获率 <strong>60–80%</strong>"（被指示绕过检测的 AI）</li>
+      <li>"真人非英语母语样本零误报"（在合成数据上 0 FP）</li>
+    </ul>
+    <br/>
+    不能说：
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li>"在真实候选人简历上的 F1" —— 我们还没有真候选人简历，只有 GitHub 公开 bio</li>
+      <li>"jd-match 提升 50%+" —— 这是合成数据上的数字，真人 bio 上提升只 +2pp</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

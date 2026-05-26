@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["chrome", "vite/client"],
+    "noEmit": true,
+    "allowImportingTsExtensions": false
+  },
+  "include": ["src", "manifest.config.ts", "vite.config.ts"]
+}

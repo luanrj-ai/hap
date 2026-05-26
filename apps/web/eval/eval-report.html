@@ -1,0 +1,2240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResumeTruth · Eval Report · 2026-05-25</title>
+<style>
+  :root {
+    --bg:#0b0d12; --panel:#12151c; --panel-2:#171b24; --line:#242a36;
+    --text:#e8ecf3; --muted:#9aa3b2;
+    --accent:#7c5cff; --cyan:#22d3ee; --green:#3ddc97; --yellow:#ffd166; --red:#ff5d73;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6;font-size:15px}
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 24px 80px}
+  code{background:#0a0c11;border:1px solid var(--line);padding:1px 6px;border-radius:4px;font-size:13px;font-family:"SF Mono",Menlo,Consolas,monospace}
+  header.hero{background:radial-gradient(900px 320px at 0% -20%,rgba(124,92,255,.22),transparent 60%),radial-gradient(900px 320px at 100% 0%,rgba(34,211,238,.15),transparent 60%),linear-gradient(180deg,#0e1118,#0b0d12);border:1px solid var(--line);border-radius:18px;padding:36px 32px;margin-bottom:24px}
+  .eyebrow{color:var(--cyan);text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:700}
+  h1{font-size:32px;margin:8px 0;line-height:1.2;letter-spacing:-.4px}
+  h1 .grad{background:linear-gradient(90deg,#7c5cff,#22d3ee 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{color:var(--muted);max-width:780px;font-size:15px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .pill{background:#1f2533;color:var(--muted);font-size:11px;padding:5px 9px;border-radius:999px;border:1px solid var(--line)}
+
+  h2{font-size:22px;margin:42px 0 14px;letter-spacing:-.3px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  h3{font-size:16px;margin:22px 0 8px;color:#f0f3fa}
+
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:760px){.grid-3,.grid-4{grid-template-columns:1fr}}
+
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .stat .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+  .stat .val{font-size:36px;font-weight:700;margin-top:6px;letter-spacing:-.5px}
+  .stat .delta{font-size:13px;color:var(--muted);margin-top:4px}
+  .stat .val.green{color:var(--green)} .stat .val.red{color:var(--red)} .stat .val.yellow{color:var(--yellow)}
+
+  table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:14px;margin:8px 0 16px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:var(--panel-2);color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  tr:last-child td{border-bottom:0}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .good{color:var(--green)} .bad{color:var(--red)} .mid{color:var(--yellow)} .neut{color:var(--muted)}
+  .bar{height:8px;background:#1f2533;border-radius:4px;overflow:hidden;margin-top:4px}
+  .bar > span{display:block;height:100%}
+  .bar .bow{background:#9aa3b2}
+  .bar .llm{background:var(--accent)}
+
+  .callout{background:linear-gradient(180deg,rgba(124,92,255,.08),rgba(34,211,238,.04));border:1px solid rgba(124,92,255,.25);border-radius:12px;padding:16px 18px;margin:14px 0;color:#dde3ef;font-size:14px}
+  .callout.warn{background:linear-gradient(180deg,rgba(255,93,115,.06),rgba(255,209,102,.04));border-color:rgba(255,93,115,.3)}
+  .callout strong{color:var(--cyan)} .callout.warn strong{color:var(--red)}
+
+  .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+  .filter-bar button{background:var(--panel-2);border:1px solid var(--line);color:var(--text);font-size:12px;padding:5px 12px;border-radius:999px;cursor:pointer}
+  .filter-bar button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+
+  footer{margin-top:54px;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">ResumeTruth · Eval Report</div>
+    <h1><span class="grad">73/90</span> bucket accuracy on jd-match · <span class="grad">F1 0.93</span> on ai-text</h1>
+    <p class="lede">
+      30 real-style + 30 AI-generated resumes across 3 JDs. 180 (resume × JD) cells, 360 LLM calls in 487.1s.
+      Each fixture scored twice: pure rule baseline vs rule + LLM signals (gpt-5.5 via uyilink proxy).
+    </p>
+    <div class="meta">
+      <span class="pill">2026-05-25 07:21 UTC</span>
+      <span class="pill">openai · gpt-5.5</span>
+      <span class="pill">30 real + 30 AI</span>
+      <span class="pill">3 JDs · 180 cells</span>
+      <span class="pill">elapsed 487s</span>
+    </div>
+  </header>
+
+  <h2>0 · TL;DR</h2>
+  <div class="grid-4">
+    <div class="stat">
+      <div class="label">JD-match overall</div>
+      <div class="val green">81%</div>
+      <div class="delta">BoW 64% · Δ +15pp</div>
+    </div>
+    <div class="stat">
+      <div class="label">AI-text F1 (all tiers)</div>
+      <div class="val green">0.93</div>
+      <div class="delta">Rule F1 0.18 · Δ +0.75</div>
+    </div>
+    <div class="stat">
+      <div class="label">False-positive on real</div>
+      <div class="val green">0/30</div>
+      <div class="delta">non-native English passed ✓</div>
+    </div>
+    <div class="stat">
+      <div class="label">Adversarial AI caught</div>
+      <div class="val yellow">6/10</div>
+      <div class="delta">tier 3: AI told to evade detection</div>
+    </div>
+  </div>
+
+  <h2>1 · JD-match · 3 个岗位的桶级准确率</h2>
+  <table>
+    <thead><tr><th>JD</th><th class="num">n</th><th class="num">规则 BoW</th><th class="num">+LLM</th><th class="num">Δ</th><th>visualization</th></tr></thead>
+    <tbody>
+      <tr>
+            <td>Senior Backend · Payments</td>
+            <td class="num">30</td>
+            <td class="num">10/30 (33%)</td>
+            <td class="num">28/30 (93%)</td>
+            <td class="num good">+60pp</td>
+            <td style="min-width:180px"><div class="bar"><span class="bow" style="width:33.33333333333333%"></span></div><div class="bar"><span class="llm" style="width:93.33333333333333%"></span></div></td>
+          </tr>
+<tr>
+            <td>Senior Frontend Engineer</td>
+            <td class="num">30</td>
+            <td class="num">23/30 (77%)</td>
+            <td class="num">28/30 (93%)</td>
+            <td class="num good">+17pp</td>
+            <td style="min-width:180px"><div class="bar"><span class="bow" style="width:76.66666666666667%"></span></div><div class="bar"><span class="llm" style="width:93.33333333333333%"></span></div></td>
+          </tr>
+<tr>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="num">30</td>
+            <td class="num">25/30 (83%)</td>
+            <td class="num">17/30 (57%)</td>
+            <td class="num bad">-27pp</td>
+            <td style="min-width:180px"><div class="bar"><span class="bow" style="width:83.33333333333334%"></span></div><div class="bar"><span class="llm" style="width:56.666666666666664%"></span></div></td>
+          </tr>
+      <tr style="background:var(--panel-2)">
+        <td><strong>TOTAL</strong></td>
+        <td class="num">90</td>
+        <td class="num">58/90 (64%)</td>
+        <td class="num">73/90 (81%)</td>
+        <td class="num good">+17pp</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>⚠ 诚实的 regression：Data JD 上 LLM 比 BoW 差</strong>
+    Data JD 的 LLM 桶级准确率 17/30
+    （57%），低于 BoW 的
+    25/30
+    （83%）。
+    <br/><br/>
+    两个原因：
+    <br/>1. <strong>Ground truth 偏严</strong>：我把 Stripe / Notion / Linear 等大厂 backend senior 在 data JD 上标为 LOW，但 LLM 给 MED（42-58）其实合理——他们确实接触过 feature pipeline / Kafka。
+    <br/>2. <strong>LLM 校准过严</strong>：3 个真 ML 工程师都精确卡在 65，刚好低于 HIGH 阈值 71。我的"domain match required for HIGH"prompt rule 把同义证据（Spark/Flink + recsys ≈ data infra）也卡死了。
+    <br/><br/>
+    Fix：把 LLM jd-match prompt 的 HIGH 标准从严格关键词扩展到语义等价；同时把 "data-adjacent backend" 的 ground truth 从 LOW 提到 MED。
+  </div>
+
+  <h2>2 · AI-text 检测 · 按难度 tier 分</h2>
+  <p style="color:var(--muted);font-size:13px;margin-top:0">
+    阈值：humanScore &lt; 60 ⇒ 判为 AI。30 份 AI 简历分 3 个 tier，每个 tier 10 份。所有 30 真人样本均参与 FP 评估。
+  </p>
+  <table>
+    <thead><tr><th>Tier</th><th class="num">n</th><th class="num">Rule prec / recall / F1</th><th class="num">LLM prec / recall / F1</th><th class="num">ΔF1</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>naive</strong> <span class="neut">— 纯模板词，零具体信息</span></td>
+        <td class="num">10</td>
+        <td class="num">1.00 / 0.30 / <strong>0.46</strong></td>
+        <td class="num">1.00 / 1.00 / <strong>1.00</strong></td>
+        <td class="num good">+0.54</td>
+      </tr>
+<tr>
+        <td><strong>coached</strong> <span class="neut">— 夹杂真实公司名 + 1-2 个数字</span></td>
+        <td class="num">10</td>
+        <td class="num">0.00 / 0.00 / <strong>0.00</strong></td>
+        <td class="num">1.00 / 1.00 / <strong>1.00</strong></td>
+        <td class="num good">+1.00</td>
+      </tr>
+<tr>
+        <td><strong>adversarial</strong> <span class="neut">— AI 显式被指示绕过检测器</span></td>
+        <td class="num">10</td>
+        <td class="num">0.00 / 0.00 / <strong>0.00</strong></td>
+        <td class="num">1.00 / 0.60 / <strong>0.75</strong></td>
+        <td class="num good">+0.75</td>
+      </tr>
+      <tr style="background:var(--panel-2)">
+        <td><strong>ALL</strong></td>
+        <td class="num">30</td>
+        <td class="num">1.00 / 0.10 / <strong>0.18</strong></td>
+        <td class="num">1.00 / 0.87 / <strong>0.93</strong></td>
+        <td class="num good">+0.75</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>关键发现</strong>
+    <ul style="margin:8px 0 0;padding-left:20px">
+      <li>规则版 ai-text 几乎完全失效（F1 0.18）—— 1.0 precision 但 10% recall 说明它**几乎没抓到任何 AI**。</li>
+      <li>LLM 版在 naive 和 coached tier 上 F1=1.00（满分）；在 <strong>adversarial tier 上 recall 仍达 60%</strong>——AI 显式被指示绕过检测器，仍被抓 6/10。</li>
+      <li><strong>零误报</strong>：30 份真人简历（含 30 中非英语母语者：Wang Lei、Hiroshi Tanaka、Chen Mei、Yuki Sato 等）全部正确判为真人。</li>
+    </ul>
+  </div>
+
+  <h2>3 · 完整 cell 数据（180 行，可过滤）</h2>
+  <div class="filter-bar">
+    <button data-filter="all" class="active">全部 (180)</button>
+    <button data-filter="source-real">仅真人 (90)</button>
+    <button data-filter="source-ai">仅 AI (90)</button>
+    <button data-filter="jd-paymentsBackend">Payments JD</button>
+    <button data-filter="jd-seniorFrontend">Frontend JD</button>
+    <button data-filter="jd-dataEngineer">Data JD</button>
+    <button data-filter="tier-naive">naive</button>
+    <button data-filter="tier-coached">coached</button>
+    <button data-filter="tier-adversarial">adversarial</button>
+  </div>
+  <table id="cells">
+    <thead><tr>
+      <th>Fixture</th><th>Source</th><th>Tier</th><th>JD</th><th>Expected</th>
+      <th class="num">BoW jd</th><th class="num">LLM jd</th>
+      <th class="num">Rule ai</th><th class="num">LLM ai</th>
+    </tr></thead>
+    <tbody>
+      <tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-pay-01-stripe-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">HIGH</td>
+            <td class="num bad">35</td>
+            <td class="num good">92</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-pay-01-stripe-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">24</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-pay-01-stripe-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">20</td>
+            <td class="num bad">42</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-pay-02-paypal-staff</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">HIGH</td>
+            <td class="num bad">38</td>
+            <td class="num good">97</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-pay-02-paypal-staff</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-pay-02-paypal-staff</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num bad">42</td>
+            <td class="num good">100</td>
+            <td class="num good">98</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-pay-03-block-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">HIGH</td>
+            <td class="num bad">32</td>
+            <td class="num good">92</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-pay-03-block-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-pay-03-block-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num bad">48</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-pay-04-revolut-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">HIGH</td>
+            <td class="num bad">16</td>
+            <td class="num good">86</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-pay-04-revolut-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">20</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-pay-04-revolut-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">17</td>
+            <td class="num bad">55</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-pay-05-ant-group-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">HIGH</td>
+            <td class="num bad">24</td>
+            <td class="num good">92</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-pay-05-ant-group-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-pay-05-ant-group-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">20</td>
+            <td class="num bad">42</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-pay-06-nubank-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">HIGH</td>
+            <td class="num bad">21</td>
+            <td class="num good">84</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-pay-06-nubank-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-pay-06-nubank-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">13</td>
+            <td class="num good">38</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-pay-07-tencent-wechatpay</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">HIGH</td>
+            <td class="num bad">24</td>
+            <td class="num good">88</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-pay-07-tencent-wechatpay</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">5</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-pay-07-tencent-wechatpay</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">13</td>
+            <td class="num bad">58</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-pay-08-razorpay-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">HIGH</td>
+            <td class="num bad">21</td>
+            <td class="num good">86</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-pay-08-razorpay-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">28</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-pay-08-razorpay-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">17</td>
+            <td class="num good">38</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-be-01-notion-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">24</td>
+            <td class="num good">65</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-be-01-notion-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">24</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-be-01-notion-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num bad">48</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-be-02-linear-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">13</td>
+            <td class="num good">62</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-be-02-linear-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">24</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-be-02-linear-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">17</td>
+            <td class="num bad">42</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-be-03-figma-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">19</td>
+            <td class="num good">65</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-be-03-figma-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">25</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-be-03-figma-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num good">38</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-be-04-vercel-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">16</td>
+            <td class="num good">65</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-be-04-vercel-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">24</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-be-04-vercel-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">10</td>
+            <td class="num bad">40</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-be-05-datadog-sre</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">21</td>
+            <td class="num good">65</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-be-05-datadog-sre</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-be-05-datadog-sre</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">17</td>
+            <td class="num bad">58</td>
+            <td class="num good">100</td>
+            <td class="num good">94</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-fe-01-wix-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-fe-01-wix-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">HIGH</td>
+            <td class="num bad">35</td>
+            <td class="num good">88</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-fe-01-wix-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">10</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-fe-02-cashapp-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">5</td>
+            <td class="num good">28</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-fe-02-cashapp-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">HIGH</td>
+            <td class="num bad">19</td>
+            <td class="num good">78</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-fe-02-cashapp-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-fe-03-airbnb-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-fe-03-airbnb-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">HIGH</td>
+            <td class="num bad">27</td>
+            <td class="num good">88</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-fe-03-airbnb-senior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-fe-04-sap-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-fe-04-sap-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">HIGH</td>
+            <td class="num bad">22</td>
+            <td class="num good">83</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-fe-04-sap-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">10</td>
+            <td class="num good">12</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-fe-05-spotify-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-fe-05-spotify-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">HIGH</td>
+            <td class="num bad">22</td>
+            <td class="num good">86</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-fe-05-spotify-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-fe-06-tiktok-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">94</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-fe-06-tiktok-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">HIGH</td>
+            <td class="num bad">16</td>
+            <td class="num bad">65</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-fe-06-tiktok-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">10</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-data-01-bytedance-data</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">5</td>
+            <td class="num bad">38</td>
+            <td class="num good">100</td>
+            <td class="num good">88</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-data-01-bytedance-data</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">5</td>
+            <td class="num good">12</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-data-01-bytedance-data</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">HIGH</td>
+            <td class="num bad">43</td>
+            <td class="num good">87</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-data-02-spotify-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">11</td>
+            <td class="num good">42</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-data-02-spotify-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-data-02-spotify-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">HIGH</td>
+            <td class="num bad">23</td>
+            <td class="num good">86</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-data-03-mercadolibre-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">11</td>
+            <td class="num good">60</td>
+            <td class="num good">100</td>
+            <td class="num good">94</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-data-03-mercadolibre-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">12</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-data-03-mercadolibre-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">HIGH</td>
+            <td class="num bad">27</td>
+            <td class="num bad">65</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-data-04-uber-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">8</td>
+            <td class="num good">48</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-data-04-uber-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">3</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-data-04-uber-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">HIGH</td>
+            <td class="num bad">27</td>
+            <td class="num bad">65</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-data-05-recruit-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">11</td>
+            <td class="num bad">30</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-data-05-recruit-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">25</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-data-05-recruit-ml</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">HIGH</td>
+            <td class="num bad">20</td>
+            <td class="num bad">65</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-low-01-monzo-designer</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">12</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-low-01-monzo-designer</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">16</td>
+            <td class="num good">25</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-low-01-monzo-designer</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">10</td>
+            <td class="num good">5</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-low-02-coupang-junior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">28</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-low-02-coupang-junior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">3</td>
+            <td class="num good">8</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-low-02-coupang-junior</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num good">12</td>
+            <td class="num good">100</td>
+            <td class="num good">90</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-low-03-cloudflare-sec</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">13</td>
+            <td class="num good">45</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-low-03-cloudflare-sec</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-low-03-cloudflare-sec</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">13</td>
+            <td class="num good">22</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-low-04-career-change-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">8</td>
+            <td class="num good">12</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-low-04-career-change-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">MED</td>
+            <td class="num bad">16</td>
+            <td class="num bad">30</td>
+            <td class="num good">100</td>
+            <td class="num good">90</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-low-04-career-change-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num good">8</td>
+            <td class="num good">100</td>
+            <td class="num good">93</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-low-05-github-devops</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">MED</td>
+            <td class="num bad">8</td>
+            <td class="num good">63</td>
+            <td class="num good">100</td>
+            <td class="num good">95</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-low-05-github-devops</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">5</td>
+            <td class="num good">15</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-low-05-github-devops</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">10</td>
+            <td class="num good">38</td>
+            <td class="num good">100</td>
+            <td class="num good">96</td>
+          </tr>
+<tr data-source="real" data-jd="paymentsBackend" data-tier="none">
+            <td>real-low-06-junior-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Backend · Payments</td>
+            <td class="">LOW</td>
+            <td class="num good">11</td>
+            <td class="num good">18</td>
+            <td class="num good">100</td>
+            <td class="num good">92</td>
+          </tr>
+<tr data-source="real" data-jd="seniorFrontend" data-tier="none">
+            <td>real-low-06-junior-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="">LOW</td>
+            <td class="num good">14</td>
+            <td class="num good">28</td>
+            <td class="num good">100</td>
+            <td class="num good">88</td>
+          </tr>
+<tr data-source="real" data-jd="dataEngineer" data-tier="none">
+            <td>real-low-06-junior-fe</td>
+            <td><span class="neut">real</span></td>
+            <td>—</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="">LOW</td>
+            <td class="num good">7</td>
+            <td class="num good">12</td>
+            <td class="num good">100</td>
+            <td class="num good">88</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">16</td>
+            <td class="num neut">62</td>
+            <td class="num bad">100</td>
+            <td class="num good">45</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">19</td>
+            <td class="num neut">18</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">60</td>
+            <td class="num neut">65</td>
+            <td class="num bad">100</td>
+            <td class="num good">45</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">16</td>
+            <td class="num neut">64</td>
+            <td class="num bad">100</td>
+            <td class="num bad">62</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">14</td>
+            <td class="num neut">18</td>
+            <td class="num bad">100</td>
+            <td class="num bad">78</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">57</td>
+            <td class="num neut">65</td>
+            <td class="num bad">100</td>
+            <td class="num bad">82</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">29</td>
+            <td class="num neut">73</td>
+            <td class="num bad">100</td>
+            <td class="num good">55</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">16</td>
+            <td class="num neut">30</td>
+            <td class="num bad">100</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">53</td>
+            <td class="num neut">88</td>
+            <td class="num bad">100</td>
+            <td class="num good">45</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-data-ml-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">21</td>
+            <td class="num neut">64</td>
+            <td class="num bad">100</td>
+            <td class="num bad">62</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-data-ml-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">16</td>
+            <td class="num neut">22</td>
+            <td class="num bad">100</td>
+            <td class="num bad">72</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-data-ml-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">57</td>
+            <td class="num neut">65</td>
+            <td class="num bad">100</td>
+            <td class="num good">58</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">24</td>
+            <td class="num neut">30</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">44</td>
+            <td class="num neut">79</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">23</td>
+            <td class="num neut">18</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">19</td>
+            <td class="num neut">30</td>
+            <td class="num bad">100</td>
+            <td class="num good">58</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">35</td>
+            <td class="num neut">86</td>
+            <td class="num bad">100</td>
+            <td class="num good">45</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">13</td>
+            <td class="num neut">15</td>
+            <td class="num bad">100</td>
+            <td class="num good">55</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">30</td>
+            <td class="num bad">100</td>
+            <td class="num bad">68</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">41</td>
+            <td class="num neut">87</td>
+            <td class="num bad">100</td>
+            <td class="num bad">82</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">17</td>
+            <td class="num neut">18</td>
+            <td class="num bad">100</td>
+            <td class="num bad">72</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">38</td>
+            <td class="num neut">92</td>
+            <td class="num bad">100</td>
+            <td class="num bad">82</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">11</td>
+            <td class="num neut">25</td>
+            <td class="num bad">100</td>
+            <td class="num bad">68</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">20</td>
+            <td class="num neut">55</td>
+            <td class="num bad">100</td>
+            <td class="num bad">78</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">48</td>
+            <td class="num neut">84</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">19</td>
+            <td class="num neut">20</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">42</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="adversarial">
+            <td>adversarial-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">46</td>
+            <td class="num neut">92</td>
+            <td class="num bad">100</td>
+            <td class="num good">45</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="adversarial">
+            <td>adversarial-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">22</td>
+            <td class="num neut">18</td>
+            <td class="num bad">100</td>
+            <td class="num good">45</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="adversarial">
+            <td>adversarial-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>adversarial</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">23</td>
+            <td class="num neut">42</td>
+            <td class="num bad">100</td>
+            <td class="num bad">62</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">55</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">25</td>
+            <td class="num neut">18</td>
+            <td class="num bad">100</td>
+            <td class="num good">45</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">60</td>
+            <td class="num neut">65</td>
+            <td class="num bad">100</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">32</td>
+            <td class="num neut">56</td>
+            <td class="num bad">85</td>
+            <td class="num good">45</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">30</td>
+            <td class="num neut">22</td>
+            <td class="num bad">85</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">73</td>
+            <td class="num neut">65</td>
+            <td class="num bad">85</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">29</td>
+            <td class="num neut">58</td>
+            <td class="num bad">90</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">30</td>
+            <td class="num neut">22</td>
+            <td class="num bad">90</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">70</td>
+            <td class="num neut">65</td>
+            <td class="num bad">90</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">38</td>
+            <td class="num neut">20</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">60</td>
+            <td class="num neut">65</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">18</td>
+            <td class="num bad">100</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">35</td>
+            <td class="num neut">22</td>
+            <td class="num bad">93</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">68</td>
+            <td class="num neut">65</td>
+            <td class="num bad">93</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">23</td>
+            <td class="num neut">12</td>
+            <td class="num bad">93</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">24</td>
+            <td class="num neut">30</td>
+            <td class="num bad">100</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">60</td>
+            <td class="num neut">86</td>
+            <td class="num bad">100</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">18</td>
+            <td class="num bad">100</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-frontend-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">29</td>
+            <td class="num neut">28</td>
+            <td class="num bad">83</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-frontend-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">60</td>
+            <td class="num neut">85</td>
+            <td class="num bad">83</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-frontend-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">18</td>
+            <td class="num bad">83</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">48</td>
+            <td class="num neut">65</td>
+            <td class="num bad">100</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">30</td>
+            <td class="num neut">28</td>
+            <td class="num bad">100</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">30</td>
+            <td class="num neut">38</td>
+            <td class="num bad">100</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">54</td>
+            <td class="num neut">65</td>
+            <td class="num bad">93</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">33</td>
+            <td class="num neut">22</td>
+            <td class="num bad">93</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">43</td>
+            <td class="num neut">42</td>
+            <td class="num bad">93</td>
+            <td class="num good">42</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="coached">
+            <td>coached-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">46</td>
+            <td class="num neut">65</td>
+            <td class="num bad">93</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="coached">
+            <td>coached-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">35</td>
+            <td class="num neut">18</td>
+            <td class="num bad">93</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="coached">
+            <td>coached-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>coached</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">40</td>
+            <td class="num neut">38</td>
+            <td class="num bad">93</td>
+            <td class="num good">40</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">21</td>
+            <td class="num neut">38</td>
+            <td class="num bad">68</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">22</td>
+            <td class="num neut">22</td>
+            <td class="num bad">68</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-data-ml-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">63</td>
+            <td class="num neut">64</td>
+            <td class="num bad">68</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">32</td>
+            <td class="num good">50</td>
+            <td class="num good">3</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">19</td>
+            <td class="num neut">18</td>
+            <td class="num good">50</td>
+            <td class="num good">5</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-data-ml-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">50</td>
+            <td class="num neut">63</td>
+            <td class="num good">50</td>
+            <td class="num good">3</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">21</td>
+            <td class="num neut">28</td>
+            <td class="num good">48</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">14</td>
+            <td class="num neut">18</td>
+            <td class="num good">48</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-data-ml-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">40</td>
+            <td class="num neut">58</td>
+            <td class="num good">48</td>
+            <td class="num good">3</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">24</td>
+            <td class="num bad">68</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">49</td>
+            <td class="num neut">62</td>
+            <td class="num bad">68</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-frontend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">18</td>
+            <td class="num bad">68</td>
+            <td class="num good">3</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">19</td>
+            <td class="num neut">18</td>
+            <td class="num bad">85</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">44</td>
+            <td class="num neut">62</td>
+            <td class="num bad">85</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-frontend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">20</td>
+            <td class="num neut">12</td>
+            <td class="num bad">85</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">21</td>
+            <td class="num neut">25</td>
+            <td class="num bad">75</td>
+            <td class="num good">3</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">46</td>
+            <td class="num neut">65</td>
+            <td class="num bad">75</td>
+            <td class="num good">3</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-frontend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">23</td>
+            <td class="num neut">12</td>
+            <td class="num bad">75</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">40</td>
+            <td class="num neut">60</td>
+            <td class="num bad">60</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">19</td>
+            <td class="num neut">12</td>
+            <td class="num bad">60</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-payments-backend-01</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">23</td>
+            <td class="num neut">28</td>
+            <td class="num bad">60</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">43</td>
+            <td class="num neut">62</td>
+            <td class="num bad">65</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">19</td>
+            <td class="num neut">22</td>
+            <td class="num bad">65</td>
+            <td class="num good">3</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-payments-backend-02</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">24</td>
+            <td class="num bad">65</td>
+            <td class="num good">2</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">38</td>
+            <td class="num neut">58</td>
+            <td class="num bad">68</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">22</td>
+            <td class="num neut">18</td>
+            <td class="num bad">68</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-payments-backend-03</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">23</td>
+            <td class="num neut">25</td>
+            <td class="num bad">68</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="paymentsBackend" data-tier="naive">
+            <td>naive-payments-backend-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Backend · Payments</td>
+            <td class="neut">—</td>
+            <td class="num neut">48</td>
+            <td class="num neut">60</td>
+            <td class="num good">50</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="seniorFrontend" data-tier="naive">
+            <td>naive-payments-backend-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Frontend Engineer</td>
+            <td class="neut">—</td>
+            <td class="num neut">27</td>
+            <td class="num neut">12</td>
+            <td class="num good">50</td>
+            <td class="num good">0</td>
+          </tr>
+<tr data-source="ai" data-jd="dataEngineer" data-tier="naive">
+            <td>naive-payments-backend-04</td>
+            <td><span class="neut">ai</span></td>
+            <td>naive</td>
+            <td>Senior Data Engineer / ML Platform</td>
+            <td class="neut">—</td>
+            <td class="num neut">33</td>
+            <td class="num neut">32</td>
+            <td class="num good">50</td>
+            <td class="num good">0</td>
+          </tr>
+    </tbody>
+  </table>
+
+  <h2>4 · Methodology & Caveats</h2>
+  <ul style="color:#cdd3df;font-size:14px;line-height:1.7">
+    <li><strong>样本量</strong>：30 真人 + 30 AI（10 naive + 10 coached + 10 adversarial）。仍属小样本，再跑可能 ±5pp 浮动。</li>
+    <li><strong>真人 fixture 来源</strong>：手工撰写，模仿真实简历样式（混入中、日、印度、巴西、东欧、非洲非英语母语样本）。<em>非</em>真实 LinkedIn 数据。</li>
+    <li><strong>AI fixture 生成</strong>：由 gpt-5.5 在受控 prompt 下生成，每个 tier 难度递增。adversarial tier 显式指示模型「绕过 AI 检测器」。</li>
+    <li><strong>Ground truth</strong>：作者人工标注。Data JD 上的 LOW 标签可能偏严（见第 1 节 callout）。</li>
+    <li><strong>规则 baseline</strong>：bag-of-words 关键词召回率 × 1.5 系数。<em>不</em>使用 LLM。</li>
+    <li><strong>LLM 模型</strong>：gpt-5.5 via openai 代理。代理上游模型未公开，不保证为 OpenAI 官方。</li>
+    <li><strong>结果非确定性</strong>：同输入再跑 ±5% 浮动。</li>
+    <li><strong>外部验证未启用</strong>：external-evidence 信号只检查 URL 是否在文本中声明，未实际访问。这是 P1 工作项。</li>
+  </ul>
+
+  <footer>
+    Generated by <code>npx tsx eval/build-report.ts</code> from <code>eval-results.json</code> ·
+    Raw data: 180 cells, 41 KB JSON
+  </footer>
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('.filter-bar button');
+  const rows = document.querySelectorAll('#cells tbody tr');
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      buttons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      rows.forEach((r) => {
+        if (f === 'all') { r.style.display = ''; return; }
+        const [kind, val] = f.split('-');
+        const map = { source: r.dataset.source, jd: r.dataset.jd, tier: r.dataset.tier };
+        r.style.display = map[kind] === val ? '' : 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "version": "v2-positive-signals",
+  "weights": {
+    "ai-text": 20,
+    "template-uniformity": 10,
+    "timeline": 10,
+    "external-evidence": 20,
+    "positive-github": 15,
+    "jd-match": 25,
+    "positive-rare-depth": 15
+  },
+  "lastTunedAt": null,
+  "feedbackSampleSize": 0
+}
