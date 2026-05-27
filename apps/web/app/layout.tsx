@@ -1,5 +1,28 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-jbm",
+  display: "swap",
+});
+
+const serif = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "HAP — Hiring Agent Protocol",
@@ -12,16 +35,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const fontVars = `${inter.variable} ${mono.variable} ${serif.variable}`;
   return (
-    <html lang="en" data-theme="light">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" data-theme="light" className={fontVars}>
       <body>{children}</body>
     </html>
   );
