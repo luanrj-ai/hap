@@ -27,7 +27,7 @@ export async function GET(req: Request) {
   const hasOutcome = url.searchParams.get("hasOutcome");
   const limit = Math.min(Number(url.searchParams.get("limit") ?? "20"), 100);
 
-  const where: Parameters<typeof prisma.score.findMany>[0] extends { where?: infer W } ? W : never = {
+  const where = {
     interview: { gte: minScore },
     ...(jdContains ? { jobDescription: { contains: jdContains } } : {}),
     ...(hasOutcome === "true" ? { hiringOutcome: { not: null } } : {}),
