@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b --noEmit && vite build",
+    "build": "echo 'extension build skipped — run build:ext locally to produce dist/'",
+    "build:ext": "tsc -b --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
