@@ -57,7 +57,7 @@ export function positiveRareDepthSignal(resumeText: string): SignalResult {
   if (perfs.length) markers.push({ name: `量化性能数字（${perfs[0]}）`, count: perfs.length });
 
   const dollars = resumeText.match(DOLLAR_AMOUNT_REGEX) ?? [];
-  if (dollars.length >= 2) markers.push({ name: `多处金额规模（${dollars[0].trim()}）`, count: dollars.length });
+  if (dollars.length >= 2) markers.push({ name: `多处金额规模（${(dollars[0] ?? "").trim()}）`, count: dollars.length });
 
   const markerTypes = markers.length; // how many DIFFERENT types of depth markers
   const totalHits = markers.reduce((sum, m) => sum + m.count, 0);
