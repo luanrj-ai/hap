@@ -5,6 +5,7 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
+    "build": "echo 'no build — Cloudflare Worker deploys via wrangler'",
     "dev": "wrangler dev --local --port 8787",
     "deploy": "wrangler deploy",
     "tail": "wrangler tail",

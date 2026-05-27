@@ -11,6 +11,9 @@
     "./verifiers/github": "./src/verifiers/github.ts",
     "./verifiers/website": "./src/verifiers/website.ts"
   },
+  "scripts": {
+    "build": "echo 'no build — TS source consumed via Next transpilePackages'"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.1",
     "@resumetruth/shared": "*",

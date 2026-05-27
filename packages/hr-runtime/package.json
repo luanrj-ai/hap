@@ -10,6 +10,7 @@
     "./interview": "./src/interview.ts"
   },
   "scripts": {
+    "build": "echo 'no build — server runs from TS via tsx'",
     "dev": "tsx watch src/cli.ts",
     "start": "tsx src/cli.ts"
   },
