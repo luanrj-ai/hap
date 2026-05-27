@@ -6,13 +6,20 @@ export const metadata = {
   title: "HAP v0.1 — Spec",
 };
 
+// Try a couple of relative roots — `process.cwd()` is `apps/web` in local dev
+// but the monorepo root on Vercel (because outputFileTracingRoot widens it).
 function loadSpec(): { ok: true; body: string } | { ok: false; error: string } {
-  try {
-    const p = resolve(process.cwd(), "../../spec/hap-v0.md");
-    return { ok: true, body: readFileSync(p, "utf8") };
-  } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : "unknown" };
+  const candidates = [
+    resolve(process.cwd(), "../../spec/hap-v0.md"),
+    resolve(process.cwd(), "spec/hap-v0.md"),
+    resolve(process.cwd(), "../spec/hap-v0.md"),
+  ];
+  for (const p of candidates) {
+    try {
+      return { ok: true, body: readFileSync(p, "utf8") };
+    } catch {}
   }
+  return { ok: false, error: `not found in: ${candidates.join(" | ")}` };
 }
 
 export default function SpecPage() {
