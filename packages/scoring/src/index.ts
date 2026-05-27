@@ -1,4 +1,5 @@
 import type {
+  ExpertPanelVerdict,
   ScoreDimension,
   ScoreRequest,
   ScoreResult,
@@ -73,8 +74,7 @@ export async function scoreResumeAsync(req: ScoreRequest): Promise<ScoreResult> 
   ].map((s) => ({ ...s, weight: getWeight(s.id) }));
 
   // ====== Expert panel for borderline cases ======
-  let panelVerdict = undefined as ReturnType<typeof shouldTriggerPanel> extends infer T ? T : never;
-  let expertPanel: Awaited<ReturnType<typeof runExpertPanel>> = null;
+  let expertPanel: ExpertPanelVerdict | null = null;
   if (hasLlm) {
     const decision = shouldTriggerPanel(signals);
     if (decision.trigger) {
