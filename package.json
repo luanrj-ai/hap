@@ -17,6 +17,8 @@
     "tune:weights": "npm run tune:weights -w @resumetruth/web",
     "tune:seed": "npm run tune:seed -w @resumetruth/web",
     "demo": "tsx scripts/demo-interview.ts",
+    "demo:apply": "tsx scripts/demo-apply.ts",
+    "test:scorer": "tsx scripts/test-scorer.ts",
     "dev:candidate": "npm run dev -w @hap/candidate-runtime",
     "dev:hr": "npm run dev -w @hap/hr-runtime",
     "dev:proxy": "npm run dev -w @hap/proxy",

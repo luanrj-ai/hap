@@ -24,6 +24,12 @@ export interface CandidateProfile {
   };
   /** How to reach human if HR-agent wants direct contact. */
   human_contact?: string;
+  /**
+   * Optional proof that the candidate controls their GitHub identity anchor:
+   * a public gist under that account containing a `HAP-PROOF` marker. Lifts the
+   * anchor from "asserted" to "proven" in the neutral scorer's report.
+   */
+  proof_of_control?: { method: "github_gist"; url: string };
 }
 
 export const EXAMPLE_PROFILE: CandidateProfile = {

@@ -27,6 +27,10 @@ export interface GitHubProfile {
 }
 
 const cache = new TTLCache<GitHubProfile>(60 * 60 * 1000); // 1 hour
+const repoCache = new TTLCache<GitHubRepoInfo>(60 * 60 * 1000);
+const commitCache = new TTLCache<GitHubCommitInfo>(60 * 60 * 1000);
+const prCache = new TTLCache<GitHubPrInfo>(60 * 60 * 1000);
+const gistCache = new TTLCache<GistInfo>(60 * 60 * 1000);
 
 function authHeaders(): Record<string, string> {
   const h: Record<string, string> = {
@@ -156,5 +160,191 @@ export async function verifyGitHubUser(login: string): Promise<GitHubProfile> {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return { exists: false, error: msg.slice(0, 100) };
+  }
+}
+
+// ---- Evidence-level verifiers: repo / commit / PR ---------------------
+// `notFound: true` means the server DEFINITIVELY said it does not exist (404)
+// — that's the only signal that justifies a "fabricated" verdict. `error`
+// means we couldn't check (rate limit / network) → treat as unverifiable.
+
+export interface GitHubRepoInfo {
+  exists: boolean;
+  notFound?: boolean;
+  fullName?: string;
+  ownerLogin?: string;
+  stars?: number;
+  language?: string;
+  description?: string;
+  topics?: string[];
+  pushedAt?: string;
+  error?: string;
+}
+
+export interface GitHubCommitInfo {
+  exists: boolean;
+  notFound?: boolean;
+  authorLogin?: string | null;
+  authorName?: string;
+  message?: string;
+  date?: string;
+  error?: string;
+}
+
+export interface GitHubPrInfo {
+  exists: boolean;
+  notFound?: boolean;
+  authorLogin?: string;
+  merged?: boolean;
+  title?: string;
+  error?: string;
+}
+
+export function parseRepoUrl(url: string): { owner: string; repo: string } | null {
+  const m = url.match(/github\.com\/([^/\s]+)\/([^/#?\s]+)/i);
+  if (!m) return null;
+  return { owner: m[1], repo: m[2].replace(/\.git$/, "") };
+}
+
+export function parseCommitUrl(url: string): { owner: string; repo: string; sha: string } | null {
+  const m = url.match(/github\.com\/([^/]+)\/([^/]+)\/commit\/([0-9a-f]{7,40})/i);
+  return m ? { owner: m[1], repo: m[2], sha: m[3] } : null;
+}
+
+export function parsePrUrl(url: string): { owner: string; repo: string; number: string } | null {
+  const m = url.match(/github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)/i);
+  return m ? { owner: m[1], repo: m[2], number: m[3] } : null;
+}
+
+export async function verifyGitHubRepo(owner: string, repo: string): Promise<GitHubRepoInfo> {
+  const key = `ghrepo:${owner}/${repo}`.toLowerCase();
+  const hit = repoCache.get(key);
+  if (hit) return hit;
+  try {
+    const res = await fetchWithTimeout(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`);
+    if (res.status === 404) {
+      const r: GitHubRepoInfo = { exists: false, notFound: true };
+      repoCache.set(key, r);
+      return r;
+    }
+    if (res.status === 403) return { exists: false, error: "rate limited (set GITHUB_TOKEN)" };
+    if (!res.ok) return { exists: false, error: `repo api ${res.status}` };
+    const j = (await res.json()) as {
+      full_name: string; owner?: { login?: string }; stargazers_count?: number;
+      language?: string | null; description?: string | null; topics?: string[]; pushed_at?: string;
+    };
+    const r: GitHubRepoInfo = {
+      exists: true, fullName: j.full_name, ownerLogin: j.owner?.login,
+      stars: j.stargazers_count, language: j.language ?? undefined,
+      description: j.description ?? undefined, topics: j.topics, pushedAt: j.pushed_at,
+    };
+    repoCache.set(key, r);
+    return r;
+  } catch (err) {
+    return { exists: false, error: (err instanceof Error ? err.message : String(err)).slice(0, 100) };
+  }
+}
+
+export async function isRepoContributor(owner: string, repo: string, login: string): Promise<boolean> {
+  try {
+    const res = await fetchWithTimeout(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contributors?per_page=100`);
+    if (!res.ok) return false;
+    const arr = (await res.json()) as Array<{ login?: string }>;
+    return arr.some((c) => c.login?.toLowerCase() === login.toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
+export async function verifyGitHubCommit(owner: string, repo: string, sha: string): Promise<GitHubCommitInfo> {
+  const key = `ghcommit:${owner}/${repo}@${sha}`.toLowerCase();
+  const hit = commitCache.get(key);
+  if (hit) return hit;
+  try {
+    const res = await fetchWithTimeout(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/commits/${encodeURIComponent(sha)}`);
+    if (res.status === 404 || res.status === 422) {
+      const r: GitHubCommitInfo = { exists: false, notFound: true };
+      commitCache.set(key, r);
+      return r;
+    }
+    if (res.status === 403) return { exists: false, error: "rate limited" };
+    if (!res.ok) return { exists: false, error: `commit api ${res.status}` };
+    const j = (await res.json()) as {
+      author?: { login?: string } | null;
+      commit?: { author?: { name?: string; date?: string }; message?: string };
+    };
+    const r: GitHubCommitInfo = {
+      exists: true,
+      authorLogin: j.author?.login ?? null,
+      authorName: j.commit?.author?.name,
+      message: j.commit?.message?.split("\n")[0]?.slice(0, 120),
+      date: j.commit?.author?.date,
+    };
+    commitCache.set(key, r);
+    return r;
+  } catch (err) {
+    return { exists: false, error: (err instanceof Error ? err.message : String(err)).slice(0, 100) };
+  }
+}
+
+export async function verifyGitHubPr(owner: string, repo: string, number: string): Promise<GitHubPrInfo> {
+  const key = `ghpr:${owner}/${repo}#${number}`.toLowerCase();
+  const hit = prCache.get(key);
+  if (hit) return hit;
+  try {
+    const res = await fetchWithTimeout(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${encodeURIComponent(number)}`);
+    if (res.status === 404) {
+      const r: GitHubPrInfo = { exists: false, notFound: true };
+      prCache.set(key, r);
+      return r;
+    }
+    if (res.status === 403) return { exists: false, error: "rate limited" };
+    if (!res.ok) return { exists: false, error: `pr api ${res.status}` };
+    const j = (await res.json()) as { user?: { login?: string }; merged?: boolean; title?: string };
+    const r: GitHubPrInfo = { exists: true, authorLogin: j.user?.login, merged: j.merged, title: j.title };
+    prCache.set(key, r);
+    return r;
+  } catch (err) {
+    return { exists: false, error: (err instanceof Error ? err.message : String(err)).slice(0, 100) };
+  }
+}
+
+// ---- Gist verifier (for proof-of-control) -----------------------------
+
+export interface GistInfo {
+  exists: boolean;
+  notFound?: boolean;
+  ownerLogin?: string;
+  /** Concatenated text of all files in the gist. */
+  text?: string;
+  error?: string;
+}
+
+/** Pull the gist id from a gist.github.com URL (with or without the username). */
+export function parseGistId(url: string): string | null {
+  const m = url.match(/gist\.github\.com\/(?:[^/]+\/)?([0-9a-f]{20,})/i);
+  return m ? m[1] : null;
+}
+
+export async function verifyGist(id: string): Promise<GistInfo> {
+  const key = `ghgist:${id}`.toLowerCase();
+  const hit = gistCache.get(key);
+  if (hit) return hit;
+  try {
+    const res = await fetchWithTimeout(`https://api.github.com/gists/${encodeURIComponent(id)}`);
+    if (res.status === 404) {
+      const r: GistInfo = { exists: false, notFound: true };
+      gistCache.set(key, r);
+      return r;
+    }
+    if (res.status === 403) return { exists: false, error: "rate limited" };
+    if (!res.ok) return { exists: false, error: `gist api ${res.status}` };
+    const j = (await res.json()) as { owner?: { login?: string }; files?: Record<string, { content?: string }> };
+    const text = Object.values(j.files ?? {}).map((f) => f.content ?? "").join("\n");
+    const r: GistInfo = { exists: true, ownerLogin: j.owner?.login, text };
+    gistCache.set(key, r);
+    return r;
+  } catch (err) {
+    return { exists: false, error: (err instanceof Error ? err.message : String(err)).slice(0, 100) };
   }
 }

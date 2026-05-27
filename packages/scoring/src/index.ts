@@ -175,4 +175,7 @@ function buildSummary(
   return `${verdict}。最强信号：${highestSignal.label}（${highestSignal.score}）；最弱信号：${lowestSignal.label}（${lowestSignal.score}）。`;
 }
 
+export * from "./score-application";
+export * from "./verifiers/evidence";
+
 export * from "@resumetruth/shared";
