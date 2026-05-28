@@ -1,0 +1,197 @@
+{
+  "$ref": "#/definitions/hap.profile",
+  "definitions": {
+    "hap.profile": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "hap.profile"
+        },
+        "hap_version": {
+          "type": "string",
+          "default": "0.2.0-draft"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "candidate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 120
+            },
+            "headline": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "specializations": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 40
+              },
+              "maxItems": 20
+            },
+            "profile_evidence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "github_user",
+                      "github_repo",
+                      "github_commit",
+                      "github_pr",
+                      "talk",
+                      "blog_post",
+                      "paper",
+                      "package",
+                      "linkedin",
+                      "personal_site",
+                      "oss_maintainer",
+                      "email_domain"
+                    ]
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "venue": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "title": {
+                    "type": "string",
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "type",
+                  "url"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 12
+            },
+            "cc_footprint": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "project": {
+                    "type": "string",
+                    "maxLength": 80
+                  },
+                  "sessions": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "last_active": {
+                    "type": "string",
+                    "maxLength": 40
+                  },
+                  "note": {
+                    "type": "string",
+                    "maxLength": 280
+                  },
+                  "repo_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "self_reported": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                },
+                "required": [
+                  "project",
+                  "self_reported"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 30
+            },
+            "proof_of_control": {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "const": "github_gist"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "method",
+                "url"
+              ],
+              "additionalProperties": false
+            },
+            "inbox": {
+              "type": "object",
+              "properties": {
+                "endpoint": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "transport": {
+                  "type": "string",
+                  "enum": [
+                    "https",
+                    "mailto"
+                  ],
+                  "default": "https"
+                }
+              },
+              "required": [
+                "endpoint"
+              ],
+              "additionalProperties": false
+            },
+            "open_to": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 40
+              },
+              "maxItems": 15
+            },
+            "rate_limit": {
+              "type": "object",
+              "properties": {
+                "per_day": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "name",
+            "profile_evidence"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "kind",
+        "candidate"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -27,6 +27,9 @@
     "test:profile": "tsx scripts/test-profile.ts",
     "test:match": "tsx scripts/test-match.ts",
     "test:discovery": "tsx scripts/test-discovery.ts",
+    "test:spec": "tsx scripts/test-spec.ts",
+    "test:all": "npm run test:scorer && npm run test:profile && npm run test:match && npm run test:discovery && npm run test:spec",
+    "spec:schemas": "tsx scripts/gen-schemas.ts",
     "dev:candidate": "npm run dev -w @hap/candidate-runtime",
     "dev:hr": "npm run dev -w @hap/hr-runtime",
     "dev:proxy": "npm run dev -w @hap/proxy",
@@ -37,6 +40,9 @@
   },
   "dependencies": {
     "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "zod-to-json-schema": "^3.25.2"
   },
   "overrides": {
     "@types/react": "^19.0.0",

@@ -1,0 +1,209 @@
+{
+  "$ref": "#/definitions/hap.posting",
+  "definitions": {
+    "hap.posting": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "hap.posting"
+        },
+        "hap_version": {
+          "type": "string",
+          "default": "0.2.0-draft"
+        },
+        "posting_id": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 64
+        },
+        "jd": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 120
+            },
+            "summary": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "must_have": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "maxItems": 15
+            },
+            "nice_to_have": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 120
+              },
+              "maxItems": 15
+            },
+            "domain": {
+              "type": "string",
+              "maxLength": 40
+            },
+            "external_url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "required": [
+            "title",
+            "summary",
+            "must_have"
+          ],
+          "additionalProperties": false
+        },
+        "rubric": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question_id": {
+                "type": "string",
+                "maxLength": 40
+              },
+              "ask": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "scored",
+                      "yes_no",
+                      "evidence_request"
+                    ]
+                  },
+                  "prompt": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "evidence_preference": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "github_user",
+                        "github_repo",
+                        "github_commit",
+                        "github_pr",
+                        "talk",
+                        "blog_post",
+                        "paper",
+                        "package",
+                        "linkedin",
+                        "personal_site",
+                        "oss_maintainer",
+                        "email_domain"
+                      ]
+                    },
+                    "maxItems": 6
+                  }
+                },
+                "required": [
+                  "type",
+                  "prompt"
+                ],
+                "additionalProperties": false
+              },
+              "required": {
+                "type": "boolean",
+                "default": true
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "question_id",
+              "ask"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 15
+        },
+        "submit": {
+          "type": "object",
+          "properties": {
+            "endpoint": {
+              "type": "string",
+              "format": "uri"
+            },
+            "transport": {
+              "type": "string",
+              "enum": [
+                "https",
+                "mailto"
+              ],
+              "default": "https"
+            },
+            "public_key": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "required": [
+            "endpoint"
+          ],
+          "additionalProperties": false
+        },
+        "from": {
+          "type": "object",
+          "properties": {
+            "company": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "human_contact": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "agent_url": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "additionalProperties": false
+        },
+        "flows": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "candidate_initiated",
+              "hr_initiated"
+            ]
+          },
+          "default": [
+            "candidate_initiated"
+          ]
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "kind",
+        "posting_id",
+        "jd",
+        "rubric",
+        "submit",
+        "from"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
