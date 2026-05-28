@@ -26,6 +26,18 @@ import {
   type VerificationResult,
 } from "./verifiers/evidence";
 
+// This module is the public entry point for the HAP application scorer
+// (imported as "@resumetruth/scoring/score-application"). Re-export the
+// evidence-verifier surface so consumers get everything from one subpath.
+export { verifyEvidence, verifyProofOfControl } from "./verifiers/evidence";
+export type {
+  IdentityAnchor,
+  ProofOfControl,
+  ProofResult,
+  VerificationLevel,
+  VerificationResult,
+} from "./verifiers/evidence";
+
 type Relevance = "strong" | "partial" | "none";
 
 export interface EvidenceScore {

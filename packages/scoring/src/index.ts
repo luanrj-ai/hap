@@ -175,7 +175,8 @@ function buildSummary(
   return `${verdict}。最强信号：${highestSignal.label}（${highestSignal.score}）；最弱信号：${lowestSignal.label}（${lowestSignal.score}）。`;
 }
 
-export * from "./score-application";
-export * from "./verifiers/evidence";
+// NOTE: the HAP application scorer (score-application + verifiers/evidence) is
+// intentionally NOT re-exported here — it pulls in @hap/a2a-adapter, which the
+// web app must not bundle. Import it via the subpath "@resumetruth/scoring/score-application".
 
 export * from "@resumetruth/shared";

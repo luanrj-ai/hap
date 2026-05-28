@@ -11,7 +11,7 @@
  */
 import { Hono } from "hono";
 import { parseAsyncHapMessage, type Application, type Posting, type Receipt } from "@hap/a2a-adapter";
-import { scoreApplication, type ScoreReport } from "@resumetruth/scoring";
+import { scoreApplication, type ScoreReport } from "@resumetruth/scoring/score-application";
 
 export interface InboxRecord {
   application: Application;

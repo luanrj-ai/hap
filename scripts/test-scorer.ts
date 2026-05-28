@@ -8,7 +8,7 @@
  *   title = verification level, note = the "facts" string fed to relevance.
  */
 import { PostingZ, ApplicationZ, type Evidence } from "@hap/a2a-adapter";
-import { scoreApplication, type VerificationResult } from "@resumetruth/scoring";
+import { scoreApplication, type VerificationResult } from "@resumetruth/scoring/score-application";
 
 const mockVerify = async (ev: Evidence): Promise<VerificationResult> => {
   const level = ev.title as VerificationResult["level"];
