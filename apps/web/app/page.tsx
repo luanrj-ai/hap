@@ -14,84 +14,77 @@ declare global {
   }
 }
 
-type SpecTab = "card" | "ask" | "answer" | "close";
+type SpecTab = "posting" | "application" | "receipt" | "score";
 
 const SPEC_PANES: Record<SpecTab, string> = {
-  card: `<span class="c-com">// GET https://alex-chen.dev/.well-known/agent.json</span>
+  posting: `<span class="c-com">// employer publishes a role — static data, no agent required</span>
 {
-  <span class="c-key">"name"</span>: <span class="c-str">"alex-chen / candidate-agent"</span>,
-  <span class="c-key">"protocolVersion"</span>: <span class="c-str">"a2a/0.3"</span>,
-  <span class="c-key">"skills"</span>: [<span class="c-str">"hap.v0"</span>],
-  <span class="c-key">"endpoints"</span>: {
-    <span class="c-key">"message"</span>: <span class="c-str">"https://alex-chen.dev/a2a/message"</span>
-  },
-  <span class="c-key">"hap"</span>: {
-    <span class="c-key">"role"</span>: <span class="c-str">"candidate"</span>,
-    <span class="c-key">"supported_versions"</span>: [<span class="c-str">"v0.1"</span>],
-    <span class="c-key">"supported_evidence_types"</span>: [
-      <span class="c-str">"github_user"</span>, <span class="c-str">"github_repo"</span>, <span class="c-str">"github_commit"</span>,
-      <span class="c-str">"talk"</span>, <span class="c-str">"blog_post"</span>, <span class="c-str">"package"</span>,
-      <span class="c-str">"personal_site"</span>
-    ],
-    <span class="c-key">"rate_limit"</span>: { <span class="c-key">"per_day"</span>: <span class="c-num">100</span>, <span class="c-key">"per_hour"</span>: <span class="c-num">20</span> },
-    <span class="c-key">"human_contact"</span>: <span class="c-str">"alex@example.com"</span>
-  }
-}`,
-  ask: `<span class="c-com">// HR-agent → candidate-agent</span>
-{
-  <span class="c-key">"kind"</span>: <span class="c-str">"hap.ask"</span>,
-  <span class="c-key">"session_id"</span>: <span class="c-str">"h_01HXY7K4M2P9R8VQ"</span>,
-  <span class="c-key">"question_id"</span>: <span class="c-str">"q1"</span>,
-  <span class="c-key">"ask"</span>: {
-    <span class="c-key">"type"</span>: <span class="c-str">"open"</span>,
-    <span class="c-key">"prompt"</span>: <span class="c-str">"Walk me through an idempotency system you've shipped at &gt;10k RPS. What broke first?"</span>,
-    <span class="c-key">"evidence_preference"</span>: [<span class="c-str">"github_commit"</span>, <span class="c-str">"talk"</span>]
-  },
-  <span class="c-key">"metadata"</span>: {
-    <span class="c-key">"hap"</span>: { <span class="c-key">"version"</span>: <span class="c-str">"v0.1"</span> }
-  }
-}`,
-  answer: `<span class="c-com">// candidate-agent → HR-agent</span>
-{
-  <span class="c-key">"kind"</span>: <span class="c-str">"hap.answer"</span>,
-  <span class="c-key">"session_id"</span>: <span class="c-str">"h_01HXY7K4M2P9R8VQ"</span>,
-  <span class="c-key">"question_id"</span>: <span class="c-str">"q1"</span>,
-  <span class="c-key">"answer"</span>: {
-    <span class="c-key">"text"</span>: <span class="c-str">"Designed the key-normalization layer for our payment router. Tuned LRU eviction after a retry storm under network partition."</span>,
-    <span class="c-key">"evidence"</span>: [
-      {
-        <span class="c-key">"type"</span>: <span class="c-str">"github_commit"</span>,
-        <span class="c-key">"url"</span>: <span class="c-str">"https://github.com/alex-chen/ratelimit-go/commit/9f4ac21"</span>,
-        <span class="c-key">"note"</span>: <span class="c-str">"PR introducing the key normalization"</span>
-      },
-      {
-        <span class="c-key">"type"</span>: <span class="c-str">"talk"</span>,
-        <span class="c-key">"url"</span>: <span class="c-str">"https://youtu.be/AbCdE"</span>,
-        <span class="c-key">"venue"</span>: <span class="c-str">"GopherCon 2024"</span>,
-        <span class="c-key">"title"</span>: <span class="c-str">"Designing Idempotent Payment APIs"</span>
+  <span class="c-key">"kind"</span>: <span class="c-str">"hap.posting"</span>,
+  <span class="c-key">"posting_id"</span>: <span class="c-str">"renlab-ai-builder-001"</span>,
+  <span class="c-key">"jd"</span>: { <span class="c-key">"title"</span>: <span class="c-str">"AI Builder · multi-agent / SWM"</span> },
+  <span class="c-key">"rubric"</span>: [
+    {
+      <span class="c-key">"question_id"</span>: <span class="c-str">"m1"</span>,
+      <span class="c-key">"required"</span>: <span class="c-num">true</span>,
+      <span class="c-key">"ask"</span>: {
+        <span class="c-key">"type"</span>: <span class="c-str">"open"</span>,
+        <span class="c-key">"prompt"</span>: <span class="c-str">"Show evidence for: multi-agent simulations end to end."</span>
       }
-    ],
-    <span class="c-key">"confidence"</span>: <span class="c-str">"high"</span>,
-    <span class="c-key">"decline_reason"</span>: <span class="c-null">null</span>
-  }
+    }
+  ],
+  <span class="c-key">"submit"</span>: { <span class="c-key">"endpoint"</span>: <span class="c-str">"https://api.renlab.ai/apply"</span>, <span class="c-key">"transport"</span>: <span class="c-str">"https"</span> }
 }`,
-  close: `<span class="c-com">// either side → counterpart</span>
+  application: `<span class="c-com">// candidate-agent → employer inbox · one outbound packet</span>
 {
-  <span class="c-key">"kind"</span>: <span class="c-str">"hap.session.close"</span>,
-  <span class="c-key">"session_id"</span>: <span class="c-str">"h_01HXY7K4M2P9R8VQ"</span>,
-  <span class="c-key">"outcome"</span>: <span class="c-str">"fit"</span>,
-  <span class="c-key">"summary"</span>: <span class="c-str">"Strong evidence on idempotency at scale. OSS maintenance recent. Recommend phone screen."</span>,
-  <span class="c-key">"next_step"</span>: <span class="c-str">"schedule_human_interview"</span>
+  <span class="c-key">"kind"</span>: <span class="c-str">"hap.application"</span>,
+  <span class="c-key">"application_id"</span>: <span class="c-str">"a_01HXY7K4M2P9"</span>,
+  <span class="c-key">"posting_ref"</span>: { <span class="c-key">"posting_id"</span>: <span class="c-str">"renlab-ai-builder-001"</span> },
+  <span class="c-key">"candidate"</span>: {
+    <span class="c-key">"name"</span>: <span class="c-str">"Alex Chen"</span>,
+    <span class="c-key">"human_contact"</span>: <span class="c-str">"alex@example.com"</span>,
+    <span class="c-key">"profile_evidence"</span>: [{ <span class="c-key">"type"</span>: <span class="c-str">"github_user"</span>, <span class="c-key">"url"</span>: <span class="c-str">"https://github.com/alex-chen"</span> }],
+    <span class="c-key">"proof_of_control"</span>: { <span class="c-key">"method"</span>: <span class="c-str">"github_gist"</span>, <span class="c-key">"url"</span>: <span class="c-str">"https://gist.github.com/alex-chen/d1f0…"</span> }
+  },
+  <span class="c-key">"responses"</span>: [
+    {
+      <span class="c-key">"question_id"</span>: <span class="c-str">"m1"</span>,
+      <span class="c-key">"answer"</span>: {
+        <span class="c-key">"text"</span>: <span class="c-str">"Built a 200-agent market simulation end to end."</span>,
+        <span class="c-key">"evidence"</span>: [{ <span class="c-key">"type"</span>: <span class="c-str">"github_repo"</span>, <span class="c-key">"url"</span>: <span class="c-str">"https://github.com/alex-chen/abm-sim"</span> }],
+        <span class="c-key">"confidence"</span>: <span class="c-str">"high"</span>
+      }
+    }
+  ]
+}`,
+  receipt: `<span class="c-com">// employer inbox → candidate · dumb ACK (scoring runs in the background)</span>
+{
+  <span class="c-key">"kind"</span>: <span class="c-str">"hap.receipt"</span>,
+  <span class="c-key">"application_id"</span>: <span class="c-str">"a_01HXY7K4M2P9"</span>,
+  <span class="c-key">"status"</span>: <span class="c-str">"received"</span>,
+  <span class="c-key">"next"</span>: <span class="c-str">"agent_followup_possible"</span>
+}`,
+  score: `<span class="c-com">// neutral scorer — dereferenced evidence, not self-reported</span>
+{
+  <span class="c-key">"verdict"</span>: <span class="c-str">"fit"</span>,
+  <span class="c-key">"overall"</span>: <span class="c-num">0.79</span>,
+  <span class="c-key">"identity"</span>: { <span class="c-key">"anchor"</span>: <span class="c-str">"alex-chen"</span>, <span class="c-key">"proven"</span>: <span class="c-num">true</span> },
+  <span class="c-key">"items"</span>: [
+    {
+      <span class="c-key">"question_id"</span>: <span class="c-str">"m1"</span>, <span class="c-key">"required"</span>: <span class="c-num">true</span>,
+      <span class="c-key">"score"</span>: <span class="c-num">1.0</span>, <span class="c-key">"bestLevel"</span>: <span class="c-str">"verified"</span>, <span class="c-key">"relevance"</span>: <span class="c-str">"strong"</span>
+    }
+  ],
+  <span class="c-key">"flags"</span>: [<span class="c-str">"✅ identity proven: gist owned by @alex-chen"</span>]
 }
 
-<span class="c-com">// outcome  ∈ { "fit", "no_fit", "unclear", "candidate_declined" }</span>
-<span class="c-com">// next_step ∈ { "human_follow_up", "schedule_human_interview", "archive" }</span>`,
+<span class="c-com">// the agent's prose &amp; self-reported confidence score nothing</span>
+<span class="c-com">// a fabricated link is a hard gate → "no_fit"</span>`,
 };
 
 export default function HapLanding() {
   const [theme, setTheme] = useState<"dark" | "light">("light");
   const [lang, setLang] = useState<Lang>("en");
-  const [activeTab, setActiveTab] = useState<SpecTab>("card");
+  const [activeTab, setActiveTab] = useState<SpecTab>("posting");
   const [scriptReady, setScriptReady] = useState(false);
 
   // restore saved theme + lang
@@ -157,10 +150,10 @@ export default function HapLanding() {
   const t = getContent(lang);
 
   const specTabLabel = (tab: SpecTab): string => {
-    if (tab === "card") return ".well-known/agent.json";
-    if (tab === "ask") return "hap.ask";
-    if (tab === "answer") return "hap.answer";
-    return "hap.session.close";
+    if (tab === "posting") return "hap.posting";
+    if (tab === "application") return "hap.application";
+    if (tab === "receipt") return "hap.receipt";
+    return "score-report";
   };
 
   return (
@@ -176,7 +169,7 @@ export default function HapLanding() {
         <div className="hap-wrap hap-nav__inner">
           <a className="hap-wordmark" href="/">
             <span className="hap-wordmark__h">hap</span>
-            <span className="hap-wordmark__v">v0.1 · {lang === "zh" ? "草案" : "draft"}</span>
+            <span className="hap-wordmark__v">v0.2 · {lang === "zh" ? "草案" : "draft"}</span>
           </a>
           <div className="hap-nav__links">
             <a href="#spec">{t.nav.spec}</a>
@@ -256,9 +249,9 @@ export default function HapLanding() {
                 </a>
                 <button
                   className="hap-btn hap-btn--cyan"
-                  data-copy="git clone https://github.com/luanrj-ai/hap && npm run demo"
+                  data-copy="git clone https://github.com/luanrj-ai/hap && npm run demo:apply"
                 >
-                  <span style={{ color: "var(--accent)" }}>$</span>&nbsp;npm&nbsp;run&nbsp;demo
+                  <span style={{ color: "var(--accent)" }}>$</span>&nbsp;npm&nbsp;run&nbsp;demo:apply
                   <span style={{ color: "var(--dim)", marginLeft: 6, fontSize: 11 }}>⌘C</span>
                 </button>
                 <a className="hap-btn" href="#spec">
@@ -388,7 +381,7 @@ export default function HapLanding() {
 
           <div className="vA-tabs">
             <div className="vA-tabs__bar" role="tablist">
-              {(["card", "ask", "answer", "close"] as SpecTab[]).map((tab) => (
+              {(["posting", "application", "receipt", "score"] as SpecTab[]).map((tab) => (
                 <button
                   key={tab}
                   className="vA-tabs__tab"
@@ -400,7 +393,7 @@ export default function HapLanding() {
               ))}
             </div>
 
-            {(["card", "ask", "answer", "close"] as SpecTab[]).map((tab) => (
+            {(["posting", "application", "receipt", "score"] as SpecTab[]).map((tab) => (
               <div
                 key={tab}
                 className="vA-tabs__pane"
@@ -514,7 +507,7 @@ export default function HapLanding() {
             </a>
             <button
               className="hap-btn hap-btn--cyan"
-              data-copy="git clone https://github.com/luanrj-ai/hap && npm run demo"
+              data-copy="git clone https://github.com/luanrj-ai/hap && npm run demo:apply"
             >
               <span style={{ color: "var(--accent)" }}>$</span>&nbsp;{t.finalCta.ctaClone}
             </button>
@@ -530,7 +523,7 @@ export default function HapLanding() {
             <div className="hap-footer__col" style={{ maxWidth: 280 }}>
               <div className="hap-wordmark" style={{ fontSize: 14 }}>
                 <span className="hap-wordmark__h">hap</span>
-                <span className="hap-wordmark__v">v0.1 · {lang === "zh" ? "草案" : "draft"}</span>
+                <span className="hap-wordmark__v">v0.2 · {lang === "zh" ? "草案" : "draft"}</span>
               </div>
               <p style={{ margin: "6px 0 0", color: "var(--muted)", lineHeight: 1.6 }}>{t.footer.blurb}</p>
             </div>
