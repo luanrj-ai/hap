@@ -30,5 +30,7 @@ apps/web/eval/data/
 hap-application.json
 # local living-profile artifact
 hap-profile.json
+# local apply ledger (rate-cap/dedupe)
+hap-applied.json
 # test fixture
 _cc_fixture/

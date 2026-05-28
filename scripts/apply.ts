@@ -17,7 +17,7 @@ import { config as loadEnv } from "dotenv";
 import { resolve } from "node:path";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { PostingZ, parseAsyncHapMessage, type Application } from "@hap/a2a-adapter";
-import { gatherProfile, buildApplication, renderApplicationEmail } from "@hap/candidate-runtime";
+import { gatherProfile, buildApplication, renderApplicationEmail, applyToTargets } from "@hap/candidate-runtime";
 
 loadEnv({ path: resolve(process.cwd(), "apps/web/.env") });
 
@@ -90,7 +90,87 @@ async function draft(): Promise<void> {
   console.log(`then send it for real:\n   tsx scripts/apply.ts --send\n`);
 }
 
-(has("send") ? send() : draft()).catch((e) => {
+// --- identity fallback: reuse the living profile (P1) if --handle is omitted ---
+function resolveIdentity(): { handle?: string; contact?: string; proof?: { method: "github_gist"; url: string } } {
+  const handle = flag("handle");
+  const contact = flag("contact");
+  const proofUrl = flag("proof");
+  const proof = proofUrl ? { method: "github_gist" as const, url: proofUrl } : undefined;
+  if (handle) return { handle, contact, proof };
+
+  const profPath = resolve(process.cwd(), "hap-profile.json");
+  if (existsSync(profPath)) {
+    try {
+      const p = JSON.parse(readFileSync(profPath, "utf8")) as {
+        candidate?: { profile_evidence?: Array<{ type: string; url: string }>; inbox?: { endpoint?: string }; proof_of_control?: { method: "github_gist"; url: string } };
+      };
+      const gh = p.candidate?.profile_evidence?.find((e) => e.type === "github_user");
+      const login = gh?.url.match(/github\.com\/([^/]+)/i)?.[1];
+      const mail = p.candidate?.inbox?.endpoint?.replace(/^mailto:/, "");
+      return { handle: login, contact: contact ?? mail, proof: proof ?? p.candidate?.proof_of_control };
+    } catch {
+      /* fall through */
+    }
+  }
+  return { handle: undefined, contact, proof };
+}
+
+// --- applied-ledger: dedupe / rate-cap cooldown for full-auto ---
+const LEDGER = resolve(process.cwd(), "hap-applied.json");
+const COOLDOWN_MS = 30 * 24 * 60 * 60 * 1000;
+function readApplied(): Set<string> {
+  if (!existsSync(LEDGER)) return new Set();
+  try {
+    const j = JSON.parse(readFileSync(LEDGER, "utf8")) as { applied?: Array<{ posting_id: string; at: number }> };
+    const cutoff = Date.now() - COOLDOWN_MS;
+    return new Set((j.applied ?? []).filter((a) => a.at >= cutoff).map((a) => a.posting_id));
+  } catch {
+    return new Set();
+  }
+}
+function recordApplied(ids: string[]): void {
+  let existing: Array<{ posting_id: string; at: number }> = [];
+  if (existsSync(LEDGER)) {
+    try { existing = (JSON.parse(readFileSync(LEDGER, "utf8")).applied ?? []) as Array<{ posting_id: string; at: number }>; } catch {}
+  }
+  const now = Date.now();
+  for (const id of ids) existing.push({ posting_id: id, at: now });
+  writeFileSync(LEDGER, JSON.stringify({ applied: existing }, null, 2));
+}
+
+async function targets(): Promise<void> {
+  const urls = (flag("targets") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
+  if (!urls.length) { console.error("usage: apply --targets <url1,url2,...> [--handle <gh>] [--auto --threshold 0.5 --cap 5]"); process.exit(1); }
+
+  const { handle, contact, proof } = resolveIdentity();
+  if (!handle) { console.error("need --handle <github> (or a hap-profile.json from `npm run profile`)"); process.exit(1); }
+
+  const { profile, warnings } = await gatherProfile(handle, { contact, proof });
+  warnings.forEach((w) => console.warn(`  ⚠ ${w}`));
+
+  const mode = has("auto") ? "auto" : "list";
+  const threshold = Number(flag("threshold") ?? 0.5);
+  const cap = Number(flag("cap") ?? 5);
+  const already = mode === "auto" ? readApplied() : new Set<string>();
+
+  const results = await applyToTargets({ profile, postingUrls: urls, mode, threshold, cap, alreadyApplied: already });
+
+  console.log(`\ncandidate: ${profile.name}  ·  mode: ${mode}\nranked targets (match%):`);
+  for (const r of results) {
+    const status = r.error ? `error: ${r.error}` : r.applied ? `APPLIED → ${r.receipt?.status}` : r.skipped ? `skipped: ${r.skipped}` : "";
+    console.log(`  ${String(Math.round(r.match * 100)).padStart(3)}%  ${r.title ?? r.url}${status ? `  — ${status}` : ""}`);
+  }
+
+  if (mode === "auto") {
+    recordApplied(results.filter((r) => r.applied && r.posting_id).map((r) => r.posting_id!));
+    console.log(`\napplied to ${results.filter((r) => r.applied).length} (threshold ${threshold}, cap ${cap}).`);
+  } else {
+    console.log(`\nlist mode (agent recommended). apply to one you pick:\n   tsx scripts/apply.ts --posting <url> --handle ${handle}\n   (or re-run with --auto to auto-apply above --threshold)`);
+  }
+}
+
+const run = has("send") ? send() : flag("targets") !== undefined ? targets() : draft();
+run.catch((e) => {
   console.error(e);
   process.exit(1);
 });

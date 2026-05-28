@@ -23,6 +23,7 @@
     "profile": "tsx scripts/profile.ts",
     "serve:inbox": "tsx scripts/serve-inbox.ts",
     "test:profile": "tsx scripts/test-profile.ts",
+    "test:match": "tsx scripts/test-match.ts",
     "dev:candidate": "npm run dev -w @hap/candidate-runtime",
     "dev:hr": "npm run dev -w @hap/hr-runtime",
     "dev:proxy": "npm run dev -w @hap/proxy",
