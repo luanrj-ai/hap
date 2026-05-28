@@ -163,19 +163,49 @@ export type Receipt = z.infer<typeof ReceiptZ>;
 // "双向皆可运行". Flesh out (standing answers? rate limits?) when a real
 // recruiter-initiated case appears.
 
+/**
+ * One project from the candidate's local Claude Code footprint. SELF-REPORTED:
+ * derived locally from the candidate's own machine, NOT dereferenceable — so it
+ * is context only and must never feed a score. Where `repo_url` is present the
+ * project maps to a public repo and *that* can be verified.
+ */
+export const CcFootprintItemZ = z.object({
+  project: z.string().max(80),
+  sessions: z.number().int().nonnegative().optional(),
+  last_active: z.string().max(40).optional(),
+  note: z.string().max(280).optional(), // candidate-authored, e.g. outcome/effectiveness
+  repo_url: z.string().url().optional(),
+  self_reported: z.literal(true),
+});
+export type CcFootprintItem = z.infer<typeof CcFootprintItemZ>;
+
+/**
+ * A candidate's living, candidate-OWNED profile (the single-player artifact).
+ * Useful with zero employers; opt-in publishable into a discovery index later.
+ */
 export const ProfileCardZ = z.object({
   kind: z.literal("hap.profile"),
   hap_version: z.string().default(HAP_DRAFT_VERSION),
+  generated_at: z.string().datetime().optional(),
   candidate: z.object({
     name: z.string().min(2).max(120),
     headline: z.string().max(200).optional(),
+    specializations: z.array(z.string().max(40)).max(20).optional(),
     profile_evidence: z.array(EvidenceZ).max(12),
-    /** Where an HR-agent delivers a session.open / asks. The candidate's inbox. */
-    inbox: z.object({
-      endpoint: z.string().url(),
-      transport: z.enum(["https", "mailto"]).default("https"),
-    }),
-    /** Coarse routing so HR doesn't spam off-target asks. */
+    /** Self-reported Claude Code footprint — context only, never scored. */
+    cc_footprint: z.array(CcFootprintItemZ).max(30).optional(),
+    /** Proof the candidate controls the identity anchor (gist now, OAuth later). */
+    proof_of_control: z
+      .object({ method: z.literal("github_gist"), url: z.string().url() })
+      .optional(),
+    /** Where a recruiter-agent reaches the candidate. Optional until discoverable. */
+    inbox: z
+      .object({
+        endpoint: z.string().url(),
+        transport: z.enum(["https", "mailto"]).default("https"),
+      })
+      .optional(),
+    /** Coarse routing so recruiters don't spam off-target asks. */
     open_to: z.array(z.string().max(40)).max(15).optional(),
     rate_limit: z
       .object({ per_day: z.number().int().positive().optional() })

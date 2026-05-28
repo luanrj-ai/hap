@@ -3,5 +3,7 @@ export * from "./handlers";
 export * from "./server";
 export * from "./apply";
 export * from "./gather";
+export * from "./claude-footprint";
+export * from "./living-profile";
 export * from "./render";
 export * from "./find-contact";

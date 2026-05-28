@@ -28,3 +28,7 @@ apps/web/eval/data/
 
 # local apply review artifact
 hap-application.json
+# local living-profile artifact
+hap-profile.json
+# test fixture
+_cc_fixture/
