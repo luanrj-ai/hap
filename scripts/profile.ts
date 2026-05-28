@@ -63,6 +63,24 @@ async function main() {
   writeFileSync(out, JSON.stringify(profile, null, 2));
   console.log(`\nwrote ${out}`);
   console.log(`This is yours. Re-run to refresh; schedule it (cron / Task Scheduler) to keep it living.`);
+
+  // Opt-in discovery: publish the profile into a central index so recruiters can find you.
+  const indexUrl = flag("publish");
+  if (indexUrl) {
+    console.log(`\npublishing (opt-in) to ${indexUrl} ...`);
+    try {
+      const res = await fetch(`${indexUrl.replace(/\/$/, "")}/publish`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(profile),
+      });
+      const j = (await res.json().catch(() => null)) as { ok?: boolean; key?: string; verified?: { note?: string }; error?: string } | null;
+      if (res.ok && j?.ok) console.log(`  ✓ indexed as @${j.key} — ${j.verified?.note ?? ""}`);
+      else console.error(`  ✗ ${j?.error ?? res.status}`);
+    } catch (e) {
+      console.error(`  ✗ ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
 }
 
 main().catch((e) => {

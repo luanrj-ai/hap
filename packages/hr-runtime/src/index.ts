@@ -3,3 +3,4 @@ export * from "./interview";
 export * from "./server";
 export * from "./inbox";
 export * from "./posting";
+export * from "./discovery";
