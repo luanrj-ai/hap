@@ -1,25 +1,32 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
+import localFont from "next/font/local";
 
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+// Self-hosted (was next/font/google). Building with Turbopack intermittently
+// failed to fetch Google Fonts on a cold cache — "Can't resolve
+// '@vercel/turbopack-next/internal/font/google/font'" — which broke cold Vercel
+// builds. These are the latin-subset variable woff2 files, so no network is
+// touched at build time. See apps/web/app/fonts/.
+
+const inter = localFont({
+  src: "./fonts/inter.woff2",
+  weight: "400 600",
   variable: "--font-inter",
   display: "swap",
 });
 
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const mono = localFont({
+  src: "./fonts/jetbrains-mono.woff2",
+  weight: "400 600",
   variable: "--font-jbm",
   display: "swap",
 });
 
-const serif = Newsreader({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
+const serif = localFont({
+  src: [
+    { path: "./fonts/newsreader.woff2", weight: "400 500", style: "normal" },
+    { path: "./fonts/newsreader-italic.woff2", weight: "400 500", style: "italic" },
+  ],
   variable: "--font-newsreader",
   display: "swap",
 });
