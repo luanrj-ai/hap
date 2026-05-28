@@ -47,27 +47,22 @@ function deriveFit(responses: ApplicationResponse[]): "strong" | "plausible" | "
   return "plausible";
 }
 
-export interface ApplyOptions {
+export interface BuildOptions {
   profile: CandidateProfile;
   posting: Posting;
-  /** Injectable transport — defaults to global fetch. */
-  fetchImpl?: typeof fetch;
   /** Streaming hook, called once per answered rubric item. */
   onAnswer?: (questionId: string, resp: ApplicationResponse) => void;
 }
 
-export interface ApplyResult {
-  application: Application;
-  receipt: Receipt | null;
-  error?: string;
-}
-
-export async function applyToPosting(opts: ApplyOptions): Promise<ApplyResult> {
+/**
+ * Steps 1–3: answer the rubric with evidence and assemble (but DON'T send) the
+ * hap.application. This is what the candidate reviews before anything leaves
+ * the machine — the privacy-control surface of the "preview & confirm" step.
+ */
+export async function buildApplication(opts: BuildOptions): Promise<Application> {
   const { profile, posting } = opts;
-  const doFetch = opts.fetchImpl ?? fetch;
   const application_id = genApplicationId();
 
-  // 1–2. answer each published rubric item with evidence (reuse v0.1 logic)
   const responses: ApplicationResponse[] = [];
   for (const pa of posting.rubric) {
     const ask: Ask = {
@@ -84,8 +79,8 @@ export async function applyToPosting(opts: ApplyOptions): Promise<ApplyResult> {
 
   const profileEvidence = profile.evidenceSources.filter((e) => IDENTITY_TYPES.has(e.type)).slice(0, 6);
 
-  // 3. bundle — parse through the schema so defaults apply and it's validated
-  const application = ApplicationZ.parse({
+  // parse through the schema so defaults apply and it's validated
+  return ApplicationZ.parse({
     kind: "hap.application",
     hap_version: HAP_DRAFT_VERSION,
     application_id,
@@ -100,8 +95,20 @@ export async function applyToPosting(opts: ApplyOptions): Promise<ApplyResult> {
     self_assessment: { fit: deriveFit(responses) },
     disclosure: { contact_release: "on_submit", public: false },
   });
+}
 
-  // 4–5. submit outbound, read receipt
+export interface SubmitResult {
+  receipt: Receipt | null;
+  error?: string;
+}
+
+/** Step 4–5: POST the (already-reviewed) application to the posting's inbox. */
+export async function submitApplication(
+  application: Application,
+  posting: Posting,
+  fetchImpl?: typeof fetch,
+): Promise<SubmitResult> {
+  const doFetch = fetchImpl ?? fetch;
   try {
     const res = await doFetch(posting.submit.endpoint, {
       method: "POST",
@@ -111,12 +118,26 @@ export async function applyToPosting(opts: ApplyOptions): Promise<ApplyResult> {
     const raw = (await res.json().catch(() => null)) as unknown;
     const msg = parseAsyncHapMessage(raw);
     const receipt = msg && msg.kind === "hap.receipt" ? msg : null;
-    return {
-      application,
-      receipt,
-      error: receipt ? undefined : `inbox returned ${res.status} with no valid receipt`,
-    };
+    return { receipt, error: receipt ? undefined : `inbox returned ${res.status} with no valid receipt` };
   } catch (err) {
-    return { application, receipt: null, error: err instanceof Error ? err.message : String(err) };
+    return { receipt: null, error: err instanceof Error ? err.message : String(err) };
   }
+}
+
+export interface ApplyOptions extends BuildOptions {
+  /** Injectable transport — defaults to global fetch. */
+  fetchImpl?: typeof fetch;
+}
+
+export interface ApplyResult {
+  application: Application;
+  receipt: Receipt | null;
+  error?: string;
+}
+
+/** Build + submit in one shot (no review step). */
+export async function applyToPosting(opts: ApplyOptions): Promise<ApplyResult> {
+  const application = await buildApplication(opts);
+  const { receipt, error } = await submitApplication(application, opts.posting, opts.fetchImpl);
+  return { application, receipt, error };
 }

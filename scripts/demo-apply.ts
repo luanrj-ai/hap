@@ -13,7 +13,7 @@
 import { config as loadEnv } from "dotenv";
 import { resolve } from "node:path";
 import { serve } from "@hono/node-server";
-import { applyToPosting, renderApplicationEmail, findApplicationContact, EXAMPLE_PROFILE } from "@hap/candidate-runtime";
+import { applyToPosting, gatherProfile, renderApplicationEmail, findApplicationContact, EXAMPLE_PROFILE } from "@hap/candidate-runtime";
 import { buildInbox, postingFromJD, type JobDescription } from "@hap/hr-runtime";
 
 loadEnv({ path: resolve(process.cwd(), "apps/web/.env") });
@@ -46,17 +46,27 @@ async function main() {
   const { app, records, idle } = buildInbox({ posting, autoScore: true });
   const server = serve({ fetch: app.fetch, port: INBOX_PORT });
 
+  // Auto-build the candidate profile from a PUBLIC GitHub handle if GH_HANDLE is
+  // set; otherwise fall back to the bundled example profile.
+  let profile = EXAMPLE_PROFILE;
+  const handle = process.env.GH_HANDLE;
+  if (handle) {
+    const gathered = await gatherProfile(handle, { contact: process.env.GH_CONTACT });
+    gathered.warnings.forEach((w) => console.log(`  ⚠ ${w}`));
+    profile = gathered.profile;
+  }
+
   const provider = process.env.OPENAI_API_KEY ? "openai" : process.env.ANTHROPIC_API_KEY ? "anthropic" : "none (template)";
   console.log("\n=== HAP candidate-initiated apply (v0.2 draft) ===\n");
   console.log(`posting   : ${posting.jd.title}`);
   console.log(`employer  : ${posting.from.company}  ·  inbox ${posting.submit.endpoint}`);
   console.log(`rubric    : ${posting.rubric.length} items (${posting.rubric.filter((r) => r.required).length} required)`);
-  console.log(`candidate : ${EXAMPLE_PROFILE.name}  ← swap in your real profile to apply for real`);
+  console.log(`candidate : ${profile.name}  ${handle ? `(auto-gathered from github/${handle})` : "← set GH_HANDLE to auto-gather from public GitHub"}`);
   console.log(`llm       : ${provider}\n`);
 
   try {
     const result = await applyToPosting({
-      profile: EXAMPLE_PROFILE,
+      profile,
       posting,
       onAnswer: (qid, r) => {
         const tag = r.answer.decline_reason ? `decline:${r.answer.decline_reason}` : r.answer.confidence;

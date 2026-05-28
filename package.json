@@ -19,6 +19,8 @@
     "demo": "tsx scripts/demo-interview.ts",
     "demo:apply": "tsx scripts/demo-apply.ts",
     "test:scorer": "tsx scripts/test-scorer.ts",
+    "apply": "tsx scripts/apply.ts",
+    "serve:inbox": "tsx scripts/serve-inbox.ts",
     "dev:candidate": "npm run dev -w @hap/candidate-runtime",
     "dev:hr": "npm run dev -w @hap/hr-runtime",
     "dev:proxy": "npm run dev -w @hap/proxy",

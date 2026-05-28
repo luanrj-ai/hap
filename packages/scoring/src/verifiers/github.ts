@@ -13,6 +13,10 @@ export interface GitHubProfile {
   exists: boolean;
   /** The login (case-corrected by GitHub) when exists. */
   login?: string;
+  /** Display name from the profile, if set. */
+  name?: string;
+  /** Profile "blog"/website URL, if set (often a personal site). */
+  blog?: string;
   publicRepos?: number;
   followers?: number;
   /** Days since account was created. */
@@ -86,6 +90,8 @@ export async function verifyGitHubUser(login: string): Promise<GitHubProfile> {
     }
     const user = (await userRes.json()) as {
       login: string;
+      name: string | null;
+      blog: string | null;
       public_repos: number;
       followers: number;
       created_at: string;
@@ -148,6 +154,8 @@ export async function verifyGitHubUser(login: string): Promise<GitHubProfile> {
     const result: GitHubProfile = {
       exists: true,
       login: user.login,
+      name: user.name ?? undefined,
+      blog: user.blog && user.blog.trim() ? user.blog.trim() : undefined,
       publicRepos: user.public_repos,
       followers: user.followers,
       accountAgeDays,

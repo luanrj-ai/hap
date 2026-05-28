@@ -156,9 +156,9 @@ export const EN: ContentTree = {
     pillars: [
       {
         num: "01 · CANDIDATE-INITIATED",
-        h: <>Your agent applies.<br />Nothing to host.</>,
-        p: <>Read a published role, answer each requirement with evidence, submit one outbound packet. No always-on server on your side, no public profile broadcasting that you're looking. You send your work to the one employer you chose — and no one else.</>,
-        sig: "// outbound · ephemeral · no public job-hunt",
+        h: <>One command.<br />Nothing to write or host.</>,
+        p: <>Your profile is auto-built from your <i className="vA-em-serif">public</i> GitHub — nothing to fill in, no server to run, your local machine never touched. The agent answers each requirement with evidence and sends one outbound packet to the one employer you chose. No public profile broadcasting that you're looking.</>,
+        sig: "// public github → packet · ephemeral · no local scan",
       },
       {
         num: "02 · SCORED ON VERIFIED EVIDENCE",
@@ -198,17 +198,17 @@ export const EN: ContentTree = {
     steps: [
       { cmd: <><span className="c-prompt">$</span>git clone https://github.com/luanrj-ai/hap && cd hap</>, copyText: "git clone https://github.com/luanrj-ai/hap && cd hap", copyLabel: "copy" },
       { cmd: <><span className="c-prompt">$</span>npm install && npm run build <span className="c-com"># ~ 20s</span></>, copyText: "npm install && npm run build", copyLabel: "copy" },
-      { cmd: <><span className="c-prompt">$</span>npm run demo:apply <span className="c-com"># agent applies w/ evidence → inbox verifies &amp; scores</span></>, copyText: "npm run demo:apply", copyLabel: "copy" },
+      { cmd: <><span className="c-prompt">$</span>npm run demo:apply <span className="c-com"># builds a packet from public GitHub → inbox verifies &amp; scores</span></>, copyText: "npm run demo:apply", copyLabel: "copy" },
     ],
     note1: (
-      <>↪ live link verification? add{" "}
-        <code style={{ color: "var(--cyan)" }}>GITHUB_TOKEN</code>{" "}
-        <span style={{ color: "var(--dim)" }}>(unauth = 60/h)</span>
+      <>↪ apply as yourself:{" "}
+        <code style={{ color: "var(--cyan)" }}>GH_HANDLE=&lt;your-github&gt; npm run demo:apply</code>
       </>
     ),
     note2: (
-      <>↪ LLM relevance? add <code style={{ color: "var(--cyan)" }}>OPENAI_API_KEY</code> — or just run{" "}
-        <code style={{ color: "var(--cyan)" }}>npm run test:scorer</code>
+      <>↪ real flow: <code style={{ color: "var(--cyan)" }}>npm run serve:inbox</code> +{" "}
+        <code style={{ color: "var(--cyan)" }}>npm run apply</code>
+        <span style={{ color: "var(--dim)" }}> · set GITHUB_TOKEN to verify links (unauth = 60/h)</span>
       </>
     ),
   },
@@ -383,9 +383,9 @@ export const ZH: ContentTree = {
     pillars: [
       {
         num: "01 · 候选发起",
-        h: <>你的 agent 主动投。<br />没有要托管的东西。</>,
-        p: <>读一个已发布的职位，针对每条要求用证据作答，发出一个出站应答包。你这边不用常驻服务器，也不用公开档案向全世界广播你在看机会。你只把作品发给你选定的那一家 —— 别人看不到。</>,
-        sig: "// 出站 · 用完即走 · 不公开求职",
+        h: <>一条命令。<br />不用写、不用托管。</>,
+        p: <>你的 profile 从你的<i className="vA-em-serif">公开</i> GitHub 自动生成 —— 不用填、不用跑服务器、绝不碰你本地机器。agent 针对每条要求用证据作答，发一个出站包给你选定的那一家。没有公开档案向全世界广播你在看机会。</>,
+        sig: "// 公开 github → 应答包 · 用完即走 · 不扫本地",
       },
       {
         num: "02 · 按核实的证据打分",
@@ -423,17 +423,17 @@ export const ZH: ContentTree = {
     steps: [
       { cmd: <><span className="c-prompt">$</span>git clone https://github.com/luanrj-ai/hap && cd hap</>, copyText: "git clone https://github.com/luanrj-ai/hap && cd hap", copyLabel: "复制" },
       { cmd: <><span className="c-prompt">$</span>npm install && npm run build <span className="c-com"># 约 20 秒</span></>, copyText: "npm install && npm run build", copyLabel: "复制" },
-      { cmd: <><span className="c-prompt">$</span>npm run demo:apply <span className="c-com"># agent 带证据投递 → 收件箱核实并打分</span></>, copyText: "npm run demo:apply", copyLabel: "复制" },
+      { cmd: <><span className="c-prompt">$</span>npm run demo:apply <span className="c-com"># 从公开 GitHub 生成应答包 → 收件箱核实并打分</span></>, copyText: "npm run demo:apply", copyLabel: "复制" },
     ],
     note1: (
-      <>↪ 想真去核实链接？加上{" "}
-        <code style={{ color: "var(--cyan)" }}>GITHUB_TOKEN</code>{" "}
-        <span style={{ color: "var(--dim)" }}>（不带 token = 60 次/小时）</span>
+      <>↪ 以你自己的身份投：{" "}
+        <code style={{ color: "var(--cyan)" }}>GH_HANDLE=&lt;你的-github&gt; npm run demo:apply</code>
       </>
     ),
     note2: (
-      <>↪ 想要 LLM 判相关性？加 <code style={{ color: "var(--cyan)" }}>OPENAI_API_KEY</code> —— 或直接跑{" "}
-        <code style={{ color: "var(--cyan)" }}>npm run test:scorer</code>
+      <>↪ 真实流程：<code style={{ color: "var(--cyan)" }}>npm run serve:inbox</code> +{" "}
+        <code style={{ color: "var(--cyan)" }}>npm run apply</code>
+        <span style={{ color: "var(--dim)" }}> · 配 GITHUB_TOKEN 才能核实链接（不带 = 60/小时）</span>
       </>
     ),
   },

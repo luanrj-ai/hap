@@ -25,3 +25,6 @@ apps/web/eval/data/
 # Build / cache
 .tsbuildinfo
 *.tsbuildinfo
+
+# local apply review artifact
+hap-application.json
