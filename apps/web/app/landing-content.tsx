@@ -202,14 +202,14 @@ export const EN: ContentTree = {
     cmd: "npm run demo:tour",
   },
   install: {
-    eyebrow: "Install · paste to Claude Code",
-    h2: <>Let your Claude Code <em>set it up</em>.</>,
-    lead: <>Paste this into Claude Code — it clones, installs, and builds your profile from your public GitHub. Then you're ready to apply.</>,
+    eyebrow: "Get started",
+    h2: <>Two ways in. <em className="vA-em-serif vA-em-cyan">~60 seconds.</em></>,
+    lead: <>Paste one block to your Claude Code, or run three commands yourself. No keys — template fallback if no LLM.</>,
     ccLabel: "paste to Claude Code",
     copyLabel: "copy",
     ccText:
       "Set up HAP for me. Clone https://github.com/luanrj-ai/hap, then run `npm install && npm run build`. Then build my HAP profile from my PUBLIC GitHub: `npm run profile -- --handle <your-github> --with-claude`. Show me my verified evidence and the command to apply to a role.",
-    note: <>↪ replace <code>&lt;your-github&gt;</code> with your handle. No Claude Code? The plain commands are in <a href="#quickstart">quickstart</a>.</>,
+    note: <>↪ replace <code>&lt;your-github&gt;</code> with your handle.</>,
   },
   why: {
     eyebrow: "What makes it different",
@@ -471,14 +471,14 @@ export const ZH: ContentTree = {
     cmd: "npm run demo:tour",
   },
   install: {
-    eyebrow: "安装 · 复制给 Claude Code",
-    h2: <>让你的 Claude Code <em>自动装好</em>。</>,
-    lead: <>把这段复制进 Claude Code —— 它会 clone、安装,并从你的公开 GitHub 生成 profile。然后就能投递了。</>,
+    eyebrow: "开始用",
+    h2: <>两种方式,<em className="vA-em-serif vA-em-cyan">约 60 秒。</em></>,
+    lead: <>把一段粘进你的 Claude Code,或自己跑三条命令。无需密钥 —— 没配 LLM 时回落到模板。</>,
     ccLabel: "复制给 Claude Code",
     copyLabel: "复制",
     ccText:
       "帮我装好 HAP。Clone https://github.com/luanrj-ai/hap,然后运行 `npm install && npm run build`。再从我的公开 GitHub 生成 HAP profile:`npm run profile -- --handle <你的-github> --with-claude`。把我核实到的证据和投递命令告诉我。",
-    note: <>↪ 把 <code>&lt;你的-github&gt;</code> 换成你的用户名。没有 Claude Code?纯命令在 <a href="#quickstart">快速开始</a>。</>,
+    note: <>↪ 把 <code>&lt;你的-github&gt;</code> 换成你的用户名。</>,
   },
   why: {
     eyebrow: "有什么不同",
