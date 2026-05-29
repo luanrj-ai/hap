@@ -298,8 +298,8 @@ export const EN: ContentTree = {
     ],
   },
   spec: {
-    eyebrow: "§3 · Spec excerpt · v0.2",
-    h2: <>Four shapes. <em className="vA-em-serif vA-em-cyan">Read them in five minutes.</em></>,
+    eyebrow: "§3 · The spec · v0.2",
+    h2: <>Four messages. <em className="vA-em-serif vA-em-cyan">One open spec.</em></>,
     lead: (
       <>
         Employer publishes a {code("hap.posting")}; the candidate-agent returns a{" "}
@@ -345,9 +345,7 @@ export const EN: ContentTree = {
     rows: [
       { ver: "v0.1", date: "May 2026", title: "Live interview", sub: "synchronous recruiter-driven interview — now the optional L1 layer", line: "· ask / answer / session.close", pill: ["cyan", "shipped"] },
       { ver: "v0.2", date: "May 2026", title: "Candidate-initiated platform", sub: "living profile · verified scorer · multi-target apply · opt-in discovery · recruiter dashboard · spec + JSON Schema", line: "· score on dereferenced evidence, not prose", pill: ["cyan", "shipped"] },
-      { ver: "v0.3", date: "Q3 2026", title: "One-click identity", sub: "Sign-in-with-GitHub OAuth + interactive challenge to close the impersonation gap", line: "· + more evidence verifiers", pill: ["yellow", "drafting"] },
-      { ver: "v0.4", date: "Q4 2026", title: "Recruiter-initiated sourcing", sub: "fully symmetric agent2agent; both sides may initiate", line: "— 双向", pill: [null, "planned"] },
-      { ver: "v1.0", date: "≥ Q3 2027", title: "Schema freeze", sub: "predicated on ≥ 5 independent runtimes interoperating cleanly", line: "— backward-compatible additions only", pill: [null, "target"] },
+      { ver: "next", date: "2026–27", title: "One-click identity · sourcing · freeze", sub: "GitHub-OAuth identity → recruiter-initiated sourcing → v1.0 schema freeze (≥ 5 interoperating runtimes)", line: "", pill: ["yellow", "planned"] },
     ],
   },
   faq: {
@@ -358,10 +356,6 @@ export const EN: ContentTree = {
       { q: <>How do you know the GitHub account is really theirs?</>, a: <>By default the anchor is {em("asserted")}. A {code("proof_of_control")} gist (a {code("HAP-PROOF")} marker under that account) makes it {em("proven")}; v0.3 adds one-click GitHub OAuth. The residual gap (wholesale impersonation of a public account) is acknowledged, not hidden.</> },
       { q: <>Does it read my private code or Claude chats?</>, a: <>No. Scoring uses only {em("public")} evidence. The Claude Code footprint is opt-in and reads {em("metadata only")} — project names + session counts, never transcript contents — and stays on your machine; only what you see goes into your profile.</> },
       { q: <>What stops spam — both ways?</>, a: <>Applying is candidate-initiated and targeted (auto-apply is gated by a match threshold + a cap). Discovery never exposes contact; a recruiter must request it, rate-limited by {em("your")} terms, with a blocklist. No bot bans — abuse is priced by verification + reputation.</> },
-      { q: <>Isn't this just an AI résumé screener?</>, a: <>Those read what you {em("wrote")} and rank the confident prose. HAP scores what it can {em("open and verify")}, and the candidate drives. Different trust root, opposite direction.</> },
-      { q: <>Why not just MCP?</>, a: <>MCP is agent ↔ tool. HAP standardizes the {em("payload")} (posting, evidence, verified score, profile) on top of {a2aLink("A2A")}, not the transport. Bring whichever you like underneath.</> },
-      { q: <>Is this an ATS / a LinkedIn?</>, a: <>No. It's the application + evidence + discovery layer, with no central résumé database — your profile and contact stay candidate-owned. An ATS can be the employer's inbox.</> },
-      { q: <>Who's it for right now?</>, a: <>Technical / product ICs with a public footprint — where the verified signal is strongest. The evidence registry is open, so other domains can extend it.</> },
     ],
   },
   finalCta: {
@@ -564,8 +558,8 @@ export const ZH: ContentTree = {
     ],
   },
   spec: {
-    eyebrow: "§3 · 协议节选 · v0.2",
-    h2: <>四个形态。<em className="vA-em-serif vA-em-cyan">五分钟读完。</em></>,
+    eyebrow: "§3 · 协议 · v0.2",
+    h2: <>四种消息。<em className="vA-em-serif vA-em-cyan">一份开放协议。</em></>,
     lead: (
       <>
         雇主发布 {code("hap.posting")};候选 agent 返回 {code("hap.application")};收件箱回 {code("hap.receipt")} 和一份中立、解引用后的 {code("评分")}。候选人自持的 {code("hap.profile")} 驱动 opt-in 发现。四者都有机器可读的 JSON Schema。
@@ -608,9 +602,7 @@ export const ZH: ContentTree = {
     rows: [
       { ver: "v0.1", date: "2026 年 5 月", title: "实时面试", sub: "同步、招聘方驱动的面试 —— 现为可选的 L1 层", line: "· ask / answer / session.close", pill: ["cyan", "已发布"] },
       { ver: "v0.2", date: "2026 年 5 月", title: "候选发起平台", sub: "活简历 · 核实打分器 · 多目标投递 · opt-in 发现 · 招聘看板 · spec + JSON Schema", line: "· 按解引用的证据打分,不看漂亮话", pill: ["cyan", "已发布"] },
-      { ver: "v0.3", date: "2026 Q3", title: "一键身份", sub: "Sign-in-with-GitHub OAuth + 交互式挑战,补上冒充缺口", line: "· + 更多证据验证器", pill: ["yellow", "起草中"] },
-      { ver: "v0.4", date: "2026 Q4", title: "雇主发起 sourcing", sub: "完全对称的 agent2agent;两边都能发起", line: "—— 双向", pill: [null, "计划中"] },
-      { ver: "v1.0", date: "≥ 2027 Q3", title: "Schema 冻结", sub: "前提:≥ 5 个独立运行时能干净互操作", line: "—— 只允许向后兼容的新增", pill: [null, "目标"] },
+      { ver: "后续", date: "2026–27", title: "一键身份 · sourcing · 冻结", sub: "GitHub-OAuth 身份 → 雇主发起 sourcing → v1.0 schema 冻结(≥ 5 个互操作运行时)", line: "", pill: ["yellow", "计划中"] },
     ],
   },
   faq: {
@@ -621,10 +613,6 @@ export const ZH: ContentTree = {
       { q: <>你怎么知道那个 GitHub 账号真是他的?</>, a: <>默认锚点是 {em("声称")}。一个 {code("proof_of_control")} gist(该账号下含 {code("HAP-PROOF")} 标记)让它变 {em("已证明")};v0.3 加一键 GitHub OAuth。残余缺口(整套冒充一个公开账号)我们直说,不藏。</> },
       { q: <>它会读我的私有代码或 Claude 聊天吗?</>, a: <>不会。打分只用{em("公开")}证据。Claude Code 足迹是 opt-in,且{em("只读元数据")} —— 项目名 + session 计数,绝不读 transcript 内容 —— 留在你机器上;只有你看到的才进 profile。</> },
       { q: <>两个方向怎么防垃圾?</>, a: <>投递是候选发起、有的放矢(全自动受匹配阈值 + cap 限制)。发现环节绝不暴露联系方式;招聘方必须请求,受{em("你")}设的条款限流,带黑名单。不封 bot —— 滥用靠验证 + 信誉来抬价。</> },
-      { q: <>这不就是个 AI 简历筛选器吗?</>, a: <>那些读你{em("写")}的、给自信的漂亮话排名。HAP 给它能{em("点开并核实")}的东西打分,而且候选人在驱动。信任根不同,方向相反。</> },
-      { q: <>为什么不直接用 MCP?</>, a: <>MCP 是 agent ↔ tool。HAP 在 {a2aLink("A2A")} 之上标准化{em("负载")}(posting、证据、核实分、profile),不是传输。底下用哪个随你。</> },
-      { q: <>它是 ATS / LinkedIn 吗?</>, a: <>不是。它是投递 + 证据 + 发现层,没有中心简历数据库 —— 你的 profile 和联系方式归候选人。ATS 可以当雇主收件箱。</> },
-      { q: <>现在适合谁?</>, a: <>有公开足迹的技术/产品 IC —— 这里可信信号最强。证据注册表是开放的,其他领域可扩展。</> },
     ],
   },
   finalCta: {

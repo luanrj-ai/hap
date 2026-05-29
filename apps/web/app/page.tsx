@@ -14,73 +14,6 @@ declare global {
   }
 }
 
-type SpecTab = "posting" | "application" | "receipt" | "score";
-
-const SPEC_PANES: Record<SpecTab, string> = {
-  posting: `<span class="c-com">// employer publishes a role — static data, no agent required</span>
-{
-  <span class="c-key">"kind"</span>: <span class="c-str">"hap.posting"</span>,
-  <span class="c-key">"posting_id"</span>: <span class="c-str">"renlab-ai-builder-001"</span>,
-  <span class="c-key">"jd"</span>: { <span class="c-key">"title"</span>: <span class="c-str">"AI Builder · multi-agent / SWM"</span> },
-  <span class="c-key">"rubric"</span>: [
-    {
-      <span class="c-key">"question_id"</span>: <span class="c-str">"m1"</span>,
-      <span class="c-key">"required"</span>: <span class="c-num">true</span>,
-      <span class="c-key">"ask"</span>: {
-        <span class="c-key">"type"</span>: <span class="c-str">"open"</span>,
-        <span class="c-key">"prompt"</span>: <span class="c-str">"Show evidence for: multi-agent simulations end to end."</span>
-      }
-    }
-  ],
-  <span class="c-key">"submit"</span>: { <span class="c-key">"endpoint"</span>: <span class="c-str">"https://api.renlab.ai/apply"</span>, <span class="c-key">"transport"</span>: <span class="c-str">"https"</span> }
-}`,
-  application: `<span class="c-com">// candidate-agent → employer inbox · one outbound packet</span>
-{
-  <span class="c-key">"kind"</span>: <span class="c-str">"hap.application"</span>,
-  <span class="c-key">"application_id"</span>: <span class="c-str">"a_01HXY7K4M2P9"</span>,
-  <span class="c-key">"posting_ref"</span>: { <span class="c-key">"posting_id"</span>: <span class="c-str">"renlab-ai-builder-001"</span> },
-  <span class="c-key">"candidate"</span>: {
-    <span class="c-key">"name"</span>: <span class="c-str">"Alex Chen"</span>,
-    <span class="c-key">"human_contact"</span>: <span class="c-str">"alex@example.com"</span>,
-    <span class="c-key">"profile_evidence"</span>: [{ <span class="c-key">"type"</span>: <span class="c-str">"github_user"</span>, <span class="c-key">"url"</span>: <span class="c-str">"https://github.com/alex-chen"</span> }],
-    <span class="c-key">"proof_of_control"</span>: { <span class="c-key">"method"</span>: <span class="c-str">"github_gist"</span>, <span class="c-key">"url"</span>: <span class="c-str">"https://gist.github.com/alex-chen/d1f0…"</span> }
-  },
-  <span class="c-key">"responses"</span>: [
-    {
-      <span class="c-key">"question_id"</span>: <span class="c-str">"m1"</span>,
-      <span class="c-key">"answer"</span>: {
-        <span class="c-key">"text"</span>: <span class="c-str">"Built a 200-agent market simulation end to end."</span>,
-        <span class="c-key">"evidence"</span>: [{ <span class="c-key">"type"</span>: <span class="c-str">"github_repo"</span>, <span class="c-key">"url"</span>: <span class="c-str">"https://github.com/alex-chen/abm-sim"</span> }],
-        <span class="c-key">"confidence"</span>: <span class="c-str">"high"</span>
-      }
-    }
-  ]
-}`,
-  receipt: `<span class="c-com">// employer inbox → candidate · dumb ACK (scoring runs in the background)</span>
-{
-  <span class="c-key">"kind"</span>: <span class="c-str">"hap.receipt"</span>,
-  <span class="c-key">"application_id"</span>: <span class="c-str">"a_01HXY7K4M2P9"</span>,
-  <span class="c-key">"status"</span>: <span class="c-str">"received"</span>,
-  <span class="c-key">"next"</span>: <span class="c-str">"agent_followup_possible"</span>
-}`,
-  score: `<span class="c-com">// neutral scorer — dereferenced evidence, not self-reported</span>
-{
-  <span class="c-key">"verdict"</span>: <span class="c-str">"fit"</span>,
-  <span class="c-key">"overall"</span>: <span class="c-num">0.79</span>,
-  <span class="c-key">"identity"</span>: { <span class="c-key">"anchor"</span>: <span class="c-str">"alex-chen"</span>, <span class="c-key">"proven"</span>: <span class="c-num">true</span> },
-  <span class="c-key">"items"</span>: [
-    {
-      <span class="c-key">"question_id"</span>: <span class="c-str">"m1"</span>, <span class="c-key">"required"</span>: <span class="c-num">true</span>,
-      <span class="c-key">"score"</span>: <span class="c-num">1.0</span>, <span class="c-key">"bestLevel"</span>: <span class="c-str">"verified"</span>, <span class="c-key">"relevance"</span>: <span class="c-str">"strong"</span>
-    }
-  ],
-  <span class="c-key">"flags"</span>: [<span class="c-str">"✅ identity proven: gist owned by @alex-chen"</span>]
-}
-
-<span class="c-com">// the agent's prose &amp; self-reported confidence score nothing</span>
-<span class="c-com">// a fabricated link is a hard gate → "no_fit"</span>`,
-};
-
 // "See it run" — faithful: one application packet (evidence per requirement) →
 // one score report. Two candidates: honest (FIT) and faker (NO_FIT). Not a chat.
 type DemoEv = { type: string; url: string; verified: boolean };
@@ -115,7 +48,6 @@ const DEMO_CASES: DemoCase[] = [
 export default function HapLanding() {
   const [theme, setTheme] = useState<"dark" | "light">("light");
   const [lang, setLang] = useState<Lang>("en");
-  const [activeTab, setActiveTab] = useState<SpecTab>("posting");
   const [scriptReady, setScriptReady] = useState(false);
 
   // restore saved theme + lang
@@ -191,13 +123,6 @@ export default function HapLanding() {
   }, [lang]);
 
   const t = getContent(lang);
-
-  const specTabLabel = (tab: SpecTab): string => {
-    if (tab === "posting") return "hap.posting";
-    if (tab === "application") return "hap.application";
-    if (tab === "receipt") return "hap.receipt";
-    return "score-report";
-  };
 
   return (
     <>
@@ -507,31 +432,6 @@ export default function HapLanding() {
           <p className="hap-eyebrow">{t.spec.eyebrow}</p>
           <h2 className="hap-h2">{t.spec.h2}</h2>
           <p className="hap-lead">{t.spec.lead}</p>
-
-          <div className="vA-tabs">
-            <div className="vA-tabs__bar" role="tablist">
-              {(["posting", "application", "receipt", "score"] as SpecTab[]).map((tab) => (
-                <button
-                  key={tab}
-                  className="vA-tabs__tab"
-                  data-active={activeTab === tab ? "1" : undefined}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {specTabLabel(tab)}
-                </button>
-              ))}
-            </div>
-
-            {(["posting", "application", "receipt", "score"] as SpecTab[]).map((tab) => (
-              <div
-                key={tab}
-                className="vA-tabs__pane"
-                data-active={activeTab === tab ? "1" : undefined}
-              >
-                <pre dangerouslySetInnerHTML={{ __html: SPEC_PANES[tab] }} />
-              </div>
-            ))}
-          </div>
 
           <div className="vA-spec__links">
             {t.spec.links.map((l, i) => (
