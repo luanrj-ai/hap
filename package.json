@@ -18,6 +18,7 @@
     "tune:seed": "npm run tune:seed -w @resumetruth/web",
     "demo": "tsx scripts/demo-interview.ts",
     "demo:apply": "tsx scripts/demo-apply.ts",
+    "demo:tour": "tsx scripts/demo-tour.ts",
     "test:scorer": "tsx scripts/test-scorer.ts",
     "apply": "tsx scripts/apply.ts",
     "discover": "tsx scripts/discover.ts",
