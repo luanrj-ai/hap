@@ -6,6 +6,7 @@
  * per-requirement, evidence as clickable links, honest declines shown as such.
  */
 import type { Application, Posting, PublishedAsk } from "@hap/a2a-adapter";
+import type { CandidateProfile } from "./profile";
 
 export interface RenderedEmail {
   subject: string;
@@ -67,4 +68,30 @@ export function renderApplicationEmail(application: Application, posting: Postin
     subject: `Application — ${application.candidate.name} for ${posting.jd.title}`,
     markdown,
   };
+}
+
+/**
+ * A short cover email built from the candidate's profile — for a discovered
+ * company that has NO HAP posting (so there's no rubric to answer). You pitch
+ * your verified evidence, not a résumé. The candidate sends it to the company's
+ * official channel found by findApplicationContact.
+ */
+export function renderProfilePitch(profile: CandidateProfile, opts: { company?: string } = {}): RenderedEmail {
+  const to = opts.company ?? "team";
+  const about = profile.evidenceSources.slice(0, 6).map(evidenceLine).join("\n");
+  const markdown = [
+    `Hi ${to},`,
+    ``,
+    `I'm ${profile.name}${profile.tagline ? ` — ${profile.tagline}` : ""}. Instead of a résumé, here is public, verifiable evidence of my work — every link is yours to open and check:`,
+    ``,
+    about,
+    ``,
+    profile.specializations?.length ? `**Focus:** ${profile.specializations.join(", ")}` : ``,
+    `**Contact:** ${profile.human_contact || "(on request)"}`,
+    ``,
+    `---`,
+    `_Sent by a HAP candidate-agent. Claims are constrained to cited, dereferenceable evidence._`,
+  ].filter(Boolean).join("\n");
+
+  return { subject: `${profile.name} — verifiable work, not a résumé`, markdown };
 }

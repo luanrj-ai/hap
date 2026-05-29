@@ -4,6 +4,7 @@ export * from "./server";
 export * from "./apply";
 export * from "./apply-targets";
 export * from "./match";
+export * from "./discover";
 export * from "./gather";
 export * from "./claude-footprint";
 export * from "./living-profile";
