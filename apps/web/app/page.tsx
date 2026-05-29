@@ -282,6 +282,31 @@ export default function HapLanding() {
         </div>
       </section>
 
+      {/* ============ HOW IT WORKS ============ */}
+      <section id="how" className="hap-section">
+        <div className="hap-wrap">
+          <p className="hap-eyebrow">{t.howItWorks.eyebrow}</p>
+          <h2 className="hap-h2">{t.howItWorks.h2}</h2>
+          <p className="hap-lead">{t.howItWorks.lead}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20, marginTop: 26 }}>
+            {t.howItWorks.flows.map((flow) => (
+              <div key={flow.title} style={{ border: "1px solid var(--border)", borderRadius: 14, padding: "22px 24px" }}>
+                <h3 style={{ margin: "0 0 14px", fontSize: 17, fontWeight: 600 }}>{flow.title}</h3>
+                <ol style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                  {flow.steps.map((s, i) => (
+                    <li key={i} style={{ display: "flex", gap: 12, padding: "10px 0", borderTop: i ? "1px solid var(--border)" : "none" }}>
+                      <span style={{ flex: "0 0 24px", height: 24, borderRadius: "50%", border: "1px solid var(--accent)", color: "var(--accent)", fontSize: 12, fontWeight: 600, display: "inline-flex", alignItems: "center", justifyContent: "center" }}>{i + 1}</span>
+                      <span style={{ fontSize: 14, lineHeight: 1.55, color: "var(--text)" }}>{s}</span>
+                    </li>
+                  ))}
+                </ol>
+                <p style={{ margin: "14px 0 0", fontSize: 13, color: "var(--cyan)" }}>↳ {flow.outcome}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ============ WHY ============ */}
       <section id="why" className="hap-section">
         <div className="hap-wrap">

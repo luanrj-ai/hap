@@ -26,6 +26,12 @@ export interface ContentTree {
     metaBYO: ReactNode;
     anchors: Array<{ kbd: string; h: string; p: string; href: string }>;
   };
+  howItWorks: {
+    eyebrow: string;
+    h2: ReactNode;
+    lead: string;
+    flows: Array<{ title: string; steps: ReactNode[]; outcome: string }>;
+  };
   why: {
     eyebrow: string;
     h2: ReactNode;
@@ -141,14 +147,41 @@ export const EN: ContentTree = {
     metaA2A: <>↪ open <b>A2A</b> profile · self-hostable</>,
     metaBYO: <>🔐 <b>your data stays yours</b></>,
     anchors: [
-      { kbd: "§1 · WHY", h: "Built for people who ship with agents", p: "What it does that a job board can't.", href: "#why" },
+      { kbd: "§ · HOW", h: "How it works", p: "The step-by-step for job-seekers and for hiring.", href: "#how" },
       { kbd: "§2 · RUN", h: "60-second local demo", p: "One command: apply with verified evidence.", href: "#quickstart" },
       { kbd: "§3 · SPEC", h: "Four messages + JSON Schema", p: "posting · application · receipt · profile.", href: "#spec" },
       { kbd: "§4 · WHY-NOT", h: "Lies, identity, spam, MCP", p: "Honest answers to the skeptical reader.", href: "#faq" },
     ],
   },
+  howItWorks: {
+    eyebrow: "How it works",
+    h2: <>No résumé, no forms.<br />Here's the <em>actual</em> flow.</>,
+    lead: "Two short commands on each side — that's the whole thing.",
+    flows: [
+      {
+        title: "① If you're job-hunting",
+        steps: [
+          "Run one command — your profile builds itself from your real GitHub work (and, if you opt in, what you've built with Claude Code).",
+          "Name a company, or let it find matches — it pulls the role and checks how well you fit.",
+          "It writes the application for you, citing your real commits, repos, and talks. You see exactly what it'll send, first.",
+          "Employers reach out to you. Your contact only shows when one actually asks — you never broadcast that you're looking.",
+        ],
+        outcome: "You apply with proof, not a résumé — in about a minute.",
+      },
+      {
+        title: "② If you're hiring",
+        steps: [
+          "Post a role: a title plus what you require. It's just a file — no account, no dashboard to set up.",
+          "Candidates' agents apply with evidence — links to real commits, repos, and talks.",
+          "The scorer opens every link and verifies it (is this commit theirs? is the repo real?). Faked links are rejected outright.",
+          "You get a ranked shortlist with the proof attached — or search candidates yourself, ranked by what's verified.",
+        ],
+        outcome: "You read verified work, not self-written resumes.",
+      },
+    ],
+  },
   why: {
-    eyebrow: "§1 · Why HAP exists",
+    eyebrow: "What makes it different",
     h2: <>A job board makes you sell yourself.<br />HAP lets your <em>work</em> speak — and checks it.</>,
     lead:
       "Anyone can write a great résumé — and AI made that free. So HAP doesn't grade what you wrote; it grades what it can open and verify. Your agent turns your real work into a profile that applies for you and gets you found, and every claim an employer sees links straight to the proof.",
@@ -367,14 +400,41 @@ export const ZH: ContentTree = {
     metaA2A: <>↪ 开放 <b>A2A</b> 子集 · 可自托管</>,
     metaBYO: <>🔐 <b>你的数据归你</b></>,
     anchors: [
-      { kbd: "§1 · 为什么", h: "为用 agent 干活的人而做", p: "招聘网站做不到的事。", href: "#why" },
+      { kbd: "§ · 怎么用", h: "怎么用", p: "求职和招聘各自的一步步流程。", href: "#how" },
       { kbd: "§2 · 运行", h: "60 秒本地 demo", p: "一条命令:带可核实证据投递。", href: "#quickstart" },
       { kbd: "§3 · 规范", h: "四种消息 + JSON Schema", p: "posting · application · receipt · profile。", href: "#spec" },
       { kbd: "§4 · 反驳", h: "撒谎、身份、垃圾、MCP", p: "对怀疑读者的诚实回答。", href: "#faq" },
     ],
   },
+  howItWorks: {
+    eyebrow: "怎么用",
+    h2: <>不写简历,不填表。<br />这是<em>真实</em>的流程。</>,
+    lead: "两边各两条短命令,就这么多。",
+    flows: [
+      {
+        title: "① 你在找工作",
+        steps: [
+          "跑一条命令 —— profile 从你真实的 GitHub 作品自动生成(你愿意的话,再算上你用 Claude Code 做过的东西)。",
+          "给它一个公司,或让它自己找匹配 —— 它会拉取职位、看你有多契合。",
+          "它替你写好申请,引用你真实的 commit、repo、talk。发出去之前,你先看到要发的全部内容。",
+          "雇主来联系你。你的联系方式只在对方真的发出请求时才出现 —— 你从不向全世界广播你在看机会。",
+        ],
+        outcome: "你用证据投递,不是简历 —— 大约一分钟。",
+      },
+      {
+        title: "② 你在招人",
+        steps: [
+          "发一个职位:一个标题 + 你的要求。它就是个文件 —— 不用注册、不用搭后台。",
+          "候选人的 agent 带证据来投 —— 指向真实 commit、repo、talk 的链接。",
+          "打分器把每个链接都打开核实(这 commit 是不是他写的?repo 是不是真的?)。造假的链接直接拒。",
+          "你拿到一份带证据的排序候选清单 —— 或自己搜索候选人,按已核实的东西排序。",
+        ],
+        outcome: "你看到的是核实过的作品,不是自己写的简历。",
+      },
+    ],
+  },
   why: {
-    eyebrow: "§1 · 为什么需要 HAP",
+    eyebrow: "有什么不同",
     h2: <>招聘网站让你推销自己。<br />HAP 让你的 <em>作品</em> 说话 —— 而且去核实它。</>,
     lead:
       "谁都能写一份漂亮简历 —— AI 让这事变得免费。所以 HAP 不评你写了什么,只评它能打开并核实的东西。你的 agent 把你真实的工作变成一份 profile,替你投递、让你被找到,而雇主看到的每条声明都直接链到证据。",
