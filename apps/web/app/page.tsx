@@ -414,6 +414,28 @@ export default function HapLanding() {
         </div>
       </section>
 
+      {/* ============ INSTALL (paste to Claude Code) ============ */}
+      <section id="install" className="hap-section">
+        <div className="hap-wrap">
+          <p className="hap-eyebrow">{t.install.eyebrow}</p>
+          <h2 className="hap-h2">{t.install.h2}</h2>
+          <p className="hap-lead">{t.install.lead}</p>
+          <div className="vA-qs" style={{ marginTop: 22 }}>
+            <div className="vA-qs__bar">
+              <div className="hap-tx__bar-dots">
+                <div className="hap-tx__bar-dot hap-tx__bar-dot--r" />
+                <div className="hap-tx__bar-dot hap-tx__bar-dot--y" />
+                <div className="hap-tx__bar-dot hap-tx__bar-dot--g" />
+              </div>
+              <b>{t.install.ccLabel}</b>
+              <button className="vA-qs__copy" data-copy={t.install.ccText} style={{ marginLeft: "auto" }}>{t.install.copyLabel}</button>
+            </div>
+            <div style={{ padding: "16px 18px", fontFamily: "var(--font-mono)", fontSize: 13, lineHeight: 1.7, color: "var(--text)", whiteSpace: "pre-wrap" }}>{t.install.ccText}</div>
+          </div>
+          <p style={{ marginTop: 14, fontFamily: "var(--font-mono)", fontSize: 12.5, color: "var(--muted)" }}>{t.install.note}</p>
+        </div>
+      </section>
+
       {/* ============ QUICKSTART ============ */}
       <section id="quickstart" className="hap-section">
         <div className="hap-wrap">
