@@ -307,6 +307,29 @@ export default function HapLanding() {
         </div>
       </section>
 
+      {/* ============ SEE IT RUN (demo) ============ */}
+      <section id="demo" className="hap-section">
+        <div className="hap-wrap">
+          <p className="hap-eyebrow">{t.demo.eyebrow}</p>
+          <h2 className="hap-h2">{t.demo.h2}</h2>
+          <p className="hap-lead">{t.demo.lead}</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 18, marginTop: 24 }}>
+            {t.demo.panes.map((pane) => (
+              <div key={pane.who} style={{ border: "1px solid var(--border)", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font-mono)" }}>
+                <div style={{ padding: "8px 14px", borderBottom: "1px solid var(--border)", fontSize: 12, color: "var(--muted)" }}>candidate: {pane.who}</div>
+                <div style={{ padding: "14px 16px", fontSize: 12.5, lineHeight: 1.7 }}>
+                  {pane.lines.map((l, i) => (
+                    <div key={i} style={{ whiteSpace: "pre-wrap", fontWeight: l.startsWith("VERDICT") ? 700 : 400, color: l.startsWith("VERDICT") ? (pane.kind === "fit" ? "#16a34a" : "#dc2626") : l.startsWith("🚩") ? "#d97706" : "var(--text)" }}>{l}</div>
+                  ))}
+                </div>
+                <div style={{ padding: "10px 16px", borderTop: "1px solid var(--border)", fontSize: 12, color: "var(--cyan)" }}>↳ {pane.note}</div>
+              </div>
+            ))}
+          </div>
+          <p style={{ marginTop: 16, fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--muted)" }}><span style={{ color: "var(--accent)" }}>$</span> {t.demo.cmd}</p>
+        </div>
+      </section>
+
       {/* ============ WHY ============ */}
       <section id="why" className="hap-section">
         <div className="hap-wrap">
