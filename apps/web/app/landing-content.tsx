@@ -128,10 +128,10 @@ export const EN: ContentTree = {
     ),
     sub: (
       <>
-        Your agent keeps a verified profile from your real GitHub (and, opt-in,
-        your local Claude Code work), applies to roles for you, and gets you found
-        — ranked on {em("evidence employers can check")}, not a <span className="vA-strike">résumé</span>.
-        Free, unlimited, agent-friendly. An open {a2aLink("A2A")} profile. Federated. Your data stays yours.
+        Your agent builds a profile from your real GitHub work, applies to jobs for
+        you, and helps employers find you. They rank you on {em("work they can open and check")} —
+        not a <span className="vA-strike">résumé you wrote</span>. Free, no limits, built for
+        agents. You own your profile — it's an open {a2aLink("A2A")} format, not a locked-in database.
       </>
     ),
     ctaStar: "Star on GitHub",
@@ -151,31 +151,31 @@ export const EN: ContentTree = {
     eyebrow: "§1 · Why HAP exists",
     h2: <>A job board makes you sell yourself.<br />HAP lets your <em>work</em> speak — and checks it.</>,
     lead:
-      "Resumes are self-reported and AI made the medium unfalsifiable. So don't trust the writing — trust the links. HAP turns your real work into a verified, candidate-owned profile that applies for you and gets you found, while every claim an employer sees is one they can dereference.",
+      "Anyone can write a great résumé — and AI made that free. So HAP doesn't grade what you wrote; it grades what it can open and verify. Your agent turns your real work into a profile that applies for you and gets you found, and every claim an employer sees links straight to the proof.",
     pillars: [
       {
         num: "01 · LIVING PROFILE",
         h: <>Your résumé writes<br />and updates itself.</>,
-        p: <>One command builds a profile from your <i className="vA-em-serif">public</i> GitHub — and, if you opt in, your <i className="vA-em-serif">local</i> Claude Code footprint (project names + counts only, never transcript contents, your machine untouched). Nothing to fill in, no server to host. Re-run (or schedule) and it stays current.</>,
+        p: <>Run one command and your profile builds itself from your <i className="vA-em-serif">public</i> GitHub. Opt in, and it also counts your <i className="vA-em-serif">local</i> Claude Code projects — only their names and how often you used them, never the contents, and nothing leaves your machine. Nothing to fill in, nothing to host. Re-run it (or schedule it) and it stays up to date.</>,
         sig: "// public github + opt-in cc footprint · candidate-owned",
       },
       {
         num: "02 · SCORED ON EVIDENCE",
         h: <>Employers open every link.<br />Prose scores nothing.</>,
-        p: <>The neutral scorer dereferences each citation — commit author is you, the repo is real, the talk venue exists — and scores that. Your agent's wording and its self-rated confidence count for <i className="vA-em-serif">zero</i>. A fabricated link is a hard gate, not a deduction. Honestly saying "no evidence" costs nothing.</>,
+        p: <>The employer's scorer opens every link you cite and checks it — is this commit yours, is the repo real, did that talk happen — and scores that. What your agent <i className="vA-em-serif">wrote</i>, and how confident it says it is, count for nothing. Cite something fake and you're out. Say "I don't have that" honestly and you lose nothing.</>,
         sig: "// score the artifact, not the sentence",
       },
       {
         num: "03 · FOUND BY EVIDENCE",
         h: <>Recruiters find you by<br />what's verified, not keywords.</>,
-        p: <>Publish your profile (opt-in) and an index ranks you on <i className="vA-em-serif">verified</i> signal. No public job-hunt broadcast; recruiters can't bulk-harvest you — your contact is never in results, and a recruiter must request it, gated by a limit <i className="vA-em-serif">you</i> set.</>,
+        p: <>Publish your profile only if you want to, and an index ranks you by what's been <i className="vA-em-serif">verified</i> — not keywords. You're not broadcasting that you're looking, and recruiters can't scrape you in bulk. Your contact isn't shown in results — to reach you, they have to ask, within a limit <i className="vA-em-serif">you</i> set.</>,
         sig: "// opt-in discovery · contact gated by your rate limit",
       },
       {
         num: "04 · OPEN & YOURS",
         h: <>Free, unlimited, agent-friendly.<br />The opposite of a walled job board.</>,
         p: (
-          <>An {a2aLink("A2A")} profile with published {code("JSON Schema")} — any agent, any language can implement it. Self-hostable, federated, MIT. No paywall, no daily caps, no banning your bot. Your profile and contact live with <i className="vA-em-serif">you</i>, not in someone's database.</>
+          <>It's an open format with published {code("JSON Schema")}, so any agent in any language can implement it — and you can run it yourself. No paywall, no daily caps, no banning your bot. Your profile and contact live with <i className="vA-em-serif">you</i>, not in someone else's database. Built on {a2aLink("A2A")}, MIT.</>
         ),
         sig: "// no paywall · no bot bans · data stays candidate-owned",
       },
@@ -355,9 +355,9 @@ export const ZH: ContentTree = {
     ),
     sub: (
       <>
-        你的 agent 从你真实的 GitHub(以及可选的本地 Claude Code 工作)生成一份可核实的 profile,替你投递,并让你被找到 ——
-        排序靠的是 {em("雇主能核实的证据")},不是 <span className="vA-strike">简历</span>。
-        免费、不限量、对 agent 友好。一个开放的 {a2aLink("A2A")} 子集。联邦化。你的数据归你。
+        你的 agent 从你真实的 GitHub 作品生成一份 profile,替你投简历,并帮雇主找到你。雇主给你排序,
+        靠的是 {em("他们能打开核实的作品")},不是你自己写的 <span className="vA-strike">简历</span>。
+        免费、不限量、为 agent 而生。profile 归你 —— 一种开放的 {a2aLink("A2A")} 格式,而不是被锁进某个数据库。
       </>
     ),
     ctaStar: "在 GitHub 上 Star",
@@ -377,31 +377,31 @@ export const ZH: ContentTree = {
     eyebrow: "§1 · 为什么需要 HAP",
     h2: <>招聘网站让你推销自己。<br />HAP 让你的 <em>作品</em> 说话 —— 而且去核实它。</>,
     lead:
-      "简历是自报的,AI 又让这种媒介无法被证伪。所以别信文字 —— 信链接。HAP 把你真实的工作变成一份可核实、归你所有的 profile,替你投递、让你被找到;而雇主看到的每条声明,都是它能解引用核实的。",
+      "谁都能写一份漂亮简历 —— AI 让这事变得免费。所以 HAP 不评你写了什么,只评它能打开并核实的东西。你的 agent 把你真实的工作变成一份 profile,替你投递、让你被找到,而雇主看到的每条声明都直接链到证据。",
     pillars: [
       {
         num: "01 · 活简历",
         h: <>简历自己写、<br />自己更新。</>,
-        p: <>一条命令从你的<i className="vA-em-serif">公开</i> GitHub 生成 profile —— 你同意的话,再加上<i className="vA-em-serif">本地</i> Claude Code 足迹(只取项目名+计数,绝不读 transcript 内容,不碰你机器)。不用填、不用托管。重跑(或挂定时)就保持最新。</>,
+        p: <>跑一条命令,profile 就从你的<i className="vA-em-serif">公开</i> GitHub 自动生成。你愿意的话,它还会统计你<i className="vA-em-serif">本地</i>的 Claude Code 项目 —— 只看项目名和你用了多少次,绝不读内容,什么都不离开你的机器。不用填、不用托管。重跑(或挂定时)它就保持最新。</>,
         sig: "// 公开 github + 可选 cc 足迹 · 归候选人所有",
       },
       {
         num: "02 · 按证据打分",
         h: <>雇主逐条点开链接。<br />漂亮话不计分。</>,
-        p: <>中立打分器解引用每条证据 —— commit 作者是不是你、repo 是否真实、talk 会场是否存在 —— 给这个打分。agent 的措辞、自报的 confidence,权重为 <i className="vA-em-serif">零</i>。引用假证据是一票否决,不是扣分。诚实说"没有证据"毫无代价。</>,
+        p: <>雇主的打分器把你引用的每个链接都打开核实 —— 这个 commit 是不是你写的、repo 是不是真的、那场 talk 有没有发生 —— 然后给这个打分。你的 agent <i className="vA-em-serif">写了什么</i>、自称多有把握,都不算分。引用一条假的,你出局。诚实说"我没有",你毫无损失。</>,
         sig: "// 给证据打分,不给句子打分",
       },
       {
         num: "03 · 靠证据被发现",
         h: <>招聘方靠核实信号找你,<br />不是关键词。</>,
-        p: <>把 profile 发布(opt-in),索引按<i className="vA-em-serif">核实过</i>的信号给你排序。不向全世界广播你在找工作;招聘方没法批量扒你 —— 联系方式不出现在结果里,得单独请求,且受<i className="vA-em-serif">你</i>设的上限限制。</>,
+        p: <>你愿意才发布 profile,索引按"<i className="vA-em-serif">已核实</i>的东西"给你排序 —— 不是关键词。你不会向全世界广播你在找工作,招聘方也没法批量扒你。联系方式不出现在结果里 —— 想联系你,得发请求,且受<i className="vA-em-serif">你</i>设的上限限制。</>,
         sig: "// opt-in 发现 · 联系方式受你设的上限限制",
       },
       {
         num: "04 · 开放且归你",
         h: <>免费、不限量、对 agent 友好。<br />和围墙招聘站相反。</>,
         p: (
-          <>一个 {a2aLink("A2A")} 子集,带公开的 {code("JSON Schema")} —— 任何 agent、任何语言都能实现。可自托管、联邦化、MIT。没有付费墙、没有每日限制、不封你的 bot。你的 profile 和联系方式归<i className="vA-em-serif">你</i>,不在别人的数据库里。</>
+          <>一种带公开 {code("JSON Schema")} 的开放格式,任何语言的 agent 都能实现 —— 你也能自己跑。没有付费墙、没有每日限制、不封你的 bot。你的 profile 和联系方式归<i className="vA-em-serif">你</i>,不在别人的数据库里。基于 {a2aLink("A2A")},MIT。</>
         ),
         sig: "// 无付费墙 · 不封 bot · 数据归候选人",
       },
