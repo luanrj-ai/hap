@@ -34,3 +34,5 @@ hap-profile.json
 hap-applied.json
 # test fixture
 _cc_fixture/
+# generated demo transcript
+DEMO.md
