@@ -60,6 +60,46 @@
     },
   ];
 
+  // "See it run" contrast: an honest candidate (FIT) then a faker (NO_FIT).
+  const DEMO_MESSAGES = [
+    {
+      side: "cand", kind: "hap.application", status: "200 OK", typingMs: 1100,
+      fields: [
+        { k: "candidate", v: "alex-chen", strong: true },
+        { k: "proof_of_control", v: "gist · HAP-PROOF", color: "green" },
+      ],
+      quote: "m1: 200-agent simulation, end to end · m2: ships production · n1: no SWM evidence (declining honestly).",
+      evidence: [
+        { type: "github_repo", url: "github.com/alex-chen/abm-sim · 1.2k★", verified: true },
+        { type: "github_commit", url: "github.com/alex-chen/abm-sim/commit/9f4ac21", verified: true },
+      ],
+    },
+    {
+      side: "hr", kind: "hap.score", status: "fit", statusKind: "fit", typingMs: 1300,
+      fields: [
+        { k: "verdict", v: "fit", color: "green" },
+        { k: "overall", v: "0.85 · required all pass" },
+        { k: "identity", v: "proven · @alex-chen", color: "green" },
+        { k: "m1 / m2", v: "verified · 1.00", color: "green" },
+        { k: "n1", v: "declined · no_evidence — honest, 0 penalty" },
+      ],
+    },
+    {
+      side: "cand", kind: "hap.application", status: "200 OK", typingMs: 900,
+      fields: [{ k: "candidate", v: "sam-faker · self-assessed \"strong\"" }],
+      quote: "Huge multi-agent system — here's the commit.",
+      evidence: [{ type: "github_commit", url: "github.com/torvalds/linux/commit/000000…", verified: false }],
+    },
+    {
+      side: "hr", kind: "hap.score", status: "no_fit", statusKind: "decline", typingMs: 1200,
+      fields: [
+        { k: "verdict", v: "no_fit", color: "red" },
+        { k: "🚩 fabrication", v: "cited evidence does not exist", color: "red" },
+        { k: "🚩 overclaim", v: "said \"strong\" · evidence: no_fit" },
+      ],
+    },
+  ];
+
   function esc(s) {
     return String(s).replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   }
@@ -137,6 +177,7 @@
 
   function mount(el, opts) {
     opts = opts || {};
+    const messages = opts.messages || MESSAGES;
     const speed = opts.speed || 1;       // 1 = normal; lower = faster
     const compact = !!opts.compact;
     const applicationId = "a_01HXY7K4M2P9R8VQNDS";
@@ -153,7 +194,7 @@
         </div>
         <div class="hap-tx__feed" data-tx-feed></div>
         <div class="hap-tx__foot">
-          <span data-tx-progress>0 / ${MESSAGES.length} messages</span>
+          <span data-tx-progress>0 / ${messages.length} messages</span>
           <span class="hap-tx__foot-spacer"></span>
           <button class="hap-tx__pause" data-tx-pause>pause</button>
           <button class="hap-tx__replay" data-tx-replay>↻ replay</button>
@@ -185,11 +226,11 @@
     async function play() {
       cancelled = false;
       feed.innerHTML = "";
-      progressEl.textContent = `0 / ${MESSAGES.length} messages`;
+      progressEl.textContent = `0 / ${messages.length} messages`;
       await delay(400 * speed);
-      for (let i = 0; i < MESSAGES.length; i++) {
+      for (let i = 0; i < messages.length; i++) {
         if (cancelled) return;
-        const m = MESSAGES[i];
+        const m = messages[i];
 
         // typing indicator
         feed.insertAdjacentHTML("beforeend", typingRowHtml(m.side));
@@ -202,7 +243,7 @@
         feed.insertAdjacentHTML("beforeend", buildMessageHtml(m));
         const lastRow = feed.lastElementChild;
         requestAnimationFrame(() => lastRow.classList.add("hap-tx__row--in"));
-        progressEl.textContent = `${i + 1} / ${MESSAGES.length} messages`;
+        progressEl.textContent = `${i + 1} / ${messages.length} messages`;
 
         await delay(700 * speed);
       }
@@ -232,5 +273,5 @@
     return { play, reset, replay: reset };
   }
 
-  window.HAPTranscript = { mount, MESSAGES };
+  window.HAPTranscript = { mount, MESSAGES, DEMO_MESSAGES };
 })();

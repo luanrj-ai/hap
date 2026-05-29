@@ -37,7 +37,6 @@ export interface ContentTree {
     h2: ReactNode;
     lead: ReactNode;
     cmd: string;
-    panes: Array<{ kind: "fit" | "no_fit"; who: string; lines: string[]; note: string }>;
   };
   why: {
     eyebrow: string;
@@ -190,32 +189,8 @@ export const EN: ContentTree = {
   demo: {
     eyebrow: "See it run",
     h2: <>Same scorer. <em>Opposite</em> outcomes.</>,
-    lead: <>Actual output from {code("npm run demo:tour")} — one honest candidate, one faker, both scored on links the employer can open.</>,
+    lead: <>Watch {code("npm run demo:tour")} run — one honest candidate, one faker, both scored on links the employer can open.</>,
     cmd: "npm run demo:tour",
-    panes: [
-      {
-        kind: "fit",
-        who: "Alex Chen",
-        lines: [
-          "VERDICT: FIT   overall 0.85   identity PROVEN",
-          "REQ  m1  1.00  verified   multi-agent simulations end to end",
-          "REQ  m2  1.00  verified   ships production code",
-          "nice n1  0.00  declined(no_evidence)   ← honest, costs nothing",
-          "nice n2  1.00  verified   agent / LLM product work",
-        ],
-        note: "Scored on links it opened and verified — not the prose.",
-      },
-      {
-        kind: "no_fit",
-        who: 'Sam Faker · self-assessed "strong"',
-        lines: [
-          "VERDICT: NO_FIT   overall 0",
-          "🚩 fabrication: cited evidence does not exist",
-          '🚩 overclaim: said "strong", evidence supports "no_fit"',
-        ],
-        note: "One fabricated link → rejected, no matter how confident.",
-      },
-    ],
   },
   why: {
     eyebrow: "What makes it different",
@@ -473,32 +448,8 @@ export const ZH: ContentTree = {
   demo: {
     eyebrow: "看它跑",
     h2: <>同一个打分器。<em>相反</em>的结果。</>,
-    lead: <>{code("npm run demo:tour")} 的真实输出 —— 一个诚实候选人,一个骗子,都按雇主能打开的链接打分。</>,
+    lead: <>看 {code("npm run demo:tour")} 跑一遍 —— 一个诚实候选人,一个骗子,都按雇主能打开的链接打分。</>,
     cmd: "npm run demo:tour",
-    panes: [
-      {
-        kind: "fit",
-        who: "Alex Chen",
-        lines: [
-          "VERDICT: FIT   overall 0.85   identity PROVEN",
-          "REQ  m1  1.00  verified   多 agent 模拟,端到端",
-          "REQ  m2  1.00  verified   ships production code",
-          "nice n1  0.00  declined(no_evidence)   ← 诚实,零惩罚",
-          "nice n2  1.00  verified   agent / LLM 产品",
-        ],
-        note: "按它打开核实的链接打分 —— 不看漂亮话。",
-      },
-      {
-        kind: "no_fit",
-        who: 'Sam Faker · 自评 "strong"',
-        lines: [
-          "VERDICT: NO_FIT   overall 0",
-          "🚩 fabrication: 引用的证据不存在",
-          '🚩 overclaim: 自称 "strong",证据只够 "no_fit"',
-        ],
-        note: "一条假链接 → 直接拒,不管话说得多自信。",
-      },
-    ],
   },
   why: {
     eyebrow: "有什么不同",
