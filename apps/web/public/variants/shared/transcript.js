@@ -6,91 +6,57 @@
   const MESSAGES = [
     {
       side: "hr",
-      kind: "hap.session.open",
-      status: "200 OK",
-      typingMs: 700,
-      fields: [
-        { k: "session_id", v: "h_01HXY7K4M2", strong: true },
-        { k: "jd.title", v: "Senior Backend Engineer · Payments" },
-        { k: "must_have", v: "5+ yrs · Go/Rust · idempotency · >10k RPS" },
-        { k: "from", v: "acme-corp.com/.well-known/agent.json" },
-      ],
-    },
-    {
-      side: "cand",
-      kind: "hap.session.accept",
-      status: "200 OK",
+      kind: "hap.posting",
+      status: "published",
       typingMs: 600,
       fields: [
-        { k: "session_id", v: "h_01HXY7K4M2" },
-        { k: "agent", v: "alex-chen.dev/.well-known/agent.json" },
-        { k: "discloses", v: "github · talks · personal_site" },
+        { k: "posting_id", v: "renlab-ai-builder-001", strong: true },
+        { k: "jd.title", v: "AI Builder · multi-agent / SWM" },
+        { k: "rubric", v: "m1 sim end-to-end · m2 ships · m3 0→1" },
+        { k: "submit", v: "api.renlab.ai/apply · static · any agent can read" },
       ],
-    },
-    {
-      side: "hr",
-      kind: "hap.ask",
-      status: "200 OK",
-      typingMs: 900,
-      fields: [
-        { k: "question_id", v: "q1" },
-        { k: "type", v: "open · evidence_request" },
-      ],
-      quote: "Walk me through an idempotency system you've shipped at >10k RPS. What broke first?",
-      evidencePref: ["github_commit", "talk"],
     },
     {
       side: "cand",
-      kind: "hap.answer",
+      kind: "hap.application",
       status: "200 OK",
       typingMs: 1500,
       fields: [
-        { k: "question_id", v: "q1" },
-        { k: "confidence", v: "high", color: "green" },
+        { k: "application_id", v: "a_01HXY7K4M2", strong: true },
+        { k: "candidate", v: "alex-chen · github.com/alex-chen" },
+        { k: "proof_of_control", v: "gist · HAP-PROOF", color: "green" },
       ],
-      quote: "Designed the key-normalization layer for our payment router. Tuned LRU eviction after a retry storm under network partition.",
+      quote: "Built from PUBLIC github — no résumé, nothing self-hosted. m1: a 200-agent market simulation, end to end.",
       evidence: [
-        { type: "github_commit", url: "github.com/alex-chen/ratelimit-go/commit/9f4ac21", verified: true },
-        { type: "talk", url: "youtu.be/AbCdE — GopherCon '24", verified: true },
+        { type: "github_repo", url: "github.com/alex-chen/abm-sim · 1.2k★", verified: true },
+        { type: "github_commit", url: "github.com/alex-chen/abm-sim/commit/9f4ac21", verified: true },
       ],
     },
     {
       side: "hr",
-      kind: "hap.ask",
-      status: "200 OK",
-      typingMs: 700,
+      kind: "hap.receipt",
+      status: "received",
+      typingMs: 500,
       fields: [
-        { k: "question_id", v: "q2" },
-        { k: "type", v: "evidence_request" },
-      ],
-      quote: "Any maintained OSS in this space we can read?",
-      evidencePref: ["github_repo", "package"],
-    },
-    {
-      side: "cand",
-      kind: "hap.answer",
-      status: "200 OK",
-      typingMs: 1100,
-      fields: [
-        { k: "question_id", v: "q2" },
-        { k: "confidence", v: "high", color: "green" },
-      ],
-      quote: "ratelimit-go · 1.2k ★ · 23 contributors. Last commit 4 days ago.",
-      evidence: [
-        { type: "github_repo", url: "github.com/alex-chen/ratelimit-go", verified: true },
+        { k: "application_id", v: "a_01HXY7K4M2" },
+        { k: "next", v: "agent_followup_possible" },
       ],
     },
     {
       side: "hr",
-      kind: "hap.session.close",
+      kind: "hap.score",
       status: "fit",
       statusKind: "fit",
-      typingMs: 800,
+      typingMs: 1200,
       fields: [
-        { k: "outcome", v: "fit", color: "green" },
-        { k: "next_step", v: "schedule_human_interview" },
-        { k: "elapsed", v: "1.8s · 7 messages · 0 resumes" },
+        { k: "verdict", v: "fit", color: "green" },
+        { k: "overall", v: "0.79 · required all pass" },
+        { k: "identity", v: "proven · @alex-chen", color: "green" },
+        { k: "m1 · sim", v: "verified · strong · 1.00", color: "green" },
+        { k: "m2 · ships", v: "verified · 0.60", color: "green" },
+        { k: "n1 · SWM", v: "declined · no_evidence (honest)" },
       ],
+      quote: "Scored on dereferenced evidence — not the agent's prose. Fabricated links are a hard gate. 0 résumés.",
     },
   ];
 
@@ -100,8 +66,8 @@
 
   function avatarHtml(side) {
     const cls = side === "hr" ? "hap-tx__avatar--hr" : "hap-tx__avatar--cand";
-    const txt = side === "hr" ? "HR" : "CA";
-    return `<div class="hap-tx__avatar ${cls}" title="${side === "hr" ? "HR-agent" : "candidate-agent"}">${txt}</div>`;
+    const txt = side === "hr" ? "EMP" : "CA";
+    return `<div class="hap-tx__avatar ${cls}" title="${side === "hr" ? "employer / neutral scorer" : "candidate-agent"}">${txt}</div>`;
   }
 
   function fieldsHtml(fields) {
@@ -173,7 +139,7 @@
     opts = opts || {};
     const speed = opts.speed || 1;       // 1 = normal; lower = faster
     const compact = !!opts.compact;
-    const sessionId = "h_01HXY7K4M2P9R8VQNDS";
+    const applicationId = "a_01HXY7K4M2P9R8VQNDS";
     const html = `
       <div class="hap-tx" data-compact="${compact ? 1 : 0}">
         <div class="hap-tx__bar">
@@ -182,8 +148,8 @@
             <div class="hap-tx__bar-dot hap-tx__bar-dot--y"></div>
             <div class="hap-tx__bar-dot hap-tx__bar-dot--g"></div>
           </div>
-          <div class="hap-tx__bar-mid">hr-agent ⇄ candidate-agent · A2A · TLS</div>
-          <div class="hap-tx__bar-id">session ${sessionId.slice(0, 14)}…</div>
+          <div class="hap-tx__bar-mid">candidate-agent → employer · A2A · evidence-verified</div>
+          <div class="hap-tx__bar-id">application ${applicationId.slice(0, 12)}…</div>
         </div>
         <div class="hap-tx__feed" data-tx-feed></div>
         <div class="hap-tx__foot">
