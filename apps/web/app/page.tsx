@@ -9,8 +9,7 @@ import { type Lang, EN, ZH, getContent } from "./landing-content";
 declare global {
   interface Window {
     HAPTranscript?: {
-      mount: (el: HTMLElement, opts?: { autoplay?: boolean; speed?: number; compact?: boolean; messages?: unknown[] }) => void;
-      DEMO_MESSAGES?: unknown[];
+      mount: (el: HTMLElement, opts?: { autoplay?: boolean; speed?: number; compact?: boolean }) => void;
     };
   }
 }
@@ -82,6 +81,37 @@ const SPEC_PANES: Record<SpecTab, string> = {
 <span class="c-com">// a fabricated link is a hard gate → "no_fit"</span>`,
 };
 
+// "See it run" — faithful: one application packet (evidence per requirement) →
+// one score report. Two candidates: honest (FIT) and faker (NO_FIT). Not a chat.
+type DemoEv = { type: string; url: string; verified: boolean };
+type DemoItem = { req: string; required: boolean; evidence?: DemoEv[]; declined?: string };
+type DemoCase = { who: string; verdict: "fit" | "no_fit"; overall: string; identity: string; application: DemoItem[]; score: string[]; flags: string[] };
+
+const DEMO_CASES: DemoCase[] = [
+  {
+    who: "Alex Chen · proof-of-control ✓",
+    verdict: "fit", overall: "0.85", identity: "proven",
+    application: [
+      { req: "multi-agent simulations end to end", required: true, evidence: [{ type: "github_repo", url: "github.com/alex-chen/abm-sim · 1.2k★", verified: true }] },
+      { req: "ships production code", required: true, evidence: [{ type: "github_commit", url: "github.com/alex-chen/abm-sim/commit/9f4ac21", verified: true }] },
+      { req: "world models / SWM", required: false, declined: "no_evidence (honest)" },
+      { req: "agent / LLM product", required: false, evidence: [{ type: "github_repo", url: "github.com/alex-chen/eval-harness", verified: true }] },
+    ],
+    score: ["m1  verified · 1.00", "m2  verified · 1.00", "n1  declined · no_evidence — 0 penalty", "n2  verified · 1.00"],
+    flags: ["✅ identity proven (@alex-chen)"],
+  },
+  {
+    who: 'Sam Faker · self-assessed "strong"',
+    verdict: "no_fit", overall: "0", identity: "asserted",
+    application: [
+      { req: "multi-agent simulations end to end", required: true, evidence: [{ type: "github_commit", url: "github.com/torvalds/linux/commit/000000…", verified: false }] },
+      { req: "ships production code", required: true, evidence: [{ type: "github_repo", url: "github.com/sam-faker/app (unrelated)", verified: false }] },
+    ],
+    score: [],
+    flags: ['🚩 fabrication: cited evidence does not exist', '🚩 overclaim: said "strong" · evidence: no_fit'],
+  },
+];
+
 export default function HapLanding() {
   const [theme, setTheme] = useState<"dark" | "light">("light");
   const [lang, setLang] = useState<Lang>("en");
@@ -116,18 +146,25 @@ export default function HapLanding() {
   }, [lang]);
 
   useEffect(() => {
-    if (!scriptReady || !window.HAPTranscript) return;
+    if (!scriptReady) return;
     const host = document.getElementById("hero-transcript");
-    if (host) {
+    if (host && window.HAPTranscript) {
       host.innerHTML = "";
       window.HAPTranscript.mount(host, { autoplay: true });
     }
-    const demoHost = document.getElementById("demo-transcript");
-    if (demoHost && window.HAPTranscript.DEMO_MESSAGES) {
-      demoHost.innerHTML = "";
-      window.HAPTranscript.mount(demoHost, { autoplay: true, messages: window.HAPTranscript.DEMO_MESSAGES });
-    }
   }, [scriptReady]);
+
+  // "See it run": reveal the application → score blocks with a light stagger.
+  const [demoIn, setDemoIn] = useState(false);
+  useEffect(() => {
+    const id = setTimeout(() => setDemoIn(true), 150);
+    return () => clearTimeout(id);
+  }, []);
+  const reveal = (i: number) => ({
+    opacity: demoIn ? 1 : 0,
+    transform: demoIn ? "none" : "translateY(10px)",
+    transition: `opacity .5s ease ${i * 0.12}s, transform .5s ease ${i * 0.12}s`,
+  });
 
   useEffect(() => {
     function handler(this: HTMLElement, ev: Event) {
@@ -319,10 +356,41 @@ export default function HapLanding() {
           <p className="hap-eyebrow">{t.demo.eyebrow}</p>
           <h2 className="hap-h2">{t.demo.h2}</h2>
           <p className="hap-lead">{t.demo.lead}</p>
-          <div style={{ maxWidth: 640, margin: "24px auto 0" }}>
-            <div id="demo-transcript" />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(330px, 1fr))", gap: 20, marginTop: 26 }}>
+            {DEMO_CASES.map((c, ci) => (
+              <div key={c.who}>
+                <div style={{ ...reveal(ci * 2), border: "1px solid var(--border)", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font-mono)", fontSize: 12.5 }}>
+                  <div style={{ padding: "8px 14px", borderBottom: "1px solid var(--border)", color: "var(--muted)" }}>① one hap.application → renlab · {c.who}</div>
+                  <div style={{ padding: "12px 16px", lineHeight: 1.65 }}>
+                    {c.application.map((it, k) => (
+                      <div key={k} style={{ marginBottom: 8 }}>
+                        <div style={{ color: "var(--text)" }}>{it.required ? "REQ " : "nice"} · {it.req}</div>
+                        {it.declined ? (
+                          <div style={{ color: "var(--dim)", paddingLeft: 14 }}>— declined: {it.declined}</div>
+                        ) : (
+                          it.evidence!.map((e, j) => (
+                            <div key={j} style={{ paddingLeft: 14, color: "var(--muted)" }}>
+                              {e.type} {e.url} {e.verified ? <span style={{ color: "var(--green)" }}>✓ verified</span> : <span style={{ color: "var(--dim)" }}>· unverified</span>}
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ textAlign: "center", color: "var(--dim)", fontFamily: "var(--font-mono)", fontSize: 12, margin: "6px 0" }}>↓ the scorer opens every link</div>
+                <div style={{ ...reveal(ci * 2 + 1), border: "1px solid var(--border)", borderRadius: 12, overflow: "hidden", fontFamily: "var(--font-mono)", fontSize: 12.5 }}>
+                  <div style={{ padding: "8px 14px", borderBottom: "1px solid var(--border)", color: "var(--muted)" }}>② one score report</div>
+                  <div style={{ padding: "12px 16px", lineHeight: 1.7 }}>
+                    <div style={{ fontWeight: 700, color: c.verdict === "fit" ? "var(--green)" : "var(--red)" }}>{c.verdict.toUpperCase()} · overall {c.overall} · identity {c.identity}</div>
+                    {c.score.map((s, k) => <div key={k} style={{ color: "var(--text)" }}>{s}</div>)}
+                    {c.flags.map((f, k) => <div key={k} style={{ color: f.startsWith("✅") ? "var(--green)" : "var(--yellow)" }}>{f}</div>)}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-          <p style={{ marginTop: 16, fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--muted)" }}><span style={{ color: "var(--accent)" }}>$</span> {t.demo.cmd}</p>
+          <p style={{ marginTop: 18, fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--muted)" }}><span style={{ color: "var(--accent)" }}>$</span> {t.demo.cmd} <span style={{ color: "var(--dim)" }}>— run it live</span></p>
         </div>
       </section>
 

@@ -60,46 +60,6 @@
     },
   ];
 
-  // "See it run" contrast: an honest candidate (FIT) then a faker (NO_FIT).
-  const DEMO_MESSAGES = [
-    {
-      side: "cand", kind: "hap.application", status: "200 OK", typingMs: 1100,
-      fields: [
-        { k: "candidate", v: "alex-chen", strong: true },
-        { k: "proof_of_control", v: "gist · HAP-PROOF", color: "green" },
-      ],
-      quote: "m1: 200-agent simulation, end to end · m2: ships production · n1: no SWM evidence (declining honestly).",
-      evidence: [
-        { type: "github_repo", url: "github.com/alex-chen/abm-sim · 1.2k★", verified: true },
-        { type: "github_commit", url: "github.com/alex-chen/abm-sim/commit/9f4ac21", verified: true },
-      ],
-    },
-    {
-      side: "hr", kind: "hap.score", status: "fit", statusKind: "fit", typingMs: 1300,
-      fields: [
-        { k: "verdict", v: "fit", color: "green" },
-        { k: "overall", v: "0.85 · required all pass" },
-        { k: "identity", v: "proven · @alex-chen", color: "green" },
-        { k: "m1 / m2", v: "verified · 1.00", color: "green" },
-        { k: "n1", v: "declined · no_evidence — honest, 0 penalty" },
-      ],
-    },
-    {
-      side: "cand", kind: "hap.application", status: "200 OK", typingMs: 900,
-      fields: [{ k: "candidate", v: "sam-faker · self-assessed \"strong\"" }],
-      quote: "Huge multi-agent system — here's the commit.",
-      evidence: [{ type: "github_commit", url: "github.com/torvalds/linux/commit/000000…", verified: false }],
-    },
-    {
-      side: "hr", kind: "hap.score", status: "no_fit", statusKind: "decline", typingMs: 1200,
-      fields: [
-        { k: "verdict", v: "no_fit", color: "red" },
-        { k: "🚩 fabrication", v: "cited evidence does not exist", color: "red" },
-        { k: "🚩 overclaim", v: "said \"strong\" · evidence: no_fit" },
-      ],
-    },
-  ];
-
   function esc(s) {
     return String(s).replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   }
@@ -273,5 +233,5 @@
     return { play, reset, replay: reset };
   }
 
-  window.HAPTranscript = { mount, MESSAGES, DEMO_MESSAGES };
+  window.HAPTranscript = { mount, MESSAGES };
 })();

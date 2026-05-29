@@ -188,8 +188,8 @@ export const EN: ContentTree = {
   },
   demo: {
     eyebrow: "See it run",
-    h2: <>Same scorer. <em>Opposite</em> outcomes.</>,
-    lead: <>Watch {code("npm run demo:tour")} run — one honest candidate, one faker, both scored on links the employer can open.</>,
+    h2: <>One application in. <em>One verified report</em> back.</>,
+    lead: <>Not a chat — the candidate submits a single packet (evidence per requirement), the scorer opens every link, and one report comes back. Same scorer, opposite outcomes.</>,
     cmd: "npm run demo:tour",
   },
   why: {
@@ -447,8 +447,8 @@ export const ZH: ContentTree = {
   },
   demo: {
     eyebrow: "看它跑",
-    h2: <>同一个打分器。<em>相反</em>的结果。</>,
-    lead: <>看 {code("npm run demo:tour")} 跑一遍 —— 一个诚实候选人,一个骗子,都按雇主能打开的链接打分。</>,
+    h2: <>投一份申请。<em>回一份核实报告</em>。</>,
+    lead: <>不是聊天 —— 候选人提交一个包(逐条要求附证据),打分器把每个链接打开核实,回一份报告。同一打分器,相反结果。</>,
     cmd: "npm run demo:tour",
   },
   why: {
