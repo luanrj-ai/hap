@@ -100,8 +100,8 @@ async function main() {
     { qid: "m2", evidence: [ev("unverifiable", "")] },
   ]), P, opts);
   check("D m1 score=0.1 (unverifiable benefit)", d.items[0].score === 0.1, `got ${d.items[0].score}`);
-  check("D verdict=no_fit", d.verdict === "no_fit");
-  check("D unverified-dominant flag", d.flags.some((f) => f.includes("unverifiable")), JSON.stringify(d.flags));
+  check("D verdict=needs_review (couldn't verify ≠ rejected)", d.verdict === "needs_review", `got ${d.verdict}`);
+  check("D flags verification incomplete", d.flags.some((f) => f.includes("verification incomplete")), JSON.stringify(d.flags));
 
   // E — overclaim: self "strong" but everything declined → no_fit + overclaim flag
   const e = await scoreApplication(app([

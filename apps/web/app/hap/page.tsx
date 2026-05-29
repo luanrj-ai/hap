@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 // imports nothing from @hap/* so the web build stays free of raw-TS workspace deps.
 type Item = { question_id: string; requirement: string; required: boolean; score: number; bestLevel: string; declineReason?: string | null };
 type Report = {
-  verdict: "fit" | "partial" | "no_fit";
+  verdict: "fit" | "partial" | "no_fit" | "needs_review";
   overall: number;
   requiredAllPass: boolean;
   identity: { anchor?: string; proven: boolean; note: string };
@@ -16,7 +16,7 @@ type Report = {
 type Rec = { application: { candidate: { name: string; human_contact: string } }; report?: Report; scoreError?: string; receivedAt: string };
 type Hit = { key: string; name: string; headline?: string; specializations?: string[]; verified: { note: string; rankSignal: number; identityProven: boolean; verifiedEvidence: number } };
 
-const verdictColor: Record<string, string> = { fit: "#16a34a", partial: "#d97706", no_fit: "#dc2626" };
+const verdictColor: Record<string, string> = { fit: "#16a34a", partial: "#d97706", no_fit: "#dc2626", needs_review: "#0891b2" };
 
 export default function HapDashboard() {
   const [tab, setTab] = useState<"apps" | "search">("apps");
