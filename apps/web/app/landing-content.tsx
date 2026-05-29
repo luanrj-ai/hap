@@ -44,6 +44,8 @@ export interface ContentTree {
     lead: ReactNode;
     ccLabel: string;
     ccText: string;
+    ccLabelEmployer: string;
+    ccTextEmployer: string;
     copyLabel: string;
     note: ReactNode;
   };
@@ -88,19 +90,6 @@ export interface ContentTree {
       web3: [Sym, string];
     }>;
     loseRow: { cat: string; hap: string; ats: string; web3: string };
-  };
-  roadmap: {
-    eyebrow: string;
-    h2: ReactNode;
-    lead: string;
-    rows: Array<{
-      ver: string;
-      date: string;
-      title: string;
-      sub: string;
-      line: string;
-      pill: [string | null, string];
-    }>;
   };
   faq: {
     eyebrow: string;
@@ -203,13 +192,16 @@ export const EN: ContentTree = {
   },
   install: {
     eyebrow: "Get started",
-    h2: <>Two ways in. <em className="vA-em-serif vA-em-cyan">~60 seconds.</em></>,
-    lead: <>Paste one block to your Claude Code, or run three commands yourself. No keys — template fallback if no LLM.</>,
-    ccLabel: "paste to Claude Code",
+    h2: <>Two sides. <em className="vA-em-serif vA-em-cyan">Paste a block, or run it.</em></>,
+    lead: <>Job-seekers and employers each get one paste-to-Claude-Code block — or the plain commands.</>,
     copyLabel: "copy",
+    ccLabel: "Job-seeker · paste to Claude Code",
     ccText:
-      "Set up HAP for me. Clone https://github.com/luanrj-ai/hap, then run `npm install && npm run build`. Then build my HAP profile from my PUBLIC GitHub: `npm run profile -- --handle <your-github> --with-claude`. Show me my verified evidence and the command to apply to a role.",
-    note: <>↪ replace <code>&lt;your-github&gt;</code> with your handle.</>,
+      "Set up HAP for me. Clone https://github.com/luanrj-ai/hap, run `npm install && npm run build`, then build my HAP profile from my PUBLIC GitHub: `npm run profile -- --handle <your-github> --with-claude`. Show my verified evidence and how to apply.",
+    ccLabelEmployer: "Employer · paste to Claude Code",
+    ccTextEmployer:
+      "Set up HAP to hire. Clone https://github.com/luanrj-ai/hap, run `npm install && npm run build`, then start the verifying inbox with `npm run serve:inbox` and tell me how to open the /hap dashboard to read scored candidates.",
+    note: <>↪ plain commands — job-seeker: <code>npm run profile</code> → <code>apply</code>; employer: <code>serve:inbox</code> + <code>serve:index</code>, dashboard <code>/hap</code>. Replace <code>&lt;your-github&gt;</code>.</>,
   },
   why: {
     eyebrow: "What makes it different",
@@ -338,16 +330,6 @@ export const EN: ContentTree = {
       web3: "no model tuned on your exact funnel (yet)",
     },
   },
-  roadmap: {
-    eyebrow: "§5 · Roadmap · published, dated, honest",
-    h2: <>v0.x = breaking changes allowed. <em className="vA-em-serif vA-em-cyan">v1.0 = stable.</em></>,
-    lead: "Built in the open. v1 freezes the schemas once independent runtimes interoperate cleanly.",
-    rows: [
-      { ver: "v0.1", date: "May 2026", title: "Live interview", sub: "synchronous recruiter-driven interview — now the optional L1 layer", line: "· ask / answer / session.close", pill: ["cyan", "shipped"] },
-      { ver: "v0.2", date: "May 2026", title: "Candidate-initiated platform", sub: "living profile · verified scorer · multi-target apply · opt-in discovery · recruiter dashboard · spec + JSON Schema", line: "· score on dereferenced evidence, not prose", pill: ["cyan", "shipped"] },
-      { ver: "next", date: "2026–27", title: "One-click identity · sourcing · freeze", sub: "GitHub-OAuth identity → recruiter-initiated sourcing → v1.0 schema freeze (≥ 5 interoperating runtimes)", line: "", pill: ["yellow", "planned"] },
-    ],
-  },
   faq: {
     eyebrow: "§6 · FAQ · for the skeptical reader",
     h2: <>"Isn't this just <em className="vA-em-serif">X</em>?"</>,
@@ -466,13 +448,16 @@ export const ZH: ContentTree = {
   },
   install: {
     eyebrow: "开始用",
-    h2: <>两种方式,<em className="vA-em-serif vA-em-cyan">约 60 秒。</em></>,
-    lead: <>把一段粘进你的 Claude Code,或自己跑三条命令。无需密钥 —— 没配 LLM 时回落到模板。</>,
-    ccLabel: "复制给 Claude Code",
+    h2: <>两边各一段。<em className="vA-em-serif vA-em-cyan">粘给 Claude Code,或自己跑。</em></>,
+    lead: <>求职者和招聘方各有一段「复制给 Claude Code」—— 或用纯命令。</>,
     copyLabel: "复制",
+    ccLabel: "求职者 · 复制给 Claude Code",
     ccText:
-      "帮我装好 HAP。Clone https://github.com/luanrj-ai/hap,然后运行 `npm install && npm run build`。再从我的公开 GitHub 生成 HAP profile:`npm run profile -- --handle <你的-github> --with-claude`。把我核实到的证据和投递命令告诉我。",
-    note: <>↪ 把 <code>&lt;你的-github&gt;</code> 换成你的用户名。</>,
+      "帮我装好 HAP。Clone https://github.com/luanrj-ai/hap,运行 `npm install && npm run build`,再从我的公开 GitHub 生成 HAP profile:`npm run profile -- --handle <你的-github> --with-claude`。把我核实到的证据和投递方式告诉我。",
+    ccLabelEmployer: "招聘方 · 复制给 Claude Code",
+    ccTextEmployer:
+      "帮我把 HAP 装来招人。Clone https://github.com/luanrj-ai/hap,运行 `npm install && npm run build`,然后用 `npm run serve:inbox` 起一个会核实的收件箱,并告诉我怎么打开 /hap 看板查看打过分的候选人。",
+    note: <>↪ 纯命令 —— 求职者:<code>npm run profile</code> → <code>apply</code>;招聘方:<code>serve:inbox</code> + <code>serve:index</code>,看板 <code>/hap</code>。把 <code>&lt;你的-github&gt;</code> 换成用户名。</>,
   },
   why: {
     eyebrow: "有什么不同",
@@ -594,16 +579,6 @@ export const ZH: ContentTree = {
       ats: "我们不跟踪应聘(我们不是 ATS)",
       web3: "没有针对你这条漏斗调过的模型(暂时)",
     },
-  },
-  roadmap: {
-    eyebrow: "§5 · 路线图 · 已公开、有日期、不打马虎眼",
-    h2: <>v0.x = 允许破坏性变更。<em className="vA-em-serif vA-em-cyan">v1.0 = 稳定。</em></>,
-    lead: "在开放中构建。等独立运行时能干净互操作,v1 再冻结 schema。",
-    rows: [
-      { ver: "v0.1", date: "2026 年 5 月", title: "实时面试", sub: "同步、招聘方驱动的面试 —— 现为可选的 L1 层", line: "· ask / answer / session.close", pill: ["cyan", "已发布"] },
-      { ver: "v0.2", date: "2026 年 5 月", title: "候选发起平台", sub: "活简历 · 核实打分器 · 多目标投递 · opt-in 发现 · 招聘看板 · spec + JSON Schema", line: "· 按解引用的证据打分,不看漂亮话", pill: ["cyan", "已发布"] },
-      { ver: "后续", date: "2026–27", title: "一键身份 · sourcing · 冻结", sub: "GitHub-OAuth 身份 → 雇主发起 sourcing → v1.0 schema 冻结(≥ 5 个互操作运行时)", line: "", pill: ["yellow", "计划中"] },
-    ],
   },
   faq: {
     eyebrow: "§6 · 常见问题 · 写给怀疑的读者",

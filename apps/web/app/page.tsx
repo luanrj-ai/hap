@@ -142,7 +142,6 @@ export default function HapLanding() {
           <div className="hap-nav__links">
             <a href="#spec">{t.nav.spec}</a>
             <a href="#quickstart">{t.nav.quickstart}</a>
-            <a href="#roadmap">{t.nav.roadmap}</a>
             <a href="#faq">{t.nav.faq}</a>
           </div>
           <div className="hap-nav__spacer" />
@@ -346,48 +345,28 @@ export default function HapLanding() {
           <h2 className="hap-h2">{t.install.h2}</h2>
           <p className="hap-lead">{t.install.lead}</p>
 
-          {/* ① paste to Claude Code */}
-          <div className="vA-qs" style={{ marginTop: 22 }}>
-            <div className="vA-qs__bar">
-              <div className="hap-tx__bar-dots">
-                <div className="hap-tx__bar-dot hap-tx__bar-dot--r" />
-                <div className="hap-tx__bar-dot hap-tx__bar-dot--y" />
-                <div className="hap-tx__bar-dot hap-tx__bar-dot--g" />
-              </div>
-              <b>{t.install.ccLabel}</b>
-              <button className="vA-qs__copy" data-copy={t.install.ccText} style={{ marginLeft: "auto" }}>{t.install.copyLabel}</button>
-            </div>
-            <div style={{ padding: "16px 18px", fontFamily: "var(--font-mono)", fontSize: 13, lineHeight: 1.7, color: "var(--text)", whiteSpace: "pre-wrap" }}>{t.install.ccText}</div>
-          </div>
-
-          {/* ② or run it yourself */}
-          <p style={{ margin: "20px 0 10px", fontFamily: "var(--font-mono)", fontSize: 12.5, color: "var(--dim)" }}>{lang === "zh" ? "── 或者,自己跑 ──" : "── or run it yourself ──"}</p>
-          <div className="vA-qs">
-            <div className="vA-qs__bar">
-              <div className="hap-tx__bar-dots">
-                <div className="hap-tx__bar-dot hap-tx__bar-dot--r" />
-                <div className="hap-tx__bar-dot hap-tx__bar-dot--y" />
-                <div className="hap-tx__bar-dot hap-tx__bar-dot--g" />
-              </div>
-              <b>{t.quickstart.barLabel}</b> <span style={{ color: "var(--dim)" }}>·</span> bash{" "}
-              <span style={{ color: "var(--dim)", marginLeft: "auto", fontSize: 11 }}>{t.quickstart.barNode}</span>
-            </div>
-            <div className="vA-qs__steps">
-              {t.quickstart.steps.map((s, i) => (
-                <div key={i} className="vA-qs__step">
-                  <span className="vA-qs__step-n">{i + 1}</span>
-                  <div className="vA-qs__cmd">{s.cmd}</div>
-                  <button className="vA-qs__copy" data-copy={s.copyText}>{s.copyLabel}</button>
+          {/* two paste-to-Claude-Code blocks: job-seeker + employer */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 18, marginTop: 22 }}>
+            {[
+              { label: t.install.ccLabel, text: t.install.ccText },
+              { label: t.install.ccLabelEmployer, text: t.install.ccTextEmployer },
+            ].map((b) => (
+              <div key={b.label} className="vA-qs">
+                <div className="vA-qs__bar">
+                  <div className="hap-tx__bar-dots">
+                    <div className="hap-tx__bar-dot hap-tx__bar-dot--r" />
+                    <div className="hap-tx__bar-dot hap-tx__bar-dot--y" />
+                    <div className="hap-tx__bar-dot hap-tx__bar-dot--g" />
+                  </div>
+                  <b>{b.label}</b>
+                  <button className="vA-qs__copy" data-copy={b.text} style={{ marginLeft: "auto" }}>{t.install.copyLabel}</button>
                 </div>
-              ))}
-            </div>
+                <div style={{ padding: "16px 18px", fontFamily: "var(--font-mono)", fontSize: 12.5, lineHeight: 1.7, color: "var(--text)", whiteSpace: "pre-wrap" }}>{b.text}</div>
+              </div>
+            ))}
           </div>
 
-          <div style={{ marginTop: 18, fontFamily: "var(--font-mono)", fontSize: 12.5, color: "var(--muted)", display: "flex", gap: 24, flexWrap: "wrap" }}>
-            <span>{t.install.note}</span>
-            <span>{t.quickstart.note1}</span>
-            <span>{t.quickstart.note2}</span>
-          </div>
+          <p style={{ marginTop: 16, fontFamily: "var(--font-mono)", fontSize: 12.5, color: "var(--muted)" }}>{t.install.note}</p>
         </div>
       </section>
 
@@ -472,33 +451,6 @@ export default function HapLanding() {
               <div className="vA-cmp__lose">{t.comparison.loseRow.ats}</div>
               <div className="vA-cmp__lose">{t.comparison.loseRow.web3}</div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ ROADMAP ============ */}
-      <section id="roadmap" className="hap-section">
-        <div className="hap-wrap">
-          <p className="hap-eyebrow">{t.roadmap.eyebrow}</p>
-          <h2 className="hap-h2">{t.roadmap.h2}</h2>
-          <p className="hap-lead">{t.roadmap.lead}</p>
-
-          <div className="vA-rm">
-            {t.roadmap.rows.map((r) => {
-              const [color, label] = r.pill;
-              const pillClass = color ? `hap-pill hap-pill--${color} hap-pill--dot` : "hap-pill hap-pill--dot";
-              return (
-                <div key={r.ver} className="vA-rm__row">
-                  <span className="vA-rm__ver">{r.ver}</span>
-                  <span className="vA-rm__date">{r.date}</span>
-                  <div className="vA-rm__what">
-                    <b>{r.title}</b> {r.line}
-                    <span className="vA-rm__sub">{r.sub}</span>
-                  </div>
-                  <span className={pillClass}>{label}</span>
-                </div>
-              );
-            })}
           </div>
         </div>
       </section>
